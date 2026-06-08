@@ -92,22 +92,23 @@ const SALT = 'CafeOrquidea2026';
 
 function janelaAtual() {
   const now = new Date();
-  // Janela de 30 min: 0-29 = janela 0, 30-59 = janela 1
-  const janela = Math.floor(now.getMinutes() / 30);
+  // Janela de 90 min: minutos totais desde meia-noite / 90
+  const minTotais = now.getHours()*60 + now.getMinutes();
+  const janela = Math.floor(minTotais / 90);
   const d = now.getFullYear().toString().slice(-2)
     + String(now.getMonth()+1).padStart(2,'0')
     + String(now.getDate()).padStart(2,'0')
     + String(now.getHours()).padStart(2,'0')
-    + String(janela);
+    + String(janela).padStart(2,'0');
   return d;
 }
 
 function minutosRestantes() {
   const now = new Date();
-  const minuto = now.getMinutes();
-  const janela = Math.floor(minuto / 30);
-  const fimJanela = (janela + 1) * 30;
-  return fimJanela - minuto;
+  const minTotais = now.getHours()*60 + now.getMinutes();
+  const janela = Math.floor(minTotais / 90);
+  const fimJanela = (janela + 1) * 90;
+  return fimJanela - minTotais;
 }
 
 function gerarToken(comanda) {
@@ -128,7 +129,7 @@ function gerar() {
   const min = minutosRestantes();
 
   document.getElementById('lblComanda').textContent = '#' + String(comanda).padStart(3,'0');
-  document.getElementById('lblValidade').textContent = '⏱️ Válido por mais ~' + min + ' minuto(s)';
+  document.getElementById('lblValidade').textContent = '⏱️ Válido por mais ~' + min + ' minuto(s) (janela 90min)';
   document.getElementById('qrcode').innerHTML = '';
 
   new QRCode(document.getElementById('qrcode'), {
