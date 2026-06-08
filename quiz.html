@@ -396,7 +396,7 @@ function validarToken(token){
   const hashE=Math.abs(hash).toString(36).toUpperCase().padStart(8,'0').slice(0,8);
   if(hashR!==hashE)return null;
   const now=new Date(),ano=parseInt('20'+data.slice(0,2)),mes=parseInt(data.slice(2,4))-1,dia=parseInt(data.slice(4,6)),hora=parseInt(data.slice(6,8)),janela=parseInt(data.slice(8,10));
-  const minInicio=janela*90,tokenDate=new Date(ano,mes,dia,Math.floor(minInicio/60),minInicio%60,0);
+  const minInicio=parseInt(data.slice(8,10),10)*90,tokenDate=new Date(ano,mes,dia,Math.floor(minInicio/60),minInicio%60,0);
   const diffMin=(now-tokenDate)/(1000*60);
   if(diffMin<0||diffMin>=90)return{expirado:true};
   return{comanda:parseInt(comanda),valido:true};
