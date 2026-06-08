@@ -6,34 +6,27 @@
 <title>Quiz da Copa — Café com Orquídea</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html,body{width:100%;height:100%;overflow:hiddenh;background:#0d3d18;font-family:'Segoe UI',Arial,sans-serif;}
+html,body{width:100%;height:100%;overflow:hidden;background:#0d3d18;font-family:'Segoe UI',Arial,sans-serif;}
 .bg{position:fixed;inset:0;z-index:0;background:linear-gradient(160deg,#0a4d1c 0%,#1a6b2e 55%,#0d3d18 100%);}
 .bg::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(255,215,0,0.08),transparent 70%);}
 .tela{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;z-index:10;transition:opacity 0.3s,transform 0.3s;}
 .tela.oculta{opacity:0;pointer-events:none;transform:scale(0.97);}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes shake{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+@keyframes pisca{0%,100%{opacity:1}50%{opacity:0.3}}
 
-/* BLOQUEADO / INVÁLIDO */
 .err-emoji{font-size:68px;display:block;margin-bottom:12px;}
-.err-titulo{font-size:20px;font-weight:900;margin-bottom:8px;}
+.err-titulo{font-size:20px;font-weight:900;margin-bottom:8px;text-align:center;}
 .err-sub{font-size:13px;line-height:1.55;text-align:center;max-width:290px;margin-bottom:16px;}
 .err-box{border-radius:14px;padding:14px 18px;max-width:300px;font-size:12px;line-height:1.55;text-align:center;}
 .blq .err-emoji{animation:shake 0.6s ease infinite;}
-@keyframes shake{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
-.blq .err-titulo{color:#f88;}
-.blq .err-sub{color:#fcc;}
+.blq .err-titulo{color:#f88;}.blq .err-sub{color:#fcc;}
 .blq .err-box{background:rgba(200,0,0,0.15);border:1.5px solid #c00;color:#faa;}
-.inv .err-titulo{color:#fa8;}
-.inv .err-sub{color:#fcc;}
+.exp .err-titulo{color:#ff8;}.exp .err-sub{color:#ffc;}
+.exp .err-box{background:rgba(200,180,0,0.15);border:1.5px solid #cc0;color:#ff8;}
+.inv .err-titulo{color:#fa8;}.inv .err-sub{color:#fcc;}
 .inv .err-box{background:rgba(200,100,0,0.15);border:1.5px solid #c80;color:#fc8;}
 
-/* EXPIRADO */
-.exp .err-emoji{animation:float 2s ease-in-out infinite;}
-.exp .err-titulo{color:#ff8;}
-.exp .err-sub{color:#ffc;}
-.exp .err-box{background:rgba(200,180,0,0.15);border:1.5px solid #cc0;color:#ff8;}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-
-/* INTRO */
 #telaIntro{gap:8px;text-align:center;}
 .logo-cafe{font-size:10px;color:#FFD700;letter-spacing:3px;font-weight:700;}
 .mascote-intro{font-size:66px;display:block;animation:float 3s ease-in-out infinite;}
@@ -43,17 +36,21 @@ html,body{width:100%;height:100%;overflow:hiddenh;background:#0d3d18;font-family
 .regra{font-size:12px;color:#dfd;line-height:1.5;margin-bottom:3px;display:flex;gap:8px;}
 .regra:last-child{margin-bottom:0;}
 .badge-comanda{background:rgba(255,215,0,0.15);border:1px solid rgba(255,215,0,0.4);border-radius:10px;padding:6px 14px;font-size:11px;color:#FFD700;font-weight:700;}
-.btn-comecar{width:100%;max-width:340px;padding:14px;border-radius:14px;border:none;background:#FFD700;color:#1a4d00;font-size:16px;font-weight:900;cursor:pointer;box-shadow:0 4px 0 #b09000;letter-spacing:0.5px;transition:transform 0.1s,box-shadow 0.1s;}
+.btn-comecar{width:100%;max-width:340px;padding:14px;border-radius:14px;border:none;background:#FFD700;color:#1a4d00;font-size:16px;font-weight:900;cursor:pointer;box-shadow:0 4px 0 #b09000;transition:transform 0.1s,box-shadow 0.1s;}
 .btn-comecar:active{transform:translateY(3px);box-shadow:0 1px 0 #b09000;}
 
-/* QUIZ */
 #telaQuiz{gap:0;justify-content:flex-start;padding:10px 12px;}
-.quiz-header{width:100%;display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
+.quiz-header{width:100%;display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
 .quiz-logo{font-size:10px;color:#FFD700;letter-spacing:2px;font-weight:700;}
 .quiz-score{font-size:12px;color:#9f9;font-weight:700;}
-.prog-wrap{width:100%;margin-bottom:8px;}
+.crono-wrap{width:100%;margin-bottom:7px;display:flex;align-items:center;gap:10px;}
+.crono-bar-bg{flex:1;height:10px;background:rgba(0,0,0,0.35);border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.1);}
+.crono-bar{height:100%;width:100%;border-radius:10px;transition:width 0.1s linear,background 0.3s;}
+.crono-num{font-size:18px;font-weight:900;color:#FFD700;min-width:26px;text-align:right;line-height:1;}
+.crono-num.urgente{color:#f55;animation:pisca 0.4s infinite;}
+.prog-wrap{width:100%;margin-bottom:7px;}
 .prog-labels{display:flex;justify-content:space-between;font-size:10px;color:#9fd;margin-bottom:3px;}
-.prog-bar{height:7px;background:rgba(0,0,0,0.3);border-radius:10px;overflow:hidden;border:1px solid rgba(255,215,0,0.15);}
+.prog-bar{height:6px;background:rgba(0,0,0,0.3);border-radius:10px;overflow:hidden;border:1px solid rgba(255,215,0,0.15);}
 .prog-fill{height:100%;background:linear-gradient(90deg,#009c3b,#FFD700);border-radius:10px;transition:width 0.5s ease;}
 .card-q{width:100%;background:#fff;border-radius:16px;padding:11px 13px 10px;margin-bottom:8px;border-top:5px solid #FFD700;box-shadow:0 4px 20px rgba(0,0,0,0.3);}
 .card-badge{font-size:10px;font-weight:700;letter-spacing:1px;margin-bottom:5px;display:flex;align-items:center;gap:6px;}
@@ -61,56 +58,74 @@ html,body{width:100%;height:100%;overflow:hiddenh;background:#0d3d18;font-family
 .b-medio{background:#fff3e0;color:#e65100;padding:2px 8px;border-radius:20px;}
 .b-dificil{background:#fce4ec;color:#c62828;padding:2px 8px;border-radius:20px;}
 .card-txt{font-size:14px;font-weight:800;color:#1a4d00;line-height:1.35;}
-.alts{width:100%;display:flex;flex-direction:column;gap:6px;margin-bottom:7px;}
-.alt{width:100%;padding:10px 12px;border-radius:11px;border:2px solid rgba(255,215,0,0.3);background:rgba(255,255,255,0.08);color:#fff;font-size:13px;font-weight:600;text-align:left;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:9px;}
+.alts{width:100%;display:flex;flex-direction:column;gap:5px;margin-bottom:6px;}
+.alt{width:100%;padding:9px 12px;border-radius:11px;border:2px solid rgba(255,215,0,0.3);background:rgba(255,255,255,0.08);color:#fff;font-size:13px;font-weight:600;text-align:left;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:9px;}
 .alt:active{transform:scale(0.98);}
 .alt.certa{background:rgba(0,200,80,0.25);border-color:#0c0;color:#9f9;pointer-events:none;}
 .alt.errada{background:rgba(220,50,50,0.22);border-color:#c00;color:#faa;pointer-events:none;}
+.alt.timeout{background:rgba(255,165,0,0.2);border-color:#fa0;color:#fc8;pointer-events:none;}
 .alt.disabled{opacity:0.45;pointer-events:none;}
 .alt-letra{width:22px;height:22px;border-radius:50%;background:rgba(255,215,0,0.2);color:#FFD700;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .alt.certa .alt-letra{background:#0c0;color:#fff;}
 .alt.errada .alt-letra{background:#c00;color:#fff;}
-.feedback-q{width:100%;border-radius:11px;padding:8px 12px;font-size:11px;font-weight:600;line-height:1.4;display:none;margin-bottom:7px;}
+.alt.timeout .alt-letra{background:#fa0;color:#fff;}
+.feedback-q{width:100%;border-radius:11px;padding:7px 12px;font-size:11px;font-weight:600;line-height:1.4;display:none;margin-bottom:6px;}
 .feedback-q.acerto{background:rgba(0,200,80,0.15);border:1.5px solid #0c0;color:#9f9;display:block;}
 .feedback-q.erro{background:rgba(220,50,50,0.15);border:1.5px solid #c00;color:#faa;display:block;}
-.btn-prox{width:100%;padding:13px;border-radius:13px;border:none;background:#FFD700;color:#1a4d00;font-size:15px;font-weight:900;cursor:pointer;box-shadow:0 4px 0 #b09000;display:none;transition:transform 0.1s,box-shadow 0.1s;}
+.feedback-q.timeout{background:rgba(255,165,0,0.15);border:1.5px solid #fa0;color:#fc8;display:block;}
+.btn-prox{width:100%;padding:12px;border-radius:13px;border:none;background:#FFD700;color:#1a4d00;font-size:15px;font-weight:900;cursor:pointer;box-shadow:0 4px 0 #b09000;display:none;transition:transform 0.1s,box-shadow 0.1s;}
 .btn-prox:active{transform:translateY(3px);box-shadow:0 1px 0 #b09000;}
 
 /* RESULTADO */
-#telaResultado{overflow-y:auto;justify-content:flex-start;padding-top:20px;}
-.res-inner{width:100%;max-width:360px;}
+#telaResultado{overflow-y:auto;justify-content:flex-start;padding:16px 14px 30px;}
+
+/* SEM PRÊMIO */
+.res-sem{width:100%;max-width:360px;background:rgba(10,50,20,0.95);border:2px solid rgba(255,215,0,0.3);border-radius:24px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,0.5);}
+.res-sem-topo{background:linear-gradient(135deg,#1a5c2a,#0d3d18);padding:24px 20px 18px;text-align:center;}
+.res-sem-emoji{font-size:52px;display:block;margin-bottom:8px;}
+.res-sem-titulo{font-size:20px;font-weight:900;color:#FFD700;margin-bottom:4px;}
+.res-sem-sub{font-size:12px;color:#9fd;line-height:1.4;}
+.res-sem-body{padding:20px 22px;text-align:center;}
+.res-sem-score{display:inline-flex;align-items:center;gap:8px;background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.3);border-radius:12px;padding:8px 20px;margin-bottom:16px;}
+.res-sem-n{font-size:30px;font-weight:900;color:#FFD700;}
+.res-sem-l{font-size:11px;color:#9fd;font-weight:700;line-height:1.3;}
+.res-sem-txt{font-size:13px;color:#cfc;line-height:1.7;margin-bottom:18px;}
+.res-sem-volte{background:rgba(255,215,0,0.08);border:1px solid rgba(255,215,0,0.2);border-radius:14px;padding:14px 16px;font-size:13px;color:#FFD700;font-weight:700;line-height:1.5;margin-bottom:16px;}
+.res-sem-rodape{font-size:11px;color:rgba(255,255,255,0.4);line-height:1.5;border-top:1px solid rgba(255,255,255,0.08);padding-top:14px;}
+.res-sem-icons{font-size:24px;margin-top:8px;letter-spacing:4px;}
+
+/* COM PRÊMIO */
+.res-premio-wrap{width:100%;max-width:360px;}
 .res-cafe-logo{font-size:10px;color:#FFD700;letter-spacing:3px;font-weight:700;text-align:center;margin-bottom:10px;}
 .res-box{border-radius:22px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,0.5);border:2px solid #FFD700;}
-.res-topo{background:linear-gradient(135deg,#009c3b,#006b28);padding:20px 20px 14px;text-align:center;position:relative;}
-.res-topo-deco{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(255,215,0,0.18),transparent 70%);}
-.res-estrelas{font-size:18px;letter-spacing:5px;margin-bottom:4px;position:relative;z-index:1;}
-.res-titulo{font-size:20px;font-weight:900;color:#FFD700;margin-bottom:2px;position:relative;z-index:1;text-shadow:0 2px 8px rgba(0,0,0,0.4);}
-.res-subtitulo{font-size:12px;color:#cfc;position:relative;z-index:1;}
-.res-corpo{background:#fff;padding:16px 18px 18px;text-align:center;}
-.res-cafe-nome{font-size:10px;color:#888;letter-spacing:2px;font-weight:700;margin-bottom:8px;}
-.res-icone{font-size:50px;margin-bottom:6px;animation:float 2s ease-in-out infinite;display:block;}
-.res-premio{font-size:21px;font-weight:900;color:#1a4d00;margin-bottom:3px;}
-.res-desc{font-size:11px;color:#666;margin-bottom:12px;line-height:1.5;}
-.res-instrucao{background:#f0fff4;border:1.5px dashed #009c3b;border-radius:10px;padding:9px 12px;font-size:12px;color:#1a7a3a;font-weight:600;margin-bottom:12px;}
-.res-pts{display:flex;justify-content:center;gap:8px;margin-bottom:10px;}
-.res-pt{background:#f5f5f5;border-radius:10px;padding:7px 12px;text-align:center;}
-.res-pt-n{font-size:18px;font-weight:900;color:#1a4d00;}
+.res-topo{padding:22px 20px 16px;text-align:center;position:relative;}
+.res-topo.espresso{background:linear-gradient(135deg,#4a2800,#7b4a1e);}
+.res-topo.cappuccino{background:linear-gradient(135deg,#006b28,#009c3b);}
+.res-topo-deco{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(255,215,0,0.2),transparent 70%);}
+.res-trofeus{font-size:24px;letter-spacing:4px;margin-bottom:5px;position:relative;z-index:1;}
+.res-titulo{font-size:24px;font-weight:900;color:#FFD700;margin-bottom:3px;position:relative;z-index:1;text-shadow:0 2px 8px rgba(0,0,0,0.5);}
+.res-subtitulo{font-size:12px;color:#ffe;position:relative;z-index:1;font-weight:600;line-height:1.4;}
+.res-corpo{background:#fff;padding:18px 20px 20px;text-align:center;}
+.res-cafe-nome-box{font-size:10px;color:#888;letter-spacing:2px;font-weight:700;margin-bottom:10px;}
+.res-icone-premio{font-size:54px;margin-bottom:8px;display:block;animation:float 2s ease-in-out infinite;}
+.res-voce-ganhou{font-size:13px;color:#555;margin-bottom:4px;font-weight:600;}
+.res-nome-premio{font-size:18px;font-weight:900;color:#1a4d00;margin-bottom:4px;line-height:1.2;}
+.res-unidade{font-size:12px;color:#777;margin-bottom:14px;font-style:italic;}
+.res-instrucao{background:#f0fff4;border:2px dashed #009c3b;border-radius:12px;padding:11px 14px;font-size:13px;color:#1a7a3a;font-weight:700;margin-bottom:14px;line-height:1.4;}
+.res-datetime{display:flex;justify-content:center;gap:10px;margin-bottom:14px;}
+.res-dt-box{background:#f5f5f5;border-radius:10px;padding:7px 14px;text-align:center;}
+.res-dt-n{font-size:15px;font-weight:900;color:#1a4d00;}
+.res-dt-l{font-size:9px;color:#888;font-weight:700;letter-spacing:1px;margin-top:1px;}
+.res-pts{display:flex;justify-content:center;gap:8px;margin-bottom:12px;}
+.res-pt{background:#f0f0f0;border-radius:10px;padding:7px 12px;text-align:center;}
+.res-pt-n{font-size:17px;font-weight:900;color:#1a4d00;}
 .res-pt-l{font-size:9px;color:#888;font-weight:700;letter-spacing:1px;}
-.res-rodape{font-size:10px;color:#aaa;margin-bottom:0;line-height:1.4;}
-/* sem prêmio */
-.res-sem{text-align:center;padding:10px 0;}
-.res-sem-emoji{font-size:58px;display:block;margin-bottom:10px;animation:float 2s ease-in-out infinite;}
-.res-sem-titulo{font-size:20px;font-weight:900;color:#FFD700;margin-bottom:7px;}
-.res-sem-sub{font-size:13px;color:#cfc;line-height:1.5;margin-bottom:14px;}
-.res-sem-score{background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.3);border-radius:14px;padding:14px;margin-bottom:14px;}
-.res-sem-n{font-size:32px;font-weight:900;color:#FFD700;}
-.res-sem-l{font-size:11px;color:#9fd;margin-top:2px;}
+.res-rodape{font-size:10px;color:#999;line-height:1.6;border-top:1px solid #eee;padding-top:10px;}
 </style>
 </head>
 <body>
 <div class="bg"></div>
 
-<!-- BLOQUEADO -->
 <div class="tela oculta blq" id="telaBloqueado">
   <span class="err-emoji">🚫</span>
   <div class="err-titulo">Acesso Bloqueado</div>
@@ -118,15 +133,13 @@ html,body{width:100%;height:100%;overflow:hiddenh;background:#0d3d18;font-family
   <div class="err-box">☕ Cada QR Code é válido para <strong>uma única partida</strong>.<br><br>Consuma no Café com Orquídea e ganhe um novo código!</div>
 </div>
 
-<!-- EXPIRADO -->
 <div class="tela oculta exp" id="telaExpirado">
-  <span class="err-emoji">⏰</span>
-  <div class="err-titulo" style="color:#ff8">QR Code Expirado</div>
-  <div class="err-sub" style="color:#ffc">Este código expirou (válido por 30 min).<br>Peça um novo QR Code ao atendente!</div>
+  <span class="err-emoji" style="animation:float 2s ease-in-out infinite">⏰</span>
+  <div class="err-titulo">QR Code Expirado</div>
+  <div class="err-sub">Este código expirou (válido por 90 min).<br>Peça um novo QR Code ao atendente!</div>
   <div class="err-box" style="background:rgba(200,180,0,0.15);border:1.5px solid #cc0;color:#ff8;">⏱️ O atendente gera um novo código em segundos!</div>
 </div>
 
-<!-- INVÁLIDO -->
 <div class="tela oculta inv" id="telaInvalido">
   <span class="err-emoji" style="animation:float 2s ease-in-out infinite">❌</span>
   <div class="err-titulo">QR Code Inválido</div>
@@ -134,27 +147,29 @@ html,body{width:100%;height:100%;overflow:hiddenh;background:#0d3d18;font-family
   <div class="err-box">☕ Só funciona com QR Codes gerados pelo Café com Orquídea!</div>
 </div>
 
-<!-- INTRO -->
 <div class="tela oculta" id="telaIntro">
   <div class="logo-cafe">☕ CAFÉ COM ORQUÍDEA</div>
   <span class="mascote-intro">☕🌸</span>
   <div class="titulo-intro">🏆 Quiz da Copa 2026</div>
   <div class="sub-intro">Teste seu conhecimento e ganhe prêmios!</div>
   <div class="regras-box">
-    <div class="regra"><span>✅</span><span><strong>5 perguntas</strong> sobre os jogos da Copa</span></div>
-    <div class="regra"><span>🎯</span><span>Escolha entre <strong>5 alternativas</strong></span></div>
-    <div class="regra"><span>☕</span><span>Acerte <strong>3 ou mais</strong> = <strong style="color:#FFD700">CAFÉ GRÁTIS!</strong></span></div>
-    <div class="regra"><span>🌟</span><span>Acerte <strong>todas as 5</strong> = <strong style="color:#FFD700">BRINDE ESPECIAL!</strong></span></div>
+    <div class="regra"><span>⚽</span><span><strong>5 perguntas</strong> — 15 segundos cada!</span></div>
+    <div class="regra"><span>⏱️</span><span>Tempo esgotado = resposta errada</span></div>
+    <div class="regra"><span>☕</span><span>3 ou 4 acertos = <strong style="color:#FFD700">1 Café Espresso!</strong></span></div>
+    <div class="regra"><span>🏆</span><span>5 acertos = <strong style="color:#FFD700">1 Cappuccino Especial da Copa!</strong></span></div>
   </div>
   <div class="badge-comanda" id="badgeComanda">🎫 Comanda válida</div>
   <button class="btn-comecar" onclick="comecar()">⚽ COMEÇAR O QUIZ!</button>
 </div>
 
-<!-- QUIZ -->
 <div class="tela oculta" id="telaQuiz">
   <div class="quiz-header">
     <div class="quiz-logo">☕ CAFÉ COM ORQUÍDEA</div>
-    <div class="quiz-score">⭐ <span id="scoreAtual">0</span> acerto(s)</div>
+    <div class="quiz-score">⭐ <span id="scoreAtual">0</span>/5</div>
+  </div>
+  <div class="crono-wrap">
+    <div class="crono-bar-bg"><div class="crono-bar" id="cronoBar" style="background:#009c3b;width:100%"></div></div>
+    <div class="crono-num" id="cronoNum">15</div>
   </div>
   <div class="prog-wrap">
     <div class="prog-labels"><span id="lblProg">Pergunta 1 de 5</span><span id="lblDif"></span></div>
@@ -166,70 +181,241 @@ html,body{width:100%;height:100%;overflow:hiddenh;background:#0d3d18;font-family
   </div>
   <div class="alts" id="altsWrap"></div>
   <div class="feedback-q" id="feedbackQ"></div>
-  <button class="btn-prox" id="btnProx" onclick="proxima()">➡️ PRÓXIMA PERGUNTA</button>
+  <button class="btn-prox" id="btnProx" onclick="proxima()">➡️ PRÓXIMA</button>
 </div>
 
-<!-- RESULTADO -->
 <div class="tela oculta" id="telaResultado"></div>
 
 <script>
-const SALT = 'CafeOrquidea2026';
+const SALT='CafeOrquidea2026';
+const TEMPO=15;
+const MAX_HIST=50; // máximo de IDs guardados por aparelho
 
-const PERGUNTAS = [
-  {txt:"Quem marcou o primeiro gol do Brasil no amistoso contra o Egito em 6 de junho de 2026?",alts:["Vinicius Jr","Rodrygo","Bruno Guimarães","Endrick","Raphinha"],certa:2,dif:"facil",exp:"Bruno Guimarães abriu o placar aos 6 minutos, roubando a bola e finalizando. Brasil venceu 2×1."},
-  {txt:"Qual foi o placar do amistoso Brasil x Egito em Cleveland no dia 6 de junho de 2026?",alts:["Brasil 1×0 Egito","Brasil 3×1 Egito","Brasil 2×1 Egito","Empate 1×1","Brasil 2×0 Egito"],certa:2,dif:"medio",exp:"Brasil venceu por 2 a 1. Gols de Bruno Guimarães e Endrick. Ziko descontou para os egípcios."},
-  {txt:"Qual seleção venceu a França de virada por 2×1 num amistoso pré-Copa em 4 de junho de 2026?",alts:["Marrocos","Senegal","Nigéria","Costa do Marfim","Camarões"],certa:3,dif:"medio",exp:"A Costa do Marfim virou no 2º tempo e surpreendeu a França por 2 a 1."},
-  {txt:"Qual jogador brasileiro saiu com dores na virilha contra o Egito e virou preocupação para a Copa?",alts:["Rodrygo","Endrick","Vinicius Jr","Wesley","Estêvão"],certa:3,dif:"dificil",exp:"Wesley saiu com dores na virilha e ficou como dúvida para a estreia do Brasil contra Marrocos."},
-  {txt:"Por qual placar o Brasil goleou o Panamá no Maracanã em 31 de maio de 2026?",alts:["3×0","4×1","5×2","6×2","7×1"],certa:3,dif:"dificil",exp:"Brasil goleou o Panamá por 6 a 2 no Maracanã sob comando de Carlo Ancelotti."}
+const BANCO=[
+// ======= FÁCEIS — COPAS PASSADAS =======
+{txt:"Quantas vezes o Brasil foi campeão mundial?",alts:["3","4","5","6","7"],certa:2,dif:"facil",exp:"O Brasil é pentacampeão: 1958, 1962, 1970, 1994 e 2002."},
+{txt:"Quem foi campeão da Copa de 2022 no Catar?",alts:["Brasil","França","Alemanha","Argentina","Croácia"],certa:3,dif:"facil",exp:"A Argentina venceu a França nos pênaltis e foi campeã em 2022."},
+{txt:"Em qual país foi a Copa de 2022?",alts:["Rússia","Brasil","Catar","Japão","África do Sul"],certa:2,dif:"facil",exp:"A Copa de 2022 foi no Catar, pela primeira vez no Oriente Médio."},
+{txt:"Quem é o maior artilheiro da história das Copas?",alts:["Pelé","Ronaldo","Miroslav Klose","Gerd Müller","Messi"],certa:2,dif:"facil",exp:"Miroslav Klose marcou 16 gols em Copas do Mundo."},
+{txt:"Em que ano o Brasil ganhou sua primeira Copa?",alts:["1950","1954","1958","1962","1966"],certa:2,dif:"facil",exp:"O Brasil ganhou o primeiro título em 1958 na Suécia com Pelé e Garrincha."},
+{txt:"Qual seleção venceu a Copa de 2018 na Rússia?",alts:["Alemanha","Argentina","França","Croácia","Bélgica"],certa:2,dif:"facil",exp:"A França venceu a Croácia por 4×2 na final e foi bicampeã em 2018."},
+{txt:"Em qual Copa o Brasil perdeu de 7×1 para a Alemanha?",alts:["2010","2018","2006","2014","2022"],certa:3,dif:"facil",exp:"O histórico 7×1 foi na semifinal da Copa de 2014 no Brasil."},
+{txt:"Qual seleção é a maior campeã da Copa do Mundo?",alts:["Alemanha","Itália","Argentina","Brasil","França"],certa:3,dif:"facil",exp:"O Brasil é pentacampeão com 5 títulos mundiais."},
+{txt:"Qual foi o primeiro país a sediar a Copa do Mundo?",alts:["Brasil","França","Argentina","Uruguai","Chile"],certa:3,dif:"facil",exp:"O Uruguai sediou e venceu a primeira Copa em 1930."},
+{txt:"Quem tem mais títulos de Copa do Mundo?",alts:["Messi","Pelé","Ronaldo","Zidane","Müller"],certa:1,dif:"facil",exp:"Pelé é o único com 3 títulos mundiais: 1958, 1962 e 1970."},
+{txt:"Em qual Copa Ronaldo Fenômeno foi artilheiro com 8 gols?",alts:["França 1998","Japão/Coreia 2002","Alemanha 2006","África do Sul 2010","Brasil 2014"],certa:1,dif:"facil",exp:"Ronaldo marcou 8 gols em 2002 e foi campeão."},
+{txt:"Onde foi a Copa de 2014?",alts:["Argentina","México","Brasil","Alemanha","França"],certa:2,dif:"facil",exp:"A Copa de 2014 foi no Brasil com 12 cidades-sede."},
+{txt:"Quem foi o artilheiro da Copa de 2022?",alts:["Messi","Neymar","Mbappé","Benzema","Lewandowski"],certa:2,dif:"facil",exp:"Kylian Mbappé foi artilheiro da Copa de 2022 com 8 gols."},
+{txt:"Quantas Copas a Alemanha já venceu?",alts:["2","3","4","5","6"],certa:2,dif:"facil",exp:"A Alemanha venceu 4 Copas: 1954, 1974, 1990 e 2014."},
+{txt:"Quantas Copas a Itália já venceu?",alts:["2","3","4","5","6"],certa:2,dif:"facil",exp:"A Itália tem 4 títulos: 1934, 1938, 1982 e 2006."},
+{txt:"Quem ficou famoso pela 'mão de Deus' em 1986?",alts:["Pelé","Ronaldo","Maradona","Zidane","Cruyff"],certa:2,dif:"facil",exp:"Diego Maradona marcou o polêmico gol com a mão contra a Inglaterra em 1986."},
+{txt:"Em qual país foi a Copa de 2010?",alts:["Brasil","Argentina","África do Sul","Japão","Alemanha"],certa:2,dif:"facil",exp:"A Copa de 2010 foi na África do Sul, a primeira no continente africano."},
+{txt:"Quem venceu a Copa de 2010?",alts:["Brasil","Argentina","Espanha","Alemanha","Holanda"],certa:2,dif:"facil",exp:"A Espanha venceu a Holanda por 1×0 na prorrogação em 2010."},
+{txt:"Quem marcou o gol da final da Copa de 2010?",alts:["Xavi","Iniesta","Villa","Torres","Casillas"],certa:1,dif:"facil",exp:"Andrés Iniesta marcou na prorrogação e deu o título à Espanha."},
+{txt:"Qual foi a primeira Copa realizada na Ásia?",alts:["China 1994","Japão/Coreia 2002","Coreia 2006","Catar 2022","India 2018"],certa:1,dif:"facil",exp:"A Copa de 2002 foi a primeira na Ásia, co-sediada por Japão e Coreia do Sul."},
+{txt:"Quantas seleções participam da Copa 2026?",alts:["32","36","40","48","52"],certa:3,dif:"facil",exp:"A Copa 2026 terá 48 seleções, a maior da história."},
+{txt:"Em quantos países será a Copa 2026?",alts:["1","2","3","4","5"],certa:2,dif:"facil",exp:"A Copa 2026 será em 3 países: EUA, México e Canadá."},
+{txt:"Qual cidade sedia a final da Copa 2026?",alts:["Los Angeles","Chicago","Nova York/Nova Jersey","Miami","Dallas"],certa:2,dif:"facil",exp:"A final será no MetLife Stadium em Nova York/Nova Jersey."},
+{txt:"Em qual mês começa a Copa 2026?",alts:["Maio","Junho","Julho","Agosto","Setembro"],certa:1,dif:"facil",exp:"A Copa do Mundo 2026 começa em junho de 2026."},
+{txt:"Qual técnico comanda o Brasil na Copa 2026?",alts:["Tite","Pep Guardiola","Carlo Ancelotti","Fernando Diniz","Vanderlei Luxemburgo"],certa:2,dif:"facil",exp:"Carlo Ancelotti assumiu o comando da Seleção Brasileira para a Copa 2026."},
+{txt:"Contra qual seleção o Brasil estreia na Copa 2026?",alts:["Argentina","França","Marrocos","Alemanha","Espanha"],certa:2,dif:"facil",exp:"O Brasil estreia contra Marrocos no dia 13 de junho de 2026."},
+{txt:"Qual o número da camisa de Vinicius Jr na Seleção?",alts:["7","9","10","11","17"],certa:3,dif:"facil",exp:"Vinicius Jr usa a camisa 11 na Seleção Brasileira."},
+{txt:"Qual jogador ganhou a Bola de Ouro na Copa de 2022?",alts:["Mbappé","Modric","Messi","Neymar","Benzema"],certa:2,dif:"facil",exp:"Lionel Messi ganhou a Bola de Ouro da Copa de 2022."},
+{txt:"Qual a maior goleada da história das Copas?",alts:["Brasil 7×0","Alemanha 7×1","Hungria 10×1","Alemanha 8×0","Eslovênia 6×0"],certa:2,dif:"facil",exp:"A maior goleada foi Hungria 10×1 sobre El Salvador na Copa de 1982."},
+{txt:"Onde foi a Copa de 1998?",alts:["Itália","Alemanha","França","Brasil","Argentina"],certa:2,dif:"facil",exp:"A França sediou a Copa de 1998 e foi campeã, vencendo o Brasil por 3×0."},
+{txt:"Quem foi artilheiro da Copa de 2014?",alts:["Neymar","Messi","Müller","Robben","Schweinsteiger"],certa:2,dif:"facil",exp:"Thomas Müller foi artilheiro da Copa de 2014 com 5 gols."},
+{txt:"Quantas Copas a França venceu?",alts:["1","2","3","4","5"],certa:1,dif:"facil",exp:"A França venceu 2 Copas: 1998 e 2018."},
+{txt:"Qual o resultado da final da Copa de 2002?",alts:["Brasil 1×0","Brasil 2×0","Brasil 3×0","Empate pênaltis","Brasil 2×1"],certa:1,dif:"facil",exp:"O Brasil venceu a Alemanha por 2×0 na final de 2002, com dois gols de Ronaldo."},
+{txt:"Qual Copa foi a primeira a usar o VAR?",alts:["Brasil 2014","Rússia 2018","Catar 2022","Japão 2002","África do Sul 2010"],certa:1,dif:"facil",exp:"A Copa de 2018 na Rússia foi a primeira a utilizar o VAR."},
+{txt:"Quem marcou o gol do título do Brasil em 1994?",alts:["Romário","Bebeto","Leonardo","Mazinho","Taffarel"],certa:0,dif:"facil",exp:"Romário foi o artilheiro e craque do Brasil campeão em 1994."},
+{txt:"Qual jogador ficou famoso por 'embalar o bebê' em 1994?",alts:["Romário","Bebeto","Leonardo","Mazinho","Aldair"],certa:1,dif:"facil",exp:"Bebeto ficou famoso pela comemoração em homenagem ao filho recém-nascido."},
+{txt:"O que foi o 'Maracanazo'?",alts:["Gol do Brasil na final de 1970","Derrota do Brasil para o Uruguai em 1950","Gol de Pelé em 1958","Vitória do Brasil em 2002","Derrota do Brasil em 2014"],certa:1,dif:"facil",exp:"O Maracanazo foi a derrota do Brasil por 2×1 para o Uruguai na Copa de 1950."},
+{txt:"Quem marcou o 'Maracanazo' em 1950?",alts:["Ghiggia","Moran","Schiaffino","Perez","Máspoli"],certa:0,dif:"facil",exp:"Alcides Ghiggia marcou o gol da vitória do Uruguai em 1950 no Maracanã."},
+{txt:"Qual Copa foi a primeira televisionada em cores?",alts:["1962","1966","1970","1974","1978"],certa:2,dif:"facil",exp:"A Copa de 1970 no México foi a primeira transmitida em cores."},
+{txt:"Qual é o único país a participar de todas as Copas?",alts:["Alemanha","Itália","Argentina","Brasil","Inglaterra"],certa:3,dif:"facil",exp:"O Brasil é o único país a participar de todas as edições da Copa do Mundo."},
+{txt:"Quantas Copas a Argentina venceu?",alts:["1","2","3","4","5"],certa:2,dif:"facil",exp:"A Argentina tem 3 títulos: 1978, 1986 e 2022."},
+{txt:"Qual Copa foi a primeira na África?",alts:["Tunísia 1994","Marrocos 1998","África do Sul 2010","Egito 2006","Nigéria 2002"],certa:2,dif:"facil",exp:"A Copa de 2010 na África do Sul foi a primeira no continente africano."},
+{txt:"Quantos gols Pelé marcou em Copas?",alts:["8","10","12","14","16"],certa:2,dif:"facil",exp:"Pelé marcou 12 gols em Copas do Mundo ao longo de quatro edições."},
+{txt:"Qual polvo ficou famoso prevendo resultados da Copa 2010?",alts:["Pedro","Paulo","Paul","Pepe","Pablo"],certa:2,dif:"facil",exp:"O polvo Paul ficou famoso durante a Copa de 2010 por acertar todos os resultados alemães."},
+{txt:"Onde foi a Copa de 1966?",alts:["França","Alemanha","Itália","Inglaterra","Espanha"],certa:3,dif:"facil",exp:"A Inglaterra sediou e venceu a Copa de 1966."},
+{txt:"Quantas gols foram marcados na Copa de 2022?",alts:["132","148","172","185","196"],certa:2,dif:"facil",exp:"A Copa de 2022 teve 172 gols em 64 jogos."},
+{txt:"Quem venceu Copa de 2006 na Alemanha?",alts:["Brasil","Alemanha","Itália","França","Portugal"],certa:2,dif:"facil",exp:"A Itália venceu a França nos pênaltis e conquistou o tetracampeonato em 2006."},
+{txt:"Qual jogador foi expulso na final da Copa de 2006?",alts:["Ronaldo","Messi","Zidane","Rooney","Drogba"],certa:2,dif:"facil",exp:"Zinédine Zidane foi expulso após dar uma cabeçada em Materazzi na final de 2006."},
+{txt:"Qual Copa usou pela primeira vez tecnologia de linha de gol?",alts:["2010","2014","2018","2022","2006"],certa:1,dif:"facil",exp:"A Copa de 2014 no Brasil foi a primeira a usar tecnologia de linha de gol."},
+{txt:"Quem marcou o gol de bicicleta mais famoso da Copa 2022?",alts:["Vinicius Jr","Neymar","Richarlison","Mbappé","Messi"],certa:2,dif:"facil",exp:"O gol de bicicleta de Richarlison contra a Sérvia foi eleito o mais bonito da Copa 2022."},
+{txt:"Quem eliminou o Brasil na Copa 2022?",alts:["Argentina","França","Croácia","Marrocos","Portugal"],certa:2,dif:"facil",exp:"A Croácia eliminou o Brasil nos pênaltis nas quartas de final da Copa de 2022."},
+{txt:"Por qual placar o Brasil eliminou a Coreia do Sul em 2022?",alts:["2×0","3×0","4×1","4×0","5×1"],certa:2,dif:"facil",exp:"O Brasil goleou a Coreia do Sul por 4×1 nas oitavas da Copa de 2022."},
+{txt:"Quem foi o artilheiro da Copa de 1998?",alts:["Ronaldo","Zidane","Davor Suker","Batistuta","Bergkamp"],certa:2,dif:"facil",exp:"Davor Suker, da Croácia, foi artilheiro da Copa de 1998 com 6 gols."},
+{txt:"Qual o resultado final da Copa 1994 nos pênaltis?",alts:["Brasil 3×2","Brasil 4×2","Brasil 3×1","Brasil 4×3","Brasil 5×3"],certa:0,dif:"facil",exp:"O Brasil venceu a Itália por 3×2 nos pênaltis na Copa de 1994."},
+{txt:"Qual time ganhou Copa e sediou no mesmo ano antes de 2026?",alts:["Brasil 1950","Alemanha 2006","França 1998","Argentina 1978","Itália 1990"],certa:2,dif:"facil",exp:"A França venceu a Copa de 1998, que ela mesma sediou."},
+{txt:"Qual jogador marcou hat-trick na final da Copa de 1966?",alts:["Pelé","Ronaldo","Geoff Hurst","Müller","Fontaine"],certa:2,dif:"facil",exp:"Geoff Hurst marcou hat-trick na final de 1966 — Inglaterra 4×2 Alemanha."},
+{txt:"Quem marcou 13 gols numa única Copa — recorde absoluto?",alts:["Pelé","Gerd Müller","Just Fontaine","Ronaldo","Müller"],certa:2,dif:"facil",exp:"Just Fontaine, da França, marcou 13 gols na Copa de 1958 na Suécia."},
+{txt:"Qual jogo teve mais gols na história das Copas?",alts:["Alemanha 7×1 Brasil","Hungria 10×1 El Salvador","Áustria 7×5 Suíça","Rússia 6×1 Camarões","Brasil 5×2 Suécia"],certa:2,dif:"facil",exp:"Áustria 7×5 Suíça na Copa de 1954 é o jogo com mais gols: 12 no total."},
+{txt:"Quantas seleções participaram da Copa de 1930?",alts:["8","12","13","16","20"],certa:2,dif:"facil",exp:"A Copa de 1930 no Uruguai teve apenas 13 seleções participantes."},
+{txt:"Qual foi o gol mais rápido da história das Copas?",alts:["Pelé em 1958","Hakan Şükür em 2002","Ronaldo em 2002","Inamoto em 2002","Klose em 2006"],certa:1,dif:"facil",exp:"Hakan Şükür marcou para a Turquia após apenas 11 segundos contra a Coreia do Sul em 2002."},
+{txt:"Em qual Copa Ronaldo Fenômeno sofreu convulsões antes da final?",alts:["1994","1998","2002","2006","2010"],certa:1,dif:"facil",exp:"Ronaldo sofreu convulsões na véspera da final de 1998, mas jogou mesmo assim."},
+{txt:"Qual Copa foi a primeira com 32 seleções?",alts:["1990","1994","1998","2002","2006"],certa:2,dif:"facil",exp:"A Copa de 1998 na França foi a primeira com 32 seleções participantes."},
+{txt:"Qual o maior público de uma partida de Copa?",alts:["100 mil","150 mil","173 mil","200 mil","120 mil"],certa:2,dif:"facil",exp:"Brasil x Uruguai em 1950 no Maracanã teve cerca de 173.850 torcedores."},
+{txt:"Qual Copa teve maior público total?",alts:["Brasil 2014","EUA 1994","Alemanha 2006","França 1998","Japão/Coreia 2002"],certa:1,dif:"facil",exp:"A Copa de 1994 nos EUA teve o maior público total da história com mais de 3,5 milhões."},
+{txt:"Quem venceu a Copa de 1986 no México?",alts:["Brasil","Alemanha","Argentina","França","Itália"],certa:2,dif:"facil",exp:"A Argentina de Maradona venceu a Alemanha Ocidental por 3×2 na final de 1986."},
+{txt:"Quem foi artilheiro da Copa de 1986?",alts:["Maradona","Lineker","Rummenigge","Platini","Careca"],certa:1,dif:"facil",exp:"Gary Lineker, da Inglaterra, foi artilheiro da Copa de 1986 com 6 gols."},
+{txt:"Em que ano a Argentina venceu sua primeira Copa?",alts:["1974","1978","1982","1986","1990"],certa:1,dif:"facil",exp:"A Argentina venceu sua primeira Copa em 1978, em casa."},
+{txt:"Qual foi o campeão da Copa de 1970?",alts:["Alemanha","Itália","Brasil","Argentina","Uruguai"],certa:2,dif:"facil",exp:"O Brasil venceu a Itália por 4×1 na final e conquistou o tricampeonato em 1970."},
+{txt:"Quem marcou o gol do título na final da Copa de 1970?",alts:["Pelé","Tostão","Carlos Alberto","Jairzinho","Rivelino"],certa:2,dif:"facil",exp:"Carlos Alberto marcou o famoso quarto gol do Brasil contra a Itália na final de 1970."},
+{txt:"Em que Copa Pelé foi expulso injustamente e chorou?",alts:["1958","1962","1966","1970","1974"],certa:2,dif:"facil",exp:"Pelé foi expulso na Copa de 1966 na Inglaterra e prometeu não jogar mais Copas — promessa que não cumpriu."},
+{txt:"Qual Copa o Brasil foi vice-campeão perdendo pro Uruguai?",alts:["1938","1946","1950","1954","1958"],certa:2,dif:"facil",exp:"O Brasil foi vice-campeão em 1950, perdendo o título para o Uruguai no Maracanã."},
+{txt:"Quem foi artilheiro da Copa de 2018?",alts:["Messi","Neymar","Harry Kane","Mbappé","Lukaku"],certa:2,dif:"facil",exp:"Harry Kane, da Inglaterra, foi artilheiro da Copa de 2018 com 6 gols."},
+{txt:"Qual seleção usou 'Total Football' nos anos 70?",alts:["Brasil","Alemanha","Holanda","Argentina","Itália"],certa:2,dif:"facil",exp:"A Holanda de Johan Cruyff popularizou o Futebol Total nas Copas de 1974 e 1978."},
+{txt:"Qual Copa do Mundo o Brasil ganhou nos EUA?",alts:["1970","1982","1990","1994","1998"],certa:3,dif:"facil",exp:"O Brasil conquistou seu tetracampeonato na Copa de 1994, nos EUA."},
+{txt:"Qual o nome do estádio da final da Copa 2026?",alts:["Rose Bowl","Cowboys Stadium","MetLife Stadium","SoFi Stadium","Azteca"],certa:2,dif:"facil",exp:"A final será no MetLife Stadium em East Rutherford, Nova Jersey."},
+{txt:"Quantos estádios sediam jogos da Copa 2026?",alts:["12","14","16","18","20"],certa:2,dif:"facil",exp:"A Copa 2026 terá 16 estádios em EUA, México e Canadá."},
+{txt:"Em que grupo o Brasil está na Copa 2026?",alts:["Grupo A","Grupo B","Grupo C","Grupo D","Grupo E"],certa:3,dif:"facil",exp:"O Brasil foi sorteado no Grupo D da Copa do Mundo 2026."},
+{txt:"Qual o número da camisa de Endrick na Seleção?",alts:["7","9","11","16","19"],certa:3,dif:"facil",exp:"Endrick usa a camisa 16 na Seleção Brasileira."},
+{txt:"Qual o número da camisa 10 do Brasil na Copa 2026?",alts:["Neymar","Paquetá","Raphinha","Vinicius Jr","Rodrygo"],certa:2,dif:"facil",exp:"Raphinha herdou a camisa 10 da Seleção Brasileira para a Copa 2026."},
+{txt:"Qual Copa será realizada para comemorar o centenário do torneio?",alts:["2026","2030","2034","2038","2042"],certa:1,dif:"facil",exp:"A Copa de 2030 comemorará os 100 anos da competição, iniciada em 1930."},
+{txt:"Qual seleção venceu mais Copas seguidas?",alts:["Brasil","Itália","Alemanha","Argentina","Uruguai"],certa:1,dif:"facil",exp:"A Itália venceu duas Copas consecutivas: 1934 e 1938."},
+{txt:"Qual Copa teve o famoso 'Jogo das Lágrimas'?",alts:["1950","1954","1958","1962","1966"],certa:1,dif:"facil",exp:"O 'Jogo das Lágrimas' foi Alemanha 3×3 Áustria na Copa de 1982, num resultado que eliminou os dois países."},
+{txt:"Qual o nome completo do troféu da Copa do Mundo?",alts:["Taça Jules Rimet","Troféu FIFA World Cup","Copa do Mundo FIFA","Taça dos Campeões Mundiais","Troféu dos Campeões"],certa:1,dif:"facil",exp:"O troféu atual se chama oficialmente FIFA World Cup Trophy."},
+{txt:"Qual Copa usou pela primeira vez bola com chip?",alts:["2006","2010","2014","2018","2022"],certa:4,dif:"facil",exp:"A Copa de 2022 no Catar foi a primeira a usar bola com chip de rastreamento."},
+{txt:"Qual time foi tricampeão seguido da Copa do Mundo?",alts:["Brasil","Itália","Alemanha","Nenhum","Argentina"],certa:3,dif:"facil",exp:"Nenhum time venceu três Copas seguidas. O Brasil chegou mais perto com dois títulos em 1958 e 1962."},
+{txt:"Qual Copa realizou o primeiro hat-trick da história?",alts:["1930","1934","1938","1950","1954"],certa:0,dif:"facil",exp:"O primeiro hat-trick foi marcado por Bert Patenaude dos EUA contra o Paraguai na Copa de 1930."},
+{txt:"Qual o único país a vencer Copa fora do seu continente várias vezes?",alts:["Alemanha","Itália","Argentina","Brasil","Espanha"],certa:3,dif:"facil",exp:"O Brasil venceu Copas na Europa (1958, 1962) e na Ásia (2002)."},
+{txt:"Qual seleção tem mais vice-campeonatos na Copa?",alts:["Brasil","França","Holanda","Alemanha","Argentina"],certa:2,dif:"facil",exp:"A Holanda tem 3 vice-campeonatos (1974, 1978, 2010) sem nunca vencer."},
+{txt:"Em qual Copa Zidane foi eleito o melhor jogador?",alts:["1998","2002","2006","2010","2014"],certa:2,dif:"facil",exp:"Zidane foi eleito o melhor da Copa de 2006 mesmo sendo expulso na final."},
+{txt:"Qual jogador ganhou três Copas do Mundo?",alts:["Messi","Maradona","Pelé","Ronaldo","Cruyff"],certa:2,dif:"facil",exp:"Pelé é o único jogador com 3 títulos mundiais: 1958, 1962 e 1970."},
+{txt:"Quantos gols Messi marcou em Copas ao longo da carreira?",alts:["10","13","14","18","21"],certa:1,dif:"facil",exp:"Messi marcou 13 gols em Copas do Mundo."},
+
+// ======= MÉDIAS — COPA 2026 E AMISTOSOS =======
+{txt:"Quem marcou o 1º gol do Brasil contra o Egito em junho de 2026?",alts:["Vinicius Jr","Rodrygo","Bruno Guimarães","Endrick","Raphinha"],certa:2,dif:"medio",exp:"Bruno Guimarães abriu o placar aos 6 minutos. Brasil venceu 2×1."},
+{txt:"Qual foi o placar do Brasil x Egito em Cleveland em junho de 2026?",alts:["1×0","3×1","2×1","1×1","2×0"],certa:2,dif:"medio",exp:"Brasil venceu por 2×1, com gols de Bruno Guimarães e Endrick."},
+{txt:"Quem marcou o gol da vitória do Brasil contra o Egito?",alts:["Rodrygo","Estêvão","Vinicius Jr","Endrick","Raphinha"],certa:3,dif:"medio",exp:"Endrick recebeu cruzamento de Raphinha e finalizou de primeira."},
+{txt:"Por qual placar o Brasil goleou o Panamá no Maracanã em maio 2026?",alts:["3×0","4×1","5×2","6×2","7×1"],certa:3,dif:"medio",exp:"Brasil goleou o Panamá por 6×2 no Maracanã."},
+{txt:"Qual seleção venceu a França de virada por 2×1 num amistoso pré-Copa 2026?",alts:["Marrocos","Senegal","Nigéria","Costa do Marfim","Camarões"],certa:3,dif:"medio",exp:"A Costa do Marfim virou no 2º tempo e surpreendeu a França por 2×1."},
+{txt:"Quem deu assistência para Endrick marcar contra o Egito?",alts:["Vinicius Jr","Bruno Guimarães","Rodrygo","Raphinha","Estêvão"],certa:3,dif:"medio",exp:"Raphinha fez o cruzamento rasteiro que Endrick finalizou de primeira."},
+{txt:"Em qual cidade foi o amistoso Brasil x Egito em junho 2026?",alts:["Nova York","Chicago","Cleveland","Los Angeles","Miami"],certa:2,dif:"medio",exp:"O amistoso foi no Huntington Bank Field, em Cleveland, Ohio."},
+{txt:"Qual jogador saiu lesionado do Brasil x Egito?",alts:["Rodrygo","Endrick","Vinicius Jr","Wesley","Estêvão"],certa:3,dif:"medio",exp:"Wesley saiu com dores na virilha e ficou em dúvida para a estreia."},
+{txt:"Contra qual seleção o Brasil fez 5×0 em amistoso pré-Copa 2026?",alts:["Japão","Coreia do Sul","Egito","Panamá","México"],certa:1,dif:"medio",exp:"O Brasil goleou a Coreia do Sul por 5×0 em Seul."},
+{txt:"Quem marcou dois gols do Brasil contra a Coreia do Sul pré-Copa?",alts:["Endrick","Vinicius Jr","Rodrygo","Bruno Guimarães","Raphinha"],certa:2,dif:"medio",exp:"Rodrygo marcou dois gols na goleada por 5×0 sobre a Coreia do Sul."},
+{txt:"Quem descontou para o Egito no amistoso contra o Brasil?",alts:["Salah","Trezeguet","Ziko","Omar","Kouka"],certa:2,dif:"medio",exp:"Ziko marcou o gol de honra do Egito no amistoso perdido por 1×2."},
+{txt:"Qual foi o resultado do amistoso Argentina x Alemanha em junho 2026?",alts:["Argentina 2×1","Empate 1×1","Alemanha 2×0","Argentina 3×0","Empate 0×0"],certa:0,dif:"medio",exp:"A Argentina venceu a Alemanha por 2×1 em amistoso de preparação."},
+{txt:"Quantos gols Estêvão marcou contra a Coreia do Sul?",alts:["0","1","2","3","4"],certa:2,dif:"medio",exp:"Estêvão marcou dois gols no Seul World Cup Stadium na goleada por 5×0."},
+{txt:"Qual goleiro foi titular do Brasil nos amistosos pré-Copa 2026?",alts:["Alisson","Ederson","Weverton","Bento","Santos"],certa:0,dif:"medio",exp:"Alisson Becker foi o goleiro titular do Brasil nos amistosos pré-Copa 2026."},
+{txt:"Quem converteu pênalti para o Brasil no amistoso contra o México?",alts:["Endrick","Raphinha","Vinicius Jr","Rodrygo","Bruno Guimarães"],certa:1,dif:"medio",exp:"Raphinha converteu o pênalti que deu a vitória ao Brasil por 1×0."},
+{txt:"Qual foi o placar do Brasil x Coreia do Sul em Seul em maio 2026?",alts:["3×0","4×0","5×0","6×1","2×0"],certa:2,dif:"medio",exp:"Brasil goleou a Coreia do Sul por 5×0 em Seul."},
+{txt:"Qual seleção europeia perdeu dois amistosos seguidos pré-Copa 2026?",alts:["Espanha","Itália","França","Alemanha","Portugal"],certa:2,dif:"medio",exp:"A França perdeu para Costa do Marfim e depois para a Bélgica."},
+{txt:"Qual time tem mais jogadores brasileiros convocados para a Copa 2026?",alts:["Flamengo","Palmeiras","Real Madrid","Manchester City","Barcelona"],certa:2,dif:"medio",exp:"O Real Madrid liderou com Vinicius, Rodrygo e Militão convocados."},
+{txt:"Qual foi o resultado do amistoso México x Sérvia em junho 2026?",alts:["México 1×0","México 3×1","Empate 0×0","Sérvia 2×1","México 2×0"],certa:1,dif:"medio",exp:"O México venceu a Sérvia por 3×1 em amistoso de preparação."},
+{txt:"Qual atacante argentino foi convocado sem clube para a Copa 2026?",alts:["Di María","Agüero","Lautaro","Dybala","Messi"],certa:0,dif:"medio",exp:"Ángel Di María foi convocado mesmo sem clube definido para sua última Copa."},
+{txt:"Qual foi o resultado do amistoso França x Brasil em Paris em 2025?",alts:["França 1×0","Empate 1×1","Brasil 2×1","França 2×0","Empate 0×0"],certa:1,dif:"medio",exp:"França e Brasil empataram por 1×1 no Parque dos Príncipes."},
+{txt:"Qual lateral se consolidou como titular do Brasil nos amistosos 2026?",alts:["Danilo","Alex Telles","Guilherme Arana","Yan Couto","Renan Lodi"],certa:3,dif:"medio",exp:"Yan Couto se consolidou como lateral-direito titular do Brasil."},
+{txt:"Qual jogador do Brasil marcou golaço de bicicleta contra o Panamá?",alts:["Endrick","Vinicius Jr","Estêvão","Rodrygo","Raphinha"],certa:2,dif:"medio",exp:"Estêvão marcou um golaço de bicicleta na goleada por 6×2 sobre o Panamá."},
+{txt:"Qual seleção africana venceu Portugal e Espanha em amistosos pré-Copa?",alts:["Nigéria","Senegal","Marrocos","Costa do Marfim","Mali"],certa:2,dif:"medio",exp:"Marrocos venceu Portugal e Espanha em amistosos consecutivos antes da Copa 2026."},
+{txt:"Qual capitão liderou o Brasil nos amistosos pré-Copa 2026?",alts:["Casemiro","Marquinhos","Alisson","Thiago Silva","Bruno Guimarães"],certa:1,dif:"medio",exp:"Marquinhos foi o capitão da Seleção Brasileira nos amistosos de preparação."},
+{txt:"Quantos gols o Brasil marcou nos amistosos de 2026 até junho?",alts:["8","10","14","18","22"],certa:2,dif:"medio",exp:"O Brasil marcou 14 gols nos amistosos de preparação para a Copa 2026."},
+{txt:"Qual foi o resultado do amistoso Espanha x Brasil em março 2026?",alts:["Espanha 2×1","Empate 1×1","Brasil 2×0","Espanha 1×0","Empate 0×0"],certa:3,dif:"medio",exp:"A Espanha venceu o Brasil por 1×0 em amistoso em Madrid."},
+{txt:"Qual foi o resultado do amistoso Portugal x Brasil em fevereiro 2026?",alts:["Portugal 2×0","Empate 0×0","Brasil 1×0","Portugal 1×0","Empate 1×1"],certa:3,dif:"medio",exp:"Portugal venceu o Brasil por 1×0 em amistoso em Lisboa."},
+{txt:"Qual jogador recebeu sua primeira convocação para o Brasil em 2026?",alts:["Estêvão","Savinho","Pedrinho","Igor Jesus","Yan Couto"],certa:3,dif:"medio",exp:"Igor Jesus, do Botafogo, recebeu sua primeira convocação em 2026."},
+{txt:"Qual seleção foi a última a se classificar para a Copa 2026?",alts:["Nova Zelândia","Venezuela","Bahrein","Papua Nova Guiné","Congo"],certa:3,dif:"medio",exp:"Papua Nova Guiné se classificou no playoff intercontinental."},
+{txt:"Qual meio-campista foi eleito melhor em campo no Brasil x Egito?",alts:["Casemiro","Paquetá","Bruno Guimarães","Gerson","Andreas Pereira"],certa:2,dif:"medio",exp:"Bruno Guimarães foi eleito o melhor em campo após marcar e comandar o jogo."},
+{txt:"Quantos gols Endrick marcou nos amistosos de preparação do Brasil?",alts:["1","2","3","4","5"],certa:2,dif:"medio",exp:"Endrick marcou 3 gols nos amistosos de preparação para a Copa 2026."},
+{txt:"Qual lateral brasileiro foi reserva nos amistosos pré-Copa 2026?",alts:["Danilo","Alex Sandro","Guilherme Arana","Renan Lodi","Alex Telles"],certa:2,dif:"medio",exp:"Guilherme Arana foi reserva de Yan Couto nos amistosos de 2026."},
+{txt:"Qual seleção usou sistema 5-3-2 nos amistosos pré-Copa 2026?",alts:["Brasil","Alemanha","Itália","Argentina","Holanda"],certa:2,dif:"medio",exp:"A Itália utilizou o esquema 5-3-2 na maioria dos amistosos de preparação para a Copa 2026."},
+{txt:"Qual atacante brasileiro voltou de lesão a tempo para a Copa 2026?",alts:["Neymar","Gabriel Jesus","Pedro","Luiz Henrique","Hulk"],certa:1,dif:"medio",exp:"Gabriel Jesus se recuperou de lesão no joelho a tempo de ser convocado para a Copa 2026."},
+{txt:"Qual foi o placar do amistoso Brasil x Equador em março 2026?",alts:["Brasil 2×0","Brasil 1×0","Brasil 3×1","Empate 1×1","Brasil 4×0"],certa:0,dif:"medio",exp:"O Brasil venceu o Equador por 2×0 em amistoso realizado nos EUA em março de 2026."},
+{txt:"Qual zagueiro foi convocado pela primeira vez para a Seleção em 2026?",alts:["Murillo","Fabrício Bruno","Lucas Beraldo","Léo Ortiz","Nino"],certa:2,dif:"medio",exp:"Lucas Beraldo, que atua no PSG, foi chamado pela primeira vez para a Seleção em 2026."},
+{txt:"Qual foi o resultado do amistoso EUA x Turquia em maio 2026?",alts:["EUA 3×0","EUA 2×1","Empate 1×1","Turquia 2×0","EUA 1×0"],certa:0,dif:"medio",exp:"Os EUA venceram a Turquia por 3×0 em amistoso de preparação para a Copa que sediam."},
+{txt:"Qual jogador brasileiro usou a camisa 7 nos amistosos pré-Copa?",alts:["Raphinha","Rodrygo","Savinho","Gabriel Martinelli","Vinicius Jr"],certa:3,dif:"medio",exp:"Gabriel Martinelli usou a camisa 7 da Seleção Brasileira nos amistosos de 2026."},
+{txt:"Qual seleção derrotou o Japão por 3×0 em amistoso em maio 2026?",alts:["EUA","França","Alemanha","Espanha","Brasil"],certa:3,dif:"medio",exp:"A Espanha derrotou o Japão por 3×0 em amistoso de preparação para a Copa 2026."},
+{txt:"Qual time venceu o duelo de treinadores Ancelotti x Guardiola nos amistosos?",alts:["Brasil","Argentina","Espanha","Portugal","França"],certa:0,dif:"medio",exp:"O Brasil de Ancelotti venceu a Espanha de Guardiola por 2×1 em amistoso disputado em março de 2026."},
+
+// ======= DIFÍCEIS — COPA 2026 E COPAS PASSADAS =======
+{txt:"Qual estádio sedia a estreia do Brasil na Copa 2026?",alts:["Rose Bowl","AT&T Stadium","SoFi Stadium","MetLife Stadium","Levi's Stadium"],certa:1,dif:"dificil",exp:"O Brasil estreia contra Marrocos no AT&T Stadium, em Dallas, Texas."},
+{txt:"Qual defensor do Brasil foi artilheiro da seleção nos amistosos pré-Copa?",alts:["Marquinhos","Militão","Bremer","Gabriel Magalhães","Danilo"],certa:0,dif:"dificil",exp:"Marquinhos marcou de cabeça em dois amistosos, sendo o zagueiro mais artilheiro."},
+{txt:"Quantos estádios nos EUA sediam a Copa 2026?",alts:["8","10","11","12","13"],certa:2,dif:"dificil",exp:"11 estádios nos EUA fazem parte da Copa 2026, mais 3 no México e 2 no Canadá."},
+{txt:"Qual foi o resultado do amistoso Holanda x Brasil em março 2026?",alts:["Holanda 2×1","Empate 1×1","Brasil 2×0","Holanda 1×0","Empate 2×2"],certa:3,dif:"dificil",exp:"A Holanda venceu o Brasil por 1×0 em amistoso disputado em Amsterdã em março de 2026."},
+{txt:"Qual árbitro apitou o amistoso Brasil x Egito em Cleveland?",alts:["Howard Webb","Szymon Marciniak","Clément Turpin","Ivan Barton","Facundo Tello"],certa:3,dif:"dificil",exp:"O árbitro salvadorenho Ivan Barton foi designado para o amistoso Brasil x Egito."},
+{txt:"Qual lateral brasileiro falhou no amistoso contra a Espanha em 2026?",alts:["Yan Couto","Guilherme Arana","Danilo","Renan Lodi","Alex Sandro"],certa:0,dif:"dificil",exp:"Yan Couto foi pressionado e falhou na marcação no gol da vitória espanhola."},
+{txt:"Qual foi o número de seleções africanas classificadas para a Copa 2026?",alts:["6","7","8","9","10"],certa:3,dif:"dificil",exp:"9 seleções africanas se classificaram para a Copa 2026 com a expansão para 48 times."},
+{txt:"Qual país da CONCACAF mais seleções enviou para a Copa 2026?",alts:["México","EUA","Costa Rica","Honduras","Jamaica"],certa:1,dif:"dificil",exp:"Os EUA enviaram a maior delegação da CONCACAF com 4 jogadores em destaque."},
+{txt:"Qual foi a convocação mais surpreendente do Brasil para a Copa 2026?",alts:["Neymar","Vinicius Jr","Hulk","Igor Jesus","Estêvão"],certa:3,dif:"dificil",exp:"Igor Jesus foi a convocação surpresa de Ancelotti para a Copa 2026."},
+{txt:"Em qual estádio o Brasil jogou o amistoso contra a Coreia do Sul?",alts:["Estádio Olímpico de Seul","Incheon Asiad Main Stadium","Seul World Cup Stadium","Busan Asiad Main Stadium","DGB Daegu Bank Park"],certa:2,dif:"dificil",exp:"O amistoso foi disputado no Seul World Cup Stadium, em Seul."},
+{txt:"Qual foi o resultado do amistoso Croácia x Brasil em novembro 2025?",alts:["Croácia 2×1","Empate 0×0","Brasil 1×0","Croácia 1×0","Empate 1×1"],certa:3,dif:"dificil",exp:"A Croácia venceu o Brasil por 1×0 em amistoso em novembro de 2025."},
+{txt:"Qual zagueiro marcou de cabeça dois amistosos seguidos pelo Brasil em 2026?",alts:["Bremer","Militão","Marquinhos","Gabriel Magalhães","Léo Ortiz"],certa:2,dif:"dificil",exp:"Marquinhos marcou dois gols de cabeça em amistosos consecutivos em 2026."},
+{txt:"Qual foi o número de gols sofridos pelo Brasil nos amistosos pré-Copa 2026?",alts:["2","3","4","5","6"],certa:3,dif:"dificil",exp:"O Brasil sofreu 5 gols nos amistosos de preparação para a Copa 2026."},
+{txt:"Qual seleção asiática causou surpresa eliminando um favorito nos playoffs 2026?",alts:["Japão","Coreia do Sul","Arábia Saudita","Irã","Austrália"],certa:0,dif:"dificil",exp:"O Japão surpreendeu e eliminou a Colômbia no playoff intercontinental para a Copa 2026."},
+{txt:"Qual camisa do Brasil foi lançada com maior polêmica antes da Copa 2026?",alts:["Camisa I (amarela)","Camisa II (azul)","Camisa III (verde)","Camisa de goleiro","Camisa de treino"],certa:1,dif:"dificil",exp:"A camisa II azul do Brasil para a Copa 2026 gerou polêmica por um detalhe no design."},
+{txt:"Qual foi o resultado do amistoso Bélgica x Brasil em setembro 2025?",alts:["Bélgica 2×1","Empate 1×1","Brasil 2×1","Bélgica 1×0","Empate 0×0"],certa:2,dif:"dificil",exp:"O Brasil venceu a Bélgica por 2×1 em amistoso disputado em setembro de 2025."},
+{txt:"Qual árbitro apitou a final da Copa do Mundo de 2022?",alts:["Howard Webb","Szymon Marciniak","Clément Turpin","Danny Makkelie","Wilton Sampaio"],certa:1,dif:"dificil",exp:"O árbitro polonês Szymon Marciniak apitou a final entre Argentina e França em 2022."},
+{txt:"Qual foi o único gol de pênalti marcado na final da Copa de 2022?",alts:["Mbappé no 1º tempo","Messi no 2º tempo","Mbappé na prorrogação","Messi nos pênaltis","Messi no 2º tempo da prorrogação"],certa:1,dif:"dificil",exp:"Messi converteu o pênalti que fez 2×0 para a Argentina no segundo tempo da final de 2022."},
+{txt:"Quantos jogadores foram expulsos na história das finais de Copa?",alts:["1","2","3","4","5"],certa:2,dif:"dificil",exp:"Apenas 3 jogadores foram expulsos em finais de Copa: Monti (1930), Coelho (1978) e Zidane (2006)."},
+{txt:"Qual foi o primeiro time a ser campeão e vice-campeão da Copa do Mundo?",alts:["Brasil","Uruguai","Itália","Alemanha","Argentina"],certa:1,dif:"dificil",exp:"O Uruguai foi campeão em 1930 e vice-campeão em 1950, no Maracanazo."},
 ];
+
+// ANTI-REPETIÇÃO: guarda IDs das últimas perguntas no localStorage
+const HIST_KEY='quiz_hist_pergs';
+function getHist(){try{return JSON.parse(localStorage.getItem(HIST_KEY)||'[]');}catch{return[];}}
+function addHist(ids){
+  let h=getHist();
+  h=h.concat(ids);
+  if(h.length>MAX_HIST)h=h.slice(h.length-MAX_HIST);
+  localStorage.setItem(HIST_KEY,JSON.stringify(h));
+}
+
+function sortearPerguntas(){
+  const hist=getHist();
+  // Filtra perguntas não vistas recentemente
+  function filtrar(dif){
+    const todas=BANCO.map((p,i)=>({...p,_i:i})).filter(p=>p.dif===dif);
+    const novas=todas.filter(p=>!hist.includes(p._i));
+    return novas.length>0?novas:todas; // se todas vistas, reseta
+  }
+  const f=shuffle(filtrar('facil'));
+  const m=shuffle(filtrar('medio'));
+  const d=shuffle(filtrar('dificil'));
+  const sel=[f[0],m[0],m[1],d[0],d[1]];
+  addHist(sel.map(p=>p._i));
+  return sel;
+}
 
 // AUDIO
 const AC=new(window.AudioContext||window.webkitAudioContext)();
 function resumirAudio(){if(AC.state==='suspended')AC.resume();}
-function beep(notas){notas.forEach(([f,t,d,tp])=>{const o=AC.createOscillator(),g=AC.createGain();o.connect(g);g.connect(AC.destination);o.frequency.value=f;o.type=tp||'sine';g.gain.setValueAtTime(0,AC.currentTime+t);g.gain.linearRampToValueAtTime(0.2,AC.currentTime+t+0.04);g.gain.linearRampToValueAtTime(0,AC.currentTime+t+d);o.start(AC.currentTime+t);o.stop(AC.currentTime+t+d+0.05);});}
+function beep(n){n.forEach(([f,t,d,tp])=>{const o=AC.createOscillator(),g=AC.createGain();o.connect(g);g.connect(AC.destination);o.frequency.value=f;o.type=tp||'sine';g.gain.setValueAtTime(0,AC.currentTime+t);g.gain.linearRampToValueAtTime(0.2,AC.currentTime+t+0.04);g.gain.linearRampToValueAtTime(0,AC.currentTime+t+d);o.start(AC.currentTime+t);o.stop(AC.currentTime+t+d+0.05);});}
 function beepAcerto(){beep([[523,0,0.2],[659,0.13,0.2],[784,0.26,0.25]]);}
 function beepErro(){beep([[330,0,0.15,'sawtooth'],[262,0.16,0.18,'sawtooth']]);}
-function jingleVitoria(){beep([[523,0,0.14,'triangle'],[523,0.15,0.14,'triangle'],[523,0.30,0.14,'triangle'],[523,0.46,0.08,'triangle'],[659,0.54,0.28,'triangle'],[587,0.88,0.1,'triangle'],[523,1.0,0.1,'triangle'],[494,1.12,0.1,'triangle'],[440,1.24,0.38,'triangle'],[523,1.7,0.48,'triangle']]);}
-function jingleBrinde(){beep([[523,0,0.09],[659,0.10,0.09],[784,0.20,0.09],[1047,0.30,0.24],[784,0.57,0.09],[880,0.68,0.09],[1047,0.79,0.33],[784,1.15,0.09],[880,1.26,0.09],[988,1.37,0.09],[1047,1.48,0.48]]);}
+function beepUrgente(){beep([[440,0,0.08,'square']]);}
+function jingleEspresso(){beep([[523,0,0.14,'triangle'],[523,0.15,0.14,'triangle'],[523,0.3,0.14,'triangle'],[659,0.48,0.28,'triangle'],[587,0.82,0.1,'triangle'],[523,0.95,0.1,'triangle'],[659,1.08,0.38,'triangle'],[523,1.5,0.5,'triangle']]);}
+function jingleCappuccino(){beep([[523,0,0.09],[659,0.1,0.09],[784,0.2,0.09],[1047,0.3,0.24],[784,0.57,0.09],[880,0.68,0.09],[1047,0.79,0.33],[784,1.15,0.09],[880,1.26,0.09],[988,1.37,0.09],[1047,1.48,0.48]]);}
 
-// VALIDAÇÃO TOKEN
-function janelaToken(ts){
-  // Arredonda timestamp para janela de 30 min
-  return Math.floor(ts / (30*60*1000));
-}
-
+// VALIDAÇÃO TOKEN (90 min)
 function validarToken(token){
-  if(!token||token.length<17) return null;
-  const data=token.slice(0,9);   // AAMMDDHHJ (ano2dig+mes+dia+hora+janela)
-  const comanda=token.slice(9,13);
-  const hashRecebido=token.slice(13);
-  const raw=data+comanda+SALT;
-  let hash=0;
-  for(let i=0;i<raw.length;i++) hash=((hash<<5)-hash)+raw.charCodeAt(i),hash|=0;
-  const hashEsperado=Math.abs(hash).toString(36).toUpperCase().padStart(8,'0').slice(0,8);
-  if(hashRecebido!==hashEsperado) return null;
-
-  // Verificar validade: data do token vs agora
-  const now=new Date();
-  const ano=parseInt('20'+data.slice(0,2));
-  const mes=parseInt(data.slice(2,4))-1;
-  const dia=parseInt(data.slice(4,6));
-  const hora=parseInt(data.slice(6,8));
-  const janela=parseInt(data.slice(8,9));
-  const tokenDate=new Date(ano,mes,dia,hora, janela===0?0:30, 0);
+  if(!token||token.length<18)return null;
+  const data=token.slice(0,10),comanda=token.slice(10,14),hashR=token.slice(14);
+  const raw=data+comanda+SALT;let hash=0;
+  for(let i=0;i<raw.length;i++)hash=((hash<<5)-hash)+raw.charCodeAt(i),hash|=0;
+  const hashE=Math.abs(hash).toString(36).toUpperCase().padStart(8,'0').slice(0,8);
+  if(hashR!==hashE)return null;
+  const now=new Date(),ano=parseInt('20'+data.slice(0,2)),mes=parseInt(data.slice(2,4))-1,dia=parseInt(data.slice(4,6)),hora=parseInt(data.slice(6,8)),janela=parseInt(data.slice(8,10));
+  const minInicio=janela*90,tokenDate=new Date(ano,mes,dia,Math.floor(minInicio/60),minInicio%60,0);
   const diffMin=(now-tokenDate)/(1000*60);
-  if(diffMin<-5||diffMin>=35) return {expirado:true};
-
-  return {comanda:parseInt(comanda), valido:true};
+  if(diffMin<0||diffMin>=90)return{expirado:true};
+  return{comanda:parseInt(comanda),valido:true};
 }
-
-function tokenJaUsado(t){return !!localStorage.getItem('token_used_'+t);}
-function marcarUsado(t){localStorage.setItem('token_used_'+t, Date.now().toString());}
+function tokenJaUsado(t){return!!localStorage.getItem('token_used_'+t);}
+function marcarUsado(t){localStorage.setItem('token_used_'+t,Date.now().toString());}
 
 // ESTADO
-let TOKEN=null,IDX=0,ACERTOS=0,PERGS=[];
+let TOKEN=null,IDX=0,ACERTOS=0,PERGS=[],cronoTimer=null,cronoSeg=TEMPO;
 
 function ir(id){document.querySelectorAll('.tela').forEach(t=>t.classList.toggle('oculta',t.id!==id));}
+
+function dataHora(){
+  const now=new Date();
+  return{
+    d:String(now.getDate()).padStart(2,'0')+'/'+String(now.getMonth()+1).padStart(2,'0')+'/'+now.getFullYear(),
+    h:String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0')
+  };
+}
 
 window.onload=function(){
   const params=new URLSearchParams(window.location.search);
@@ -246,9 +432,40 @@ window.onload=function(){
 
 function comecar(){
   resumirAudio();
-  PERGS=shuffle([...PERGUNTAS]);
+  PERGS=sortearPerguntas();
   IDX=0;ACERTOS=0;
   ir('telaQuiz');renderQ();
+}
+
+function iniciarCrono(){
+  pararCrono();cronoSeg=TEMPO;atualizarCrono();
+  cronoTimer=setInterval(()=>{
+    cronoSeg--;atualizarCrono();
+    if(cronoSeg<=3)beepUrgente();
+    if(cronoSeg<=0){pararCrono();timeoutResposta();}
+  },1000);
+}
+function pararCrono(){if(cronoTimer){clearInterval(cronoTimer);cronoTimer=null;}}
+function atualizarCrono(){
+  const pct=(cronoSeg/TEMPO)*100;
+  const bar=document.getElementById('cronoBar'),num=document.getElementById('cronoNum');
+  bar.style.width=pct+'%';num.textContent=Math.max(0,cronoSeg);
+  if(cronoSeg<=4){bar.style.background='#e33';num.className='crono-num urgente';}
+  else if(cronoSeg<=8){bar.style.background='#fa0';num.className='crono-num';}
+  else{bar.style.background='#009c3b';num.className='crono-num';}
+}
+function timeoutResposta(){
+  const p=PERGS[IDX];
+  document.querySelectorAll('.alt').forEach((b,i)=>{
+    b.classList.add('disabled');
+    if(i===p.certa)b.classList.add('certa');else b.classList.add('timeout');
+  });
+  const fb=document.getElementById('feedbackQ');
+  fb.className='feedback-q timeout';
+  fb.textContent='⏰ Tempo! Certa: '+p.alts[p.certa]+'. '+p.exp;
+  beepErro();
+  document.getElementById('btnProx').style.display='block';
+  document.getElementById('btnProx').textContent=IDX===4?'🏁 VER RESULTADO':'➡️ PRÓXIMA';
 }
 
 function renderQ(){
@@ -270,11 +487,11 @@ function renderQ(){
   document.getElementById('feedbackQ').className='feedback-q';
   document.getElementById('feedbackQ').textContent='';
   document.getElementById('btnProx').style.display='none';
-  document.getElementById('btnProx').textContent=IDX===4?'🏁 VER RESULTADO':'➡️ PRÓXIMA PERGUNTA';
+  iniciarCrono();
 }
 
 function responder(escolha){
-  resumirAudio();
+  pararCrono();resumirAudio();
   const p=PERGS[IDX];
   document.querySelectorAll('.alt').forEach((b,i)=>{
     b.classList.add('disabled');
@@ -285,47 +502,84 @@ function responder(escolha){
   if(escolha===p.certa){ACERTOS++;document.getElementById('scoreAtual').textContent=ACERTOS;fb.className='feedback-q acerto';fb.textContent='✅ Correto! '+p.exp;beepAcerto();}
   else{fb.className='feedback-q erro';fb.textContent='❌ Errou! '+p.exp;beepErro();}
   document.getElementById('btnProx').style.display='block';
+  document.getElementById('btnProx').textContent=IDX===4?'🏁 VER RESULTADO':'➡️ PRÓXIMA';
 }
 
 function proxima(){resumirAudio();IDX++;if(IDX>=5){finalizar();return;}renderQ();}
 
 function finalizar(){
-  marcarUsado(TOKEN);
+  pararCrono();marcarUsado(TOKEN);
+  const{d,h}=dataHora();
   const tel=document.getElementById('telaResultado');
-  if(ACERTOS>=3){
-    const brinde=ACERTOS===5;
-    setTimeout(()=>{brinde?jingleBrinde():jingleVitoria();},300);
-    tel.innerHTML=`<div class="res-inner">
+
+  if(ACERTOS<3){
+    tel.innerHTML=`
+    <div class="res-sem">
+      <div class="res-sem-topo">
+        <span class="res-sem-emoji">⚽☕🌺</span>
+        <div class="res-sem-titulo">Obrigado por Participar!</div>
+        <div class="res-sem-sub">Você acertou ${ACERTOS} de 5 perguntas</div>
+      </div>
+      <div class="res-sem-body">
+        <div class="res-sem-score">
+          <div class="res-sem-n">${ACERTOS}</div>
+          <div class="res-sem-l">DE 5<br>ACERTOS</div>
+        </div>
+        <div class="res-sem-txt">
+          Agradecemos sua visita ao <strong>Café com Orquídea</strong>.<br><br>
+          Esperamos que tenha se divertido com nosso <strong>Quiz da Copa do Mundo</strong>.<br><br>
+          Você pode voltar outro dia para tentar ganhar!<br>
+          A cada nova comanda, um novo desafio espera por você! 😊
+        </div>
+        <div class="res-sem-volte">
+          📅 Volte amanhã com uma nova comanda<br>e tente conquistar seu prêmio!
+        </div>
+        <div class="res-sem-rodape">
+          Quiz da Copa do Mundo 2026<br>
+          Café com Orquídea • Santo Antônio do Pinhal<br>
+          Serra da Mantiqueira 🌿
+          <div class="res-sem-icons">⚽☕🌺</div>
+        </div>
+      </div>
+    </div>`;
+
+  } else {
+    const cappuccino=ACERTOS===5;
+    setTimeout(()=>{cappuccino?jingleCappuccino():jingleEspresso();},300);
+    tel.innerHTML=`
+    <div class="res-premio-wrap">
       <div class="res-cafe-logo">☕ CAFÉ COM ORQUÍDEA</div>
       <div class="res-box">
-        <div class="res-topo">
+        <div class="res-topo ${cappuccino?'cappuccino':'espresso'}">
           <div class="res-topo-deco"></div>
-          <div class="res-estrelas">★ ★ ★ ★ ★</div>
-          <div class="res-titulo">${brinde?'🌟 BRINDE ESPECIAL!':'🏆 PARABÉNS!'}</div>
-          <div class="res-subtitulo">${brinde?'Acertou TODAS as 5!':'Você acertou '+ACERTOS+' de 5!'}</div>
+          <div class="res-trofeus">${cappuccino?'🏆🏆':'🏆'}</div>
+          <div class="res-titulo">PARABÉNS!</div>
+          <div class="res-subtitulo">${cappuccino?'VOCÊ ACERTOU TODAS AS 5 PERGUNTAS!':'Você acertou '+ACERTOS+' de 5 perguntas.'}</div>
         </div>
         <div class="res-corpo">
-          <div class="res-cafe-nome">☕ CAFÉ COM ORQUÍDEA</div>
-          <span class="res-icone">${brinde?'🍌':'☕'}</span>
-          <div class="res-premio">${brinde?'BANOFFEE GRÁTIS!':'CAFÉ GRÁTIS!'}</div>
-          <div class="res-desc">${brinde?'Banoffee artesanal — doce de leite,<br>banana fresca e chantili 🍌':'Um café especial da Serra da Mantiqueira<br>esperando por você! ☕'}</div>
-          <div class="res-instrucao">📲 Mostre essa tela ao atendente e resgate seu prêmio!</div>
+          <div class="res-cafe-nome-box">☕ CAFÉ COM ORQUÍDEA</div>
+          <span class="res-icone-premio">${cappuccino?'☕✨':'☕'}</span>
+          <div class="res-voce-ganhou">Você ganhou:</div>
+          <div class="res-nome-premio">${cappuccino?'☕✨ CAPPUCCINO ESPECIAL DA COPA':'☕ CAFÉ ESPRESSO TRADICIONAL'}</div>
+          <div class="res-unidade">1 (uma) unidade</div>
+          <div class="res-instrucao">📲 Apresente esta tela a um de nossos<br>atendentes para retirar seu prêmio.</div>
+          <div class="res-datetime">
+            <div class="res-dt-box"><div class="res-dt-n">${d}</div><div class="res-dt-l">DATA</div></div>
+            <div class="res-dt-box"><div class="res-dt-n">${h}</div><div class="res-dt-l">HORA</div></div>
+          </div>
           <div class="res-pts">
             <div class="res-pt"><div class="res-pt-n">${ACERTOS}</div><div class="res-pt-l">ACERTOS</div></div>
             <div class="res-pt"><div class="res-pt-n">${5-ACERTOS}</div><div class="res-pt-l">ERROS</div></div>
             <div class="res-pt"><div class="res-pt-n">${Math.round(ACERTOS/5*100)}%</div><div class="res-pt-l">APROVEIT.</div></div>
           </div>
-          <div class="res-rodape">Quiz da Copa 2026 • Café com Orquídea<br>Santo Antônio do Pinhal — Serra da Mantiqueira 🌿</div>
+          <div class="res-rodape">
+            Obrigado por participar do Quiz da Copa do Mundo<br>
+            do Café com Orquídea.<br>
+            Santo Antônio do Pinhal — Serra da Mantiqueira 🌿
+          </div>
         </div>
-      </div></div>`;
-  } else {
-    tel.innerHTML=`<div class="res-inner"><div class="res-sem">
-      <span class="res-sem-emoji">😅⚽</span>
-      <div class="res-sem-titulo">Quase lá, campeão!</div>
-      <div class="res-sem-sub">Você acertou ${ACERTOS} de 5.<br>Precisa de 3 para ganhar o café.<br>Volte e tente com uma nova comanda!</div>
-      <div class="res-sem-score"><div class="res-sem-n">${ACERTOS}/5</div><div class="res-sem-l">ACERTOS</div></div>
-      <div style="font-size:12px;color:#afd;line-height:1.5">☕ Venha tomar mais um café e tente novamente!</div>
-    </div></div>`;
+      </div>
+    </div>`;
   }
   ir('telaResultado');
 }
