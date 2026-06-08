@@ -199,10 +199,10 @@ function janelaToken(ts){
 }
 
 function validarToken(token){
-  if(!token||token.length<18) return null;
-  const data=token.slice(0,10);   // AAMMDDHHJ (ano2dig+mes+dia+hora+janela)
-  const comanda=token.slice(10,14);
-  const hashRecebido=token.slice(14);
+  if(!token||token.length<17) return null;
+  const data=token.slice(0,9);   // AAMMDDHHJ (ano2dig+mes+dia+hora+janela)
+  const comanda=token.slice(9,13);
+  const hashRecebido=token.slice(13);
   const raw=data+comanda+SALT;
   let hash=0;
   for(let i=0;i<raw.length;i++) hash=((hash<<5)-hash)+raw.charCodeAt(i),hash|=0;
@@ -215,7 +215,7 @@ function validarToken(token){
   const mes=parseInt(data.slice(2,4))-1;
   const dia=parseInt(data.slice(4,6));
   const hora=parseInt(data.slice(6,8));
-  const janela=parseInt(data.slice(8,10));
+  const janela=parseInt(data.slice(8,9));
   const tokenDate=new Date(ano,mes,dia,hora, janela===0?0:30, 0);
   const diffMin=(now-tokenDate)/(1000*60);
   if(diffMin<-5||diffMin>=35) return {expirado:true};
