@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Gerador — Café com Orquídea</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{width:100%;min-height:100vh;background:#0d3d18;font-family:'Segoe UI',Arial,sans-serif;display:flex;flex-direction:column;align-items:center;padding:20px 16px 40px;}
+
+.card{background:rgba(10,50,20,0.9);border:2px solid #FFD700;border-radius:24px;padding:26px 20px;width:100%;max-width:360px;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,0.5);margin-bottom:16px;}
+.logo{font-size:10px;color:#FFD700;letter-spacing:3px;font-weight:700;margin-bottom:4px;}
+.mascote{font-size:48px;display:block;margin-bottom:6px;animation:float 3s ease-in-out infinite;}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-8px) rotate(2deg)}}
+.titulo{font-size:17px;font-weight:900;color:#fff;margin-bottom:2px;}
+.sub{font-size:11px;color:#afd;margin-bottom:18px;}
+
+.janela-info{background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.3);border-radius:10px;padding:8px 12px;font-size:11px;color:#FFD700;margin-bottom:16px;display:flex;align-items:center;gap:6px;text-align:left;}
+
+.input-label{font-size:11px;color:#FFD700;font-weight:700;letter-spacing:1px;margin-bottom:6px;text-align:left;display:block;}
+.input-comanda{width:100%;padding:14px;border-radius:14px;border:2px solid rgba(255,215,0,0.4);background:rgba(255,255,255,0.08);color:#fff;font-size:24px;font-weight:900;text-align:center;outline:none;letter-spacing:4px;margin-bottom:14px;}
+.input-comanda:focus{border-color:#FFD700;}
+.input-comanda::placeholder{color:rgba(255,255,255,0.25);font-size:13px;letter-spacing:1px;}
+
+.btn-gerar{width:100%;padding:15px;border-radius:14px;border:none;background:#FFD700;color:#1a4d00;font-size:16px;font-weight:900;cursor:pointer;box-shadow:0 4px 0 #b09000;transition:transform 0.1s,box-shadow 0.1s;letter-spacing:0.5px;}
+.btn-gerar:active{transform:translateY(3px);box-shadow:0 1px 0 #b09000;}
+
+.qr-area{display:none;margin-top:18px;}
+.qr-area.show{display:block;}
+.divider{height:1px;background:rgba(255,215,0,0.2);margin-bottom:16px;}
+.qr-instrucao{font-size:12px;color:#afd;margin-bottom:10px;line-height:1.5;}
+.qr-comanda{font-size:13px;color:#FFD700;font-weight:700;margin-bottom:10px;}
+.qr-comanda span{color:#fff;font-size:17px;}
+.qr-validade{font-size:11px;color:#9fd;margin-bottom:12px;}
+.qr-box{background:#fff;border-radius:14px;padding:14px;display:inline-block;box-shadow:0 4px 20px rgba(0,0,0,0.3);margin-bottom:14px;}
+.btn-novo{width:100%;padding:12px;border-radius:12px;border:2px solid rgba(255,215,0,0.4);background:transparent;color:#FFD700;font-size:13px;font-weight:700;cursor:pointer;}
+.btn-novo:active{background:rgba(255,215,0,0.1);}
+
+/* historico */
+.hist-card{background:rgba(10,50,20,0.9);border:1px solid rgba(255,215,0,0.2);border-radius:16px;padding:16px;width:100%;max-width:360px;}
+.hist-titulo{font-size:10px;color:#FFD700;letter-spacing:2px;font-weight:700;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;}
+.hist-item{background:rgba(0,0,0,0.3);border:1px solid rgba(255,215,0,0.12);border-radius:10px;padding:9px 12px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#cfc;}
+.hist-item:last-child{margin-bottom:0;}
+.hist-item.usado{opacity:0.4;}
+.tag{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:700;}
+.tag-livre{background:rgba(0,200,80,0.2);color:#0f0;}
+.tag-usado{background:rgba(200,0,0,0.2);color:#f88;}
+.hist-vazio{font-size:12px;color:rgba(255,255,255,0.3);text-align:center;padding:8px;}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="logo">☕ CAFÉ COM ORQUÍDEA</div>
+  <span class="mascote">🎫</span>
+  <div class="titulo">Gerador de QR Code</div>
+  <div class="sub">Painel do Atendente</div>
+
+  <div class="janela-info">
+    ⏱️ <span id="infoJanela">Calculando janela atual...</span>
+  </div>
+
+  <label class="input-label">Nº DA COMANDA</label>
+  <input type="number" class="input-comanda" id="inputComanda" placeholder="ex: 042" min="1" max="9999" inputmode="numeric">
+  <button class="btn-gerar" onclick="gerar()">🎯 GERAR QR CODE</button>
+
+  <div class="qr-area" id="qrArea">
+    <div class="divider"></div>
+    <div class="qr-instrucao">📱 Mostre essa tela para o cliente escanear</div>
+    <div class="qr-comanda">Comanda: <span id="lblComanda">—</span></div>
+    <div class="qr-validade" id="lblValidade"></div>
+    <div class="qr-box"><div id="qrcode"></div></div>
+    <br>
+    <button class="btn-novo" onclick="novo()">➕ Gerar Novo QR Code</button>
+  </div>
+</div>
+
+<div class="hist-card">
+  <div class="hist-titulo">
+    <span>📋 HISTÓRICO DE HOJE</span>
+    <span id="contadorHist" style="color:#9fd;font-weight:700"></span>
+  </div>
+  <div id="histLista"><div class="hist-vazio">Nenhum código gerado ainda</div></div>
+</div>
+
+<script>
+// ⚠️ TROQUE pela URL do seu GitHub Pages após publicar
+// Exemplo: https://seuusuario.github.io/quiz-cafe/quiz.html
+const QUIZ_URL = 'https://eduyamada.github.io/quiz-cafe/quiz.html';
+const SALT = 'CafeOrquidea2026';
+
+function janelaAtual() {
+  const now = new Date();
+  // Janela de 30 min: 0-29 = janela 0, 30-59 = janela 1
+  const janela = Math.floor(now.getMinutes() / 30);
+  const d = now.getFullYear().toString().slice(-2)
+    + String(now.getMonth()+1).padStart(2,'0')
+    + String(now.getDate()).padStart(2,'0')
+    + String(now.getHours()).padStart(2,'0')
+    + String(janela);
+  return d;
+}
+
+function minutosRestantes() {
+  const now = new Date();
+  const minuto = now.getMinutes();
+  const janela = Math.floor(minuto / 30);
+  const fimJanela = (janela + 1) * 30;
+  return fimJanela - minuto;
+}
+
+function gerarToken(comanda) {
+  const jan = janelaAtual();
+  const raw = jan + String(comanda).padStart(4,'0') + SALT;
+  let hash = 0;
+  for(let i=0;i<raw.length;i++) hash=((hash<<5)-hash)+raw.charCodeAt(i),hash|=0;
+  const h = Math.abs(hash).toString(36).toUpperCase().padStart(8,'0').slice(0,8);
+  return jan + String(comanda).padStart(4,'0') + h;
+}
+
+function gerar() {
+  const val = document.getElementById('inputComanda').value.trim();
+  if (!val || isNaN(val) || parseInt(val) < 1) { alert('Digite o número da comanda!'); return; }
+  const comanda = parseInt(val);
+  const token = gerarToken(comanda);
+  const url = QUIZ_URL + '?t=' + token;
+  const min = minutosRestantes();
+
+  document.getElementById('lblComanda').textContent = '#' + String(comanda).padStart(3,'0');
+  document.getElementById('lblValidade').textContent = '⏱️ Válido por mais ~' + min + ' minuto(s)';
+  document.getElementById('qrcode').innerHTML = '';
+
+  new QRCode(document.getElementById('qrcode'), {
+    text: url, width: 220, height: 220,
+    colorDark:'#000', colorLight:'#fff',
+    correctLevel: QRCode.CorrectLevel.H
+  });
+
+  document.getElementById('qrArea').classList.add('show');
+  salvarHist(comanda, token);
+  renderHist();
+}
+
+function novo() {
+  document.getElementById('qrArea').classList.remove('show');
+  document.getElementById('inputComanda').value = '';
+  document.getElementById('inputComanda').focus();
+}
+
+function salvarHist(comanda, token) {
+  const hoje = diaHoje();
+  let hist = JSON.parse(localStorage.getItem('hist_'+hoje) || '[]');
+  if (!hist.find(h => h.token === token)) {
+    hist.unshift({ comanda, token, hora: horaAgora() });
+    localStorage.setItem('hist_'+hoje, JSON.stringify(hist));
+  }
+}
+
+function renderHist() {
+  const hoje = diaHoje();
+  const hist = JSON.parse(localStorage.getItem('hist_'+hoje) || '[]');
+  const lista = document.getElementById('histLista');
+  document.getElementById('contadorHist').textContent = hist.length + ' gerado(s)';
+  if (hist.length === 0) { lista.innerHTML='<div class="hist-vazio">Nenhum código gerado ainda</div>'; return; }
+  lista.innerHTML = hist.map(h => {
+    const usado = !!localStorage.getItem('token_used_'+h.token);
+    return `<div class="hist-item ${usado?'usado':''}">
+      <div>
+        <strong style="color:#FFD700">Comanda #${String(h.comanda).padStart(3,'0')}</strong>
+        <div style="color:#888;font-size:10px;margin-top:2px">${h.hora}</div>
+      </div>
+      <span class="tag ${usado?'tag-usado':'tag-livre'}">${usado?'USADO':'LIVRE'}</span>
+    </div>`;
+  }).join('');
+}
+
+function atualizarInfo() {
+  const min = minutosRestantes();
+  const jan = janelaAtual();
+  const hora = jan.slice(6,8);
+  const j = jan.slice(8);
+  const inicio = parseInt(hora) + ':' + (j==='0'?'00':'30');
+  const fimMin = j==='0'?'30':'00';
+  const fimHora = j==='0'?hora:(parseInt(hora)+1).toString().padStart(2,'0');
+  document.getElementById('infoJanela').textContent =
+    'Janela: '+inicio+' → '+fimHora+':'+fimMin+' ('+min+' min restantes)';
+}
+
+function diaHoje(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function horaAgora(){const d=new Date();return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}
+
+atualizarInfo();
+renderHist();
+setInterval(()=>{ atualizarInfo(); renderHist(); }, 30000);
+</script>
+</body>
+</html>

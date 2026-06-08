@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Quiz da Copa — Café com Orquídea</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{width:100%;height:100%;overflow:hidden;background:#0d3d18;font-family:'Segoe UI',Arial,sans-serif;}
+.bg{position:fixed;inset:0;z-index:0;background:linear-gradient(160deg,#0a4d1c 0%,#1a6b2e 55%,#0d3d18 100%);}
+.bg::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(255,215,0,0.08),transparent 70%);}
+.tela{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;z-index:10;transition:opacity 0.3s,transform 0.3s;}
+.tela.oculta{opacity:0;pointer-events:none;transform:scale(0.97);}
+
+/* BLOQUEADO / INVÁLIDO */
+.err-emoji{font-size:68px;display:block;margin-bottom:12px;}
+.err-titulo{font-size:20px;font-weight:900;margin-bottom:8px;}
+.err-sub{font-size:13px;line-height:1.55;text-align:center;max-width:290px;margin-bottom:16px;}
+.err-box{border-radius:14px;padding:14px 18px;max-width:300px;font-size:12px;line-height:1.55;text-align:center;}
+.blq .err-emoji{animation:shake 0.6s ease infinite;}
+@keyframes shake{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+.blq .err-titulo{color:#f88;}
+.blq .err-sub{color:#fcc;}
+.blq .err-box{background:rgba(200,0,0,0.15);border:1.5px solid #c00;color:#faa;}
+.inv .err-titulo{color:#fa8;}
+.inv .err-sub{color:#fcc;}
+.inv .err-box{background:rgba(200,100,0,0.15);border:1.5px solid #c80;color:#fc8;}
+
+/* EXPIRADO */
+.exp .err-emoji{animation:float 2s ease-in-out infinite;}
+.exp .err-titulo{color:#ff8;}
+.exp .err-sub{color:#ffc;}
+.exp .err-box{background:rgba(200,180,0,0.15);border:1.5px solid #cc0;color:#ff8;}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+
+/* INTRO */
+#telaIntro{gap:8px;text-align:center;}
+.logo-cafe{font-size:10px;color:#FFD700;letter-spacing:3px;font-weight:700;}
+.mascote-intro{font-size:66px;display:block;animation:float 3s ease-in-out infinite;}
+.titulo-intro{font-size:20px;font-weight:900;color:#fff;line-height:1.2;}
+.sub-intro{font-size:12px;color:#afd;}
+.regras-box{background:rgba(0,0,0,0.3);border:1px solid rgba(255,215,0,0.25);border-radius:16px;padding:11px 15px;text-align:left;width:100%;max-width:340px;}
+.regra{font-size:12px;color:#dfd;line-height:1.5;margin-bottom:3px;display:flex;gap:8px;}
+.regra:last-child{margin-bottom:0;}
+.badge-comanda{background:rgba(255,215,0,0.15);border:1px solid rgba(255,215,0,0.4);border-radius:10px;padding:6px 14px;font-size:11px;color:#FFD700;font-weight:700;}
+.btn-comecar{width:100%;max-width:340px;padding:14px;border-radius:14px;border:none;background:#FFD700;color:#1a4d00;font-size:16px;font-weight:900;cursor:pointer;box-shadow:0 4px 0 #b09000;letter-spacing:0.5px;transition:transform 0.1s,box-shadow 0.1s;}
+.btn-comecar:active{transform:translateY(3px);box-shadow:0 1px 0 #b09000;}
+
+/* QUIZ */
+#telaQuiz{gap:0;justify-content:flex-start;padding:10px 12px;}
+.quiz-header{width:100%;display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
+.quiz-logo{font-size:10px;color:#FFD700;letter-spacing:2px;font-weight:700;}
+.quiz-score{font-size:12px;color:#9f9;font-weight:700;}
+.prog-wrap{width:100%;margin-bottom:8px;}
+.prog-labels{display:flex;justify-content:space-between;font-size:10px;color:#9fd;margin-bottom:3px;}
+.prog-bar{height:7px;background:rgba(0,0,0,0.3);border-radius:10px;overflow:hidden;border:1px solid rgba(255,215,0,0.15);}
+.prog-fill{height:100%;background:linear-gradient(90deg,#009c3b,#FFD700);border-radius:10px;transition:width 0.5s ease;}
+.card-q{width:100%;background:#fff;border-radius:16px;padding:11px 13px 10px;margin-bottom:8px;border-top:5px solid #FFD700;box-shadow:0 4px 20px rgba(0,0,0,0.3);}
+.card-badge{font-size:10px;font-weight:700;letter-spacing:1px;margin-bottom:5px;display:flex;align-items:center;gap:6px;}
+.b-facil{background:#e6f9ee;color:#1a7a3a;padding:2px 8px;border-radius:20px;}
+.b-medio{background:#fff3e0;color:#e65100;padding:2px 8px;border-radius:20px;}
+.b-dificil{background:#fce4ec;color:#c62828;padding:2px 8px;border-radius:20px;}
+.card-txt{font-size:14px;font-weight:800;color:#1a4d00;line-height:1.35;}
+.alts{width:100%;display:flex;flex-direction:column;gap:6px;margin-bottom:7px;}
+.alt{width:100%;padding:10px 12px;border-radius:11px;border:2px solid rgba(255,215,0,0.3);background:rgba(255,255,255,0.08);color:#fff;font-size:13px;font-weight:600;text-align:left;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;gap:9px;}
+.alt:active{transform:scale(0.98);}
+.alt.certa{background:rgba(0,200,80,0.25);border-color:#0c0;color:#9f9;pointer-events:none;}
+.alt.errada{background:rgba(220,50,50,0.22);border-color:#c00;color:#faa;pointer-events:none;}
+.alt.disabled{opacity:0.45;pointer-events:none;}
+.alt-letra{width:22px;height:22px;border-radius:50%;background:rgba(255,215,0,0.2);color:#FFD700;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.alt.certa .alt-letra{background:#0c0;color:#fff;}
+.alt.errada .alt-letra{background:#c00;color:#fff;}
+.feedback-q{width:100%;border-radius:11px;padding:8px 12px;font-size:11px;font-weight:600;line-height:1.4;display:none;margin-bottom:7px;}
+.feedback-q.acerto{background:rgba(0,200,80,0.15);border:1.5px solid #0c0;color:#9f9;display:block;}
+.feedback-q.erro{background:rgba(220,50,50,0.15);border:1.5px solid #c00;color:#faa;display:block;}
+.btn-prox{width:100%;padding:13px;border-radius:13px;border:none;background:#FFD700;color:#1a4d00;font-size:15px;font-weight:900;cursor:pointer;box-shadow:0 4px 0 #b09000;display:none;transition:transform 0.1s,box-shadow 0.1s;}
+.btn-prox:active{transform:translateY(3px);box-shadow:0 1px 0 #b09000;}
+
+/* RESULTADO */
+#telaResultado{overflow-y:auto;justify-content:flex-start;padding-top:20px;}
+.res-inner{width:100%;max-width:360px;}
+.res-cafe-logo{font-size:10px;color:#FFD700;letter-spacing:3px;font-weight:700;text-align:center;margin-bottom:10px;}
+.res-box{border-radius:22px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,0.5);border:2px solid #FFD700;}
+.res-topo{background:linear-gradient(135deg,#009c3b,#006b28);padding:20px 20px 14px;text-align:center;position:relative;}
+.res-topo-deco{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(255,215,0,0.18),transparent 70%);}
+.res-estrelas{font-size:18px;letter-spacing:5px;margin-bottom:4px;position:relative;z-index:1;}
+.res-titulo{font-size:20px;font-weight:900;color:#FFD700;margin-bottom:2px;position:relative;z-index:1;text-shadow:0 2px 8px rgba(0,0,0,0.4);}
+.res-subtitulo{font-size:12px;color:#cfc;position:relative;z-index:1;}
+.res-corpo{background:#fff;padding:16px 18px 18px;text-align:center;}
+.res-cafe-nome{font-size:10px;color:#888;letter-spacing:2px;font-weight:700;margin-bottom:8px;}
+.res-icone{font-size:50px;margin-bottom:6px;animation:float 2s ease-in-out infinite;display:block;}
+.res-premio{font-size:21px;font-weight:900;color:#1a4d00;margin-bottom:3px;}
+.res-desc{font-size:11px;color:#666;margin-bottom:12px;line-height:1.5;}
+.res-instrucao{background:#f0fff4;border:1.5px dashed #009c3b;border-radius:10px;padding:9px 12px;font-size:12px;color:#1a7a3a;font-weight:600;margin-bottom:12px;}
+.res-pts{display:flex;justify-content:center;gap:8px;margin-bottom:10px;}
+.res-pt{background:#f5f5f5;border-radius:10px;padding:7px 12px;text-align:center;}
+.res-pt-n{font-size:18px;font-weight:900;color:#1a4d00;}
+.res-pt-l{font-size:9px;color:#888;font-weight:700;letter-spacing:1px;}
+.res-rodape{font-size:10px;color:#aaa;margin-bottom:0;line-height:1.4;}
+/* sem prêmio */
+.res-sem{text-align:center;padding:10px 0;}
+.res-sem-emoji{font-size:58px;display:block;margin-bottom:10px;animation:float 2s ease-in-out infinite;}
+.res-sem-titulo{font-size:20px;font-weight:900;color:#FFD700;margin-bottom:7px;}
+.res-sem-sub{font-size:13px;color:#cfc;line-height:1.5;margin-bottom:14px;}
+.res-sem-score{background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.3);border-radius:14px;padding:14px;margin-bottom:14px;}
+.res-sem-n{font-size:32px;font-weight:900;color:#FFD700;}
+.res-sem-l{font-size:11px;color:#9fd;margin-top:2px;}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+
+<!-- BLOQUEADO -->
+<div class="tela oculta blq" id="telaBloqueado">
+  <span class="err-emoji">🚫</span>
+  <div class="err-titulo">Acesso Bloqueado</div>
+  <div class="err-sub">Esse QR Code já foi utilizado.<br>Peça um novo ao atendente.</div>
+  <div class="err-box">☕ Cada QR Code é válido para <strong>uma única partida</strong>.<br><br>Consuma no Café com Orquídea e ganhe um novo código!</div>
+</div>
+
+<!-- EXPIRADO -->
+<div class="tela oculta exp" id="telaExpirado">
+  <span class="err-emoji">⏰</span>
+  <div class="err-titulo" style="color:#ff8">QR Code Expirado</div>
+  <div class="err-sub" style="color:#ffc">Este código expirou (válido por 30 min).<br>Peça um novo QR Code ao atendente!</div>
+  <div class="err-box" style="background:rgba(200,180,0,0.15);border:1.5px solid #cc0;color:#ff8;">⏱️ O atendente gera um novo código em segundos!</div>
+</div>
+
+<!-- INVÁLIDO -->
+<div class="tela oculta inv" id="telaInvalido">
+  <span class="err-emoji" style="animation:float 2s ease-in-out infinite">❌</span>
+  <div class="err-titulo">QR Code Inválido</div>
+  <div class="err-sub">Este link não é válido.<br>Peça um novo QR Code ao atendente.</div>
+  <div class="err-box">☕ Só funciona com QR Codes gerados pelo Café com Orquídea!</div>
+</div>
+
+<!-- INTRO -->
+<div class="tela oculta" id="telaIntro">
+  <div class="logo-cafe">☕ CAFÉ COM ORQUÍDEA</div>
+  <span class="mascote-intro">☕🌸</span>
+  <div class="titulo-intro">🏆 Quiz da Copa 2026</div>
+  <div class="sub-intro">Teste seu conhecimento e ganhe prêmios!</div>
+  <div class="regras-box">
+    <div class="regra"><span>✅</span><span><strong>5 perguntas</strong> sobre os jogos da Copa</span></div>
+    <div class="regra"><span>🎯</span><span>Escolha entre <strong>5 alternativas</strong></span></div>
+    <div class="regra"><span>☕</span><span>Acerte <strong>3 ou mais</strong> = <strong style="color:#FFD700">CAFÉ GRÁTIS!</strong></span></div>
+    <div class="regra"><span>🌟</span><span>Acerte <strong>todas as 5</strong> = <strong style="color:#FFD700">BRINDE ESPECIAL!</strong></span></div>
+  </div>
+  <div class="badge-comanda" id="badgeComanda">🎫 Comanda válida</div>
+  <button class="btn-comecar" onclick="comecar()">⚽ COMEÇAR O QUIZ!</button>
+</div>
+
+<!-- QUIZ -->
+<div class="tela oculta" id="telaQuiz">
+  <div class="quiz-header">
+    <div class="quiz-logo">☕ CAFÉ COM ORQUÍDEA</div>
+    <div class="quiz-score">⭐ <span id="scoreAtual">0</span> acerto(s)</div>
+  </div>
+  <div class="prog-wrap">
+    <div class="prog-labels"><span id="lblProg">Pergunta 1 de 5</span><span id="lblDif"></span></div>
+    <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+  </div>
+  <div class="card-q">
+    <div class="card-badge"><span>⚽</span><span id="badgeDif" class="b-facil">FÁCIL</span></div>
+    <div class="card-txt" id="txtPergunta">—</div>
+  </div>
+  <div class="alts" id="altsWrap"></div>
+  <div class="feedback-q" id="feedbackQ"></div>
+  <button class="btn-prox" id="btnProx" onclick="proxima()">➡️ PRÓXIMA PERGUNTA</button>
+</div>
+
+<!-- RESULTADO -->
+<div class="tela oculta" id="telaResultado"></div>
+
+<script>
+const SALT = 'CafeOrquidea2026';
+
+const PERGUNTAS = [
+  {txt:"Quem marcou o primeiro gol do Brasil no amistoso contra o Egito em 6 de junho de 2026?",alts:["Vinicius Jr","Rodrygo","Bruno Guimarães","Endrick","Raphinha"],certa:2,dif:"facil",exp:"Bruno Guimarães abriu o placar aos 6 minutos, roubando a bola e finalizando. Brasil venceu 2×1."},
+  {txt:"Qual foi o placar do amistoso Brasil x Egito em Cleveland no dia 6 de junho de 2026?",alts:["Brasil 1×0 Egito","Brasil 3×1 Egito","Brasil 2×1 Egito","Empate 1×1","Brasil 2×0 Egito"],certa:2,dif:"medio",exp:"Brasil venceu por 2 a 1. Gols de Bruno Guimarães e Endrick. Ziko descontou para os egípcios."},
+  {txt:"Qual seleção venceu a França de virada por 2×1 num amistoso pré-Copa em 4 de junho de 2026?",alts:["Marrocos","Senegal","Nigéria","Costa do Marfim","Camarões"],certa:3,dif:"medio",exp:"A Costa do Marfim virou no 2º tempo e surpreendeu a França por 2 a 1."},
+  {txt:"Qual jogador brasileiro saiu com dores na virilha contra o Egito e virou preocupação para a Copa?",alts:["Rodrygo","Endrick","Vinicius Jr","Wesley","Estêvão"],certa:3,dif:"dificil",exp:"Wesley saiu com dores na virilha e ficou como dúvida para a estreia do Brasil contra Marrocos."},
+  {txt:"Por qual placar o Brasil goleou o Panamá no Maracanã em 31 de maio de 2026?",alts:["3×0","4×1","5×2","6×2","7×1"],certa:3,dif:"dificil",exp:"Brasil goleou o Panamá por 6 a 2 no Maracanã sob comando de Carlo Ancelotti."}
+];
+
+// AUDIO
+const AC=new(window.AudioContext||window.webkitAudioContext)();
+function resumirAudio(){if(AC.state==='suspended')AC.resume();}
+function beep(notas){notas.forEach(([f,t,d,tp])=>{const o=AC.createOscillator(),g=AC.createGain();o.connect(g);g.connect(AC.destination);o.frequency.value=f;o.type=tp||'sine';g.gain.setValueAtTime(0,AC.currentTime+t);g.gain.linearRampToValueAtTime(0.2,AC.currentTime+t+0.04);g.gain.linearRampToValueAtTime(0,AC.currentTime+t+d);o.start(AC.currentTime+t);o.stop(AC.currentTime+t+d+0.05);});}
+function beepAcerto(){beep([[523,0,0.2],[659,0.13,0.2],[784,0.26,0.25]]);}
+function beepErro(){beep([[330,0,0.15,'sawtooth'],[262,0.16,0.18,'sawtooth']]);}
+function jingleVitoria(){beep([[523,0,0.14,'triangle'],[523,0.15,0.14,'triangle'],[523,0.30,0.14,'triangle'],[523,0.46,0.08,'triangle'],[659,0.54,0.28,'triangle'],[587,0.88,0.1,'triangle'],[523,1.0,0.1,'triangle'],[494,1.12,0.1,'triangle'],[440,1.24,0.38,'triangle'],[523,1.7,0.48,'triangle']]);}
+function jingleBrinde(){beep([[523,0,0.09],[659,0.10,0.09],[784,0.20,0.09],[1047,0.30,0.24],[784,0.57,0.09],[880,0.68,0.09],[1047,0.79,0.33],[784,1.15,0.09],[880,1.26,0.09],[988,1.37,0.09],[1047,1.48,0.48]]);}
+
+// VALIDAÇÃO TOKEN
+function janelaToken(ts){
+  // Arredonda timestamp para janela de 30 min
+  return Math.floor(ts / (30*60*1000));
+}
+
+function validarToken(token){
+  if(!token||token.length<18) return null;
+  const data=token.slice(0,10);   // AAMMDDHHJ (ano2dig+mes+dia+hora+janela)
+  const comanda=token.slice(10,14);
+  const hashRecebido=token.slice(14);
+  const raw=data+comanda+SALT;
+  let hash=0;
+  for(let i=0;i<raw.length;i++) hash=((hash<<5)-hash)+raw.charCodeAt(i),hash|=0;
+  const hashEsperado=Math.abs(hash).toString(36).toUpperCase().padStart(8,'0').slice(0,8);
+  if(hashRecebido!==hashEsperado) return null;
+
+  // Verificar validade: data do token vs agora
+  const now=new Date();
+  const ano=parseInt('20'+data.slice(0,2));
+  const mes=parseInt(data.slice(2,4))-1;
+  const dia=parseInt(data.slice(4,6));
+  const hora=parseInt(data.slice(6,8));
+  const janela=parseInt(data.slice(8,10));
+  const tokenDate=new Date(ano,mes,dia,hora, janela===0?0:30, 0);
+  const diffMin=(now-tokenDate)/(1000*60);
+  if(diffMin<0||diffMin>=30) return {expirado:true};
+
+  return {comanda:parseInt(comanda), valido:true};
+}
+
+function tokenJaUsado(t){return !!localStorage.getItem('token_used_'+t);}
+function marcarUsado(t){localStorage.setItem('token_used_'+t, Date.now().toString());}
+
+// ESTADO
+let TOKEN=null,IDX=0,ACERTOS=0,PERGS=[];
+
+function ir(id){document.querySelectorAll('.tela').forEach(t=>t.classList.toggle('oculta',t.id!==id));}
+
+window.onload=function(){
+  const params=new URLSearchParams(window.location.search);
+  const t=params.get('t');
+  if(!t){ir('telaInvalido');return;}
+  if(tokenJaUsado(t)){ir('telaBloqueado');return;}
+  const info=validarToken(t);
+  if(!info){ir('telaInvalido');return;}
+  if(info.expirado){ir('telaExpirado');return;}
+  TOKEN=t;
+  document.getElementById('badgeComanda').textContent='🎫 Comanda #'+String(info.comanda).padStart(3,'0');
+  ir('telaIntro');
+};
+
+function comecar(){
+  resumirAudio();
+  PERGS=shuffle([...PERGUNTAS]);
+  IDX=0;ACERTOS=0;
+  ir('telaQuiz');renderQ();
+}
+
+function renderQ(){
+  const p=PERGS[IDX],num=IDX+1;
+  document.getElementById('lblProg').textContent='Pergunta '+num+' de 5';
+  document.getElementById('progFill').style.width=((num-1)/5*100)+'%';
+  document.getElementById('scoreAtual').textContent=ACERTOS;
+  document.getElementById('txtPergunta').textContent=p.txt;
+  const badge=document.getElementById('badgeDif');
+  const map={facil:['⚡ FÁCIL','b-facil'],medio:['🔥 MÉDIO','b-medio'],dificil:['💀 DIFÍCIL','b-dificil']};
+  const[dt,dc]=map[p.dif];badge.textContent=dt;badge.className=dc;
+  document.getElementById('lblDif').textContent=p.dif==='facil'?'1 ponto':p.dif==='medio'?'2 pontos':'3 pontos';
+  const wrap=document.getElementById('altsWrap');wrap.innerHTML='';
+  ['A','B','C','D','E'].forEach((l,i)=>{
+    const b=document.createElement('button');b.className='alt';
+    b.innerHTML='<span class="alt-letra">'+l+'</span><span>'+p.alts[i]+'</span>';
+    b.onclick=()=>responder(i);wrap.appendChild(b);
+  });
+  document.getElementById('feedbackQ').className='feedback-q';
+  document.getElementById('feedbackQ').textContent='';
+  document.getElementById('btnProx').style.display='none';
+  document.getElementById('btnProx').textContent=IDX===4?'🏁 VER RESULTADO':'➡️ PRÓXIMA PERGUNTA';
+}
+
+function responder(escolha){
+  resumirAudio();
+  const p=PERGS[IDX];
+  document.querySelectorAll('.alt').forEach((b,i)=>{
+    b.classList.add('disabled');
+    if(i===p.certa)b.classList.add('certa');
+    else if(i===escolha&&escolha!==p.certa)b.classList.add('errada');
+  });
+  const fb=document.getElementById('feedbackQ');
+  if(escolha===p.certa){ACERTOS++;document.getElementById('scoreAtual').textContent=ACERTOS;fb.className='feedback-q acerto';fb.textContent='✅ Correto! '+p.exp;beepAcerto();}
+  else{fb.className='feedback-q erro';fb.textContent='❌ Errou! '+p.exp;beepErro();}
+  document.getElementById('btnProx').style.display='block';
+}
+
+function proxima(){resumirAudio();IDX++;if(IDX>=5){finalizar();return;}renderQ();}
+
+function finalizar(){
+  marcarUsado(TOKEN);
+  const tel=document.getElementById('telaResultado');
+  if(ACERTOS>=3){
+    const brinde=ACERTOS===5;
+    setTimeout(()=>{brinde?jingleBrinde():jingleVitoria();},300);
+    tel.innerHTML=`<div class="res-inner">
+      <div class="res-cafe-logo">☕ CAFÉ COM ORQUÍDEA</div>
+      <div class="res-box">
+        <div class="res-topo">
+          <div class="res-topo-deco"></div>
+          <div class="res-estrelas">★ ★ ★ ★ ★</div>
+          <div class="res-titulo">${brinde?'🌟 BRINDE ESPECIAL!':'🏆 PARABÉNS!'}</div>
+          <div class="res-subtitulo">${brinde?'Acertou TODAS as 5!':'Você acertou '+ACERTOS+' de 5!'}</div>
+        </div>
+        <div class="res-corpo">
+          <div class="res-cafe-nome">☕ CAFÉ COM ORQUÍDEA</div>
+          <span class="res-icone">${brinde?'🍌':'☕'}</span>
+          <div class="res-premio">${brinde?'BANOFFEE GRÁTIS!':'CAFÉ GRÁTIS!'}</div>
+          <div class="res-desc">${brinde?'Banoffee artesanal — doce de leite,<br>banana fresca e chantili 🍌':'Um café especial da Serra da Mantiqueira<br>esperando por você! ☕'}</div>
+          <div class="res-instrucao">📲 Mostre essa tela ao atendente e resgate seu prêmio!</div>
+          <div class="res-pts">
+            <div class="res-pt"><div class="res-pt-n">${ACERTOS}</div><div class="res-pt-l">ACERTOS</div></div>
+            <div class="res-pt"><div class="res-pt-n">${5-ACERTOS}</div><div class="res-pt-l">ERROS</div></div>
+            <div class="res-pt"><div class="res-pt-n">${Math.round(ACERTOS/5*100)}%</div><div class="res-pt-l">APROVEIT.</div></div>
+          </div>
+          <div class="res-rodape">Quiz da Copa 2026 • Café com Orquídea<br>Santo Antônio do Pinhal — Serra da Mantiqueira 🌿</div>
+        </div>
+      </div></div>`;
+  } else {
+    tel.innerHTML=`<div class="res-inner"><div class="res-sem">
+      <span class="res-sem-emoji">😅⚽</span>
+      <div class="res-sem-titulo">Quase lá, campeão!</div>
+      <div class="res-sem-sub">Você acertou ${ACERTOS} de 5.<br>Precisa de 3 para ganhar o café.<br>Volte e tente com uma nova comanda!</div>
+      <div class="res-sem-score"><div class="res-sem-n">${ACERTOS}/5</div><div class="res-sem-l">ACERTOS</div></div>
+      <div style="font-size:12px;color:#afd;line-height:1.5">☕ Venha tomar mais um café e tente novamente!</div>
+    </div></div>`;
+  }
+  ir('telaResultado');
+}
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+</script>
+</body>
+</html>
