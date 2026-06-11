@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — Café com Orquídea</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#0d3d18;color:#fff;min-height:100vh;padding:16px;}
+.header{text-align:center;padding:20px 0 16px;border-bottom:1px solid rgba(255,215,0,0.2);margin-bottom:20px;}
+.header-logo{font-size:11px;color:#FFD700;letter-spacing:3px;font-weight:700;margin-bottom:4px;}
+.header-titulo{font-size:22px;font-weight:900;color:#fff;}
+.header-sub{font-size:12px;color:#afd;margin-top:4px;}
+
+/* KPI CARDS */
+.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px;}
+.kpi{background:rgba(0,0,0,0.3);border:1px solid rgba(255,215,0,0.2);border-radius:14px;padding:14px;text-align:center;}
+.kpi-n{font-size:28px;font-weight:900;color:#FFD700;}
+.kpi-l{font-size:11px;color:#9fd;margin-top:3px;font-weight:600;letter-spacing:1px;}
+
+/* SEÇÕES */
+.secao{background:rgba(0,0,0,0.25);border:1px solid rgba(255,215,0,0.15);border-radius:16px;padding:16px;margin-bottom:16px;}
+.secao-titulo{font-size:12px;color:#FFD700;font-weight:700;letter-spacing:2px;margin-bottom:14px;}
+canvas{max-height:220px;}
+
+/* TABELA */
+.tabela-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:12px;}
+th{background:rgba(255,215,0,0.1);color:#FFD700;padding:8px 10px;text-align:left;font-size:10px;letter-spacing:1px;border-bottom:1px solid rgba(255,215,0,0.2);}
+td{padding:8px 10px;border-bottom:1px solid rgba(255,255,255,0.05);color:#dfd;vertical-align:middle;}
+tr:hover td{background:rgba(255,255,255,0.04);}
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;}
+.badge-cap{background:rgba(0,200,80,0.2);color:#0f0;}
+.badge-esp{background:rgba(255,215,0,0.15);color:#FFD700;}
+.badge-sem{background:rgba(200,200,200,0.1);color:#aaa;}
+
+/* BOTÕES */
+.btns{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;}
+.btn{padding:11px 20px;border-radius:12px;border:none;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.15s;}
+.btn-csv{background:#FFD700;color:#1a4d00;}
+.btn-csv:hover{background:#ffe040;}
+.btn-limpar{background:rgba(200,0,0,0.2);color:#f88;border:1px solid rgba(200,0,0,0.4);}
+.btn-limpar:hover{background:rgba(200,0,0,0.3);}
+.btn-atualizar{background:rgba(0,200,80,0.15);color:#0f0;border:1px solid rgba(0,200,80,0.3);}
+.btn-atualizar:hover{background:rgba(0,200,80,0.25);}
+
+.vazio{text-align:center;padding:30px;color:rgba(255,255,255,0.3);font-size:14px;}
+.senha-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;gap:16px;text-align:center;}
+.senha-titulo{font-size:20px;font-weight:900;color:#FFD700;}
+.senha-input{padding:14px 20px;border-radius:14px;border:2px solid rgba(255,215,0,0.4);background:rgba(255,255,255,0.08);color:#fff;font-size:18px;text-align:center;outline:none;letter-spacing:4px;width:220px;}
+.senha-input:focus{border-color:#FFD700;}
+.btn-entrar{padding:13px 32px;border-radius:14px;border:none;background:#FFD700;color:#1a4d00;font-size:16px;font-weight:900;cursor:pointer;box-shadow:0 4px 0 #b09000;}
+.erro-senha{color:#f88;font-size:13px;display:none;}
+
+.chip{display:inline-block;background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.2);border-radius:20px;padding:2px 10px;font-size:11px;color:#FFD700;margin:2px;}
+</style>
+</head>
+<body>
+
+<!-- TELA SENHA -->
+<div id="telaSenha" class="senha-wrap">
+  <span style="font-size:52px">📊</span>
+  <div class="senha-titulo">Dashboard<br>Café com Orquídea</div>
+  <input type="password" class="senha-input" id="inputSenha" placeholder="••••" onkeydown="if(event.key==='Enter')entrar()">
+  <button class="btn-entrar" onclick="entrar()">🔐 ENTRAR</button>
+  <div class="erro-senha" id="erroSenha">Senha incorreta!</div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" style="display:none">
+  <div class="header">
+    <div class="header-logo">☕ CAFÉ COM ORQUÍDEA</div>
+    <div class="header-titulo">📊 Dashboard Quiz Copa 2026</div>
+    <div class="header-sub" id="ultimaAtualizacao">—</div>
+  </div>
+
+  <div class="btns">
+    <button class="btn btn-atualizar" onclick="carregar()">🔄 Atualizar</button>
+    <button class="btn btn-csv" onclick="exportarCSV()">📥 Exportar CSV</button>
+    <button class="btn btn-limpar" onclick="limparDados()">🗑️ Limpar dados</button>
+  </div>
+
+  <!-- KPIs -->
+  <div class="kpis">
+    <div class="kpi"><div class="kpi-n" id="kpiTotal">0</div><div class="kpi-l">PARTICIPANTES</div></div>
+    <div class="kpi"><div class="kpi-n" id="kpiHoje">0</div><div class="kpi-l">HOJE</div></div>
+    <div class="kpi"><div class="kpi-n" id="kpiCappuccino">0</div><div class="kpi-l">CAPPUCCINOS</div></div>
+    <div class="kpi"><div class="kpi-n" id="kpiEspresso">0</div><div class="kpi-l">EXPRESSOS</div></div>
+  </div>
+
+  <!-- GRÁFICOS -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+    <div class="secao">
+      <div class="secao-titulo">🏆 PRÊMIOS</div>
+      <canvas id="grafPremios"></canvas>
+    </div>
+    <div class="secao">
+      <div class="secao-titulo">⭐ ACERTOS</div>
+      <canvas id="grafAcertos"></canvas>
+    </div>
+  </div>
+
+  <div class="secao" style="margin-bottom:16px">
+    <div class="secao-titulo">📅 PARTICIPAÇÕES POR DIA</div>
+    <canvas id="grafDias"></canvas>
+  </div>
+
+  <div class="secao" style="margin-bottom:16px">
+    <div class="secao-titulo">🎂 FAIXA ETÁRIA</div>
+    <canvas id="grafIdade"></canvas>
+  </div>
+
+  <div class="secao" style="margin-bottom:16px">
+    <div class="secao-titulo">📍 TOP CIDADES</div>
+    <div id="cidades" style="display:flex;flex-wrap:wrap;gap:6px;padding:4px 0"></div>
+  </div>
+
+  <!-- TABELA -->
+  <div class="secao">
+    <div class="secao-titulo">👥 TODOS OS PARTICIPANTES</div>
+    <div class="tabela-wrap">
+      <table id="tabela">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>NOME</th>
+            <th>IDADE</th>
+            <th>CIDADE</th>
+            <th>EMAIL</th>
+            <th>CELULAR</th>
+            <th>COMANDA</th>
+            <th>ACERTOS</th>
+            <th>PRÊMIO</th>
+            <th>DATA</th>
+            <th>HORA</th>
+          </tr>
+        </thead>
+        <tbody id="tabelaBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const SENHA_DASH = '2026cafe';
+let DADOS = [];
+let graficos = {};
+
+function entrar(){
+  const s = document.getElementById('inputSenha').value;
+  if(s === SENHA_DASH){
+    document.getElementById('telaSenha').style.display='none';
+    document.getElementById('dashboard').style.display='block';
+    carregar();
+  } else {
+    document.getElementById('erroSenha').style.display='block';
+    setTimeout(()=>document.getElementById('erroSenha').style.display='none',2000);
+  }
+}
+
+function carregar(){
+  try{
+    DADOS = JSON.parse(localStorage.getItem('quiz_clientes')||'[]');
+  }catch(e){ DADOS=[]; }
+  document.getElementById('ultimaAtualizacao').textContent =
+    'Atualizado: ' + new Date().toLocaleString('pt-BR');
+  renderizar();
+}
+
+function renderizar(){
+  if(DADOS.length===0){
+    document.getElementById('kpiTotal').textContent='0';
+    document.getElementById('kpiHoje').textContent='0';
+    document.getElementById('kpiCappuccino').textContent='0';
+    document.getElementById('kpiEspresso').textContent='0';
+    document.getElementById('tabelaBody').innerHTML='<tr><td colspan="11" class="vazio">Nenhum participante ainda</td></tr>';
+    document.getElementById('cidades').innerHTML='<span style="color:rgba(255,255,255,0.3);font-size:13px">Sem dados ainda</span>';
+    return;
+  }
+
+  // KPIs
+  const hoje = new Date().toLocaleDateString('pt-BR');
+  const deHoje = DADOS.filter(d=>d.data===hoje).length;
+  const cappuccinos = DADOS.filter(d=>d.premio&&d.premio.includes('Cappuccino')).length;
+  const expressos = DADOS.filter(d=>d.premio&&d.premio.includes('Espresso')).length;
+  document.getElementById('kpiTotal').textContent = DADOS.length;
+  document.getElementById('kpiHoje').textContent = deHoje;
+  document.getElementById('kpiCappuccino').textContent = cappuccinos;
+  document.getElementById('kpiEspresso').textContent = expressos;
+
+  // Gráfico prêmios
+  const sem = DADOS.filter(d=>d.premio&&d.premio.includes('Sem')).length;
+  desenharPizza('grafPremios',['Cappuccino','Espresso','Sem prêmio'],[cappuccinos,expressos,sem],['#009c3b','#FFD700','#555']);
+
+  // Gráfico acertos
+  const contAcertos = [0,0,0,0,0,0];
+  DADOS.forEach(d=>{ if(d.acertos>=0&&d.acertos<=5) contAcertos[d.acertos]++; });
+  desenharBarras('grafAcertos',['0','1','2','3','4','5'],contAcertos,'#FFD700','Acertos');
+
+  // Gráfico por dia
+  const porDia = {};
+  DADOS.forEach(d=>{ porDia[d.data]=(porDia[d.data]||0)+1; });
+  const dias = Object.keys(porDia).sort();
+  desenharBarras('grafDias',dias,dias.map(d=>porDia[d]),'#009c3b','Participações');
+
+  // Gráfico faixa etária
+  const faixas = {'<18':0,'18-25':0,'26-35':0,'36-45':0,'46-55':0,'>55':0};
+  DADOS.forEach(d=>{
+    const i=parseInt(d.idade)||0;
+    if(i<18)faixas['<18']++;
+    else if(i<=25)faixas['18-25']++;
+    else if(i<=35)faixas['26-35']++;
+    else if(i<=45)faixas['36-45']++;
+    else if(i<=55)faixas['46-55']++;
+    else faixas['>55']++;
+  });
+  desenharBarras('grafIdade',Object.keys(faixas),Object.values(faixas),'#e870c8','Pessoas');
+
+  // Cidades
+  const cidadeCount = {};
+  DADOS.forEach(d=>{ if(d.cidade){ const ci=d.cidade.trim(); cidadeCount[ci]=(cidadeCount[ci]||0)+1; }});
+  const topCidades = Object.entries(cidadeCount).sort((a,b)=>b[1]-a[1]).slice(0,15);
+  document.getElementById('cidades').innerHTML = topCidades.map(([c,n])=>
+    `<span class="chip">${c} (${n})</span>`).join('') || '<span style="color:rgba(255,255,255,0.3)">Sem dados</span>';
+
+  // Tabela
+  const tbody = document.getElementById('tabelaBody');
+  tbody.innerHTML = [...DADOS].reverse().map((d,i)=>{
+    const badgeCls = d.premio&&d.premio.includes('Cappuccino')?'badge-cap':d.premio&&d.premio.includes('Espresso')?'badge-esp':'badge-sem';
+    const premioLabel = d.premio&&d.premio.includes('Cappuccino')?'☕✨ Cappuccino':d.premio&&d.premio.includes('Espresso')?'☕ Espresso':'—';
+    return `<tr>
+      <td style="color:#FFD700">${DADOS.length-i}</td>
+      <td style="font-weight:600">${d.nome||'—'}</td>
+      <td>${d.idade||'—'}</td>
+      <td>${d.cidade||'—'}</td>
+      <td style="color:#afd">${d.email||'—'}</td>
+      <td>${d.celular||'—'}</td>
+      <td style="color:#FFD700">#${String(d.comanda||0).padStart(3,'0')}</td>
+      <td style="text-align:center;font-weight:900;color:${d.acertos>=3?'#0f0':'#f88'}">${d.acertos??'—'}</td>
+      <td><span class="badge ${badgeCls}">${premioLabel}</span></td>
+      <td>${d.data||'—'}</td>
+      <td>${d.hora||'—'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function desenharPizza(id, labels, dados, cores){
+  if(graficos[id]) graficos[id].destroy();
+  const ctx = document.getElementById(id).getContext('2d');
+  graficos[id] = new Chart(ctx,{
+    type:'doughnut',
+    data:{labels,datasets:[{data:dados,backgroundColor:cores,borderWidth:0}]},
+    options:{responsive:true,plugins:{legend:{labels:{color:'#cfc',font:{size:10}}}}}
+  });
+}
+
+function desenharBarras(id, labels, dados, cor, label){
+  if(graficos[id]) graficos[id].destroy();
+  const ctx = document.getElementById(id).getContext('2d');
+  graficos[id] = new Chart(ctx,{
+    type:'bar',
+    data:{labels,datasets:[{label,data:dados,backgroundColor:cor+'88',borderColor:cor,borderWidth:1,borderRadius:4}]},
+    options:{responsive:true,plugins:{legend:{display:false}},scales:{
+      x:{ticks:{color:'#9fd',font:{size:9}},grid:{color:'rgba(255,255,255,0.05)'}},
+      y:{ticks:{color:'#9fd',font:{size:9}},grid:{color:'rgba(255,255,255,0.05)'},beginAtZero:true}
+    }}
+  });
+}
+
+function exportarCSV(){
+  if(DADOS.length===0){ alert('Nenhum dado para exportar!'); return; }
+  const headers = ['#','Nome','Idade','Cidade','Email','Celular','Comanda','Acertos','Premio','Data','Hora'];
+  const rows = DADOS.map((d,i)=>[
+    i+1, d.nome||'', d.idade||'', d.cidade||'', d.email||'',
+    d.celular||'', d.comanda||'', d.acertos??'', d.premio||'', d.data||'', d.hora||''
+  ]);
+  const csv = [headers, ...rows].map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const blob = new Blob(['\uFEFF'+csv], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href=url; a.download='quiz-cafe-'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click(); URL.revokeObjectURL(url);
+}
+
+function limparDados(){
+  if(!confirm('Tem certeza? Isso apaga TODOS os dados!')) return;
+  localStorage.removeItem('quiz_clientes');
+  DADOS=[];
+  renderizar();
+  alert('Dados apagados!');
+}
+
+// Auto-atualizar a cada 60 segundos
+setInterval(()=>{ if(document.getElementById('dashboard').style.display!=='none') carregar(); }, 60000);
+</script>
+</body>
+</html>
