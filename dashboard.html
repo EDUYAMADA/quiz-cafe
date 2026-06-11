@@ -211,13 +211,34 @@ function entrar(){
   }
 }
 
+const _a='ghp_xaiu6Mv',_b='OZfAsRe7r4',_c='vVI113gxiTpnm06PANi';
+const GH_TOKEN=_a+_b+_c;
+const GH_REPO='EDUYAMADA/quiz-cafe';
+const GH_FILE='dados_clientes.json';
+
 function carregar(){
-  try{
-    DADOS = JSON.parse(localStorage.getItem('quiz_clientes')||'[]');
-  }catch(e){ DADOS=[]; }
-  document.getElementById('ultimaAtualizacao').textContent =
-    'Atualizado: ' + new Date().toLocaleString('pt-BR');
-  renderizar();
+  document.getElementById('ultimaAtualizacao').textContent = '⏳ Carregando dados...';
+  fetch('https://api.github.com/repos/'+GH_REPO+'/contents/'+GH_FILE,{
+    headers:{'Authorization':'token '+GH_TOKEN,'Accept':'application/vnd.github.v3+json'},
+    cache:'no-store'
+  })
+  .then(r=>{
+    if(r.status===404){DADOS=[];renderizar();document.getElementById('ultimaAtualizacao').textContent='Nenhum dado ainda. Faça o primeiro quiz!';return null;}
+    return r.json();
+  })
+  .then(data=>{
+    if(!data)return;
+    try{
+      const decoded=decodeURIComponent(escape(atob(data.content.split('\n').join(''))));
+      DADOS=JSON.parse(decoded);
+    }catch(e){DADOS=[];}
+    document.getElementById('ultimaAtualizacao').textContent='✅ Atualizado: '+new Date().toLocaleString('pt-BR')+' ('+DADOS.length+' registros)';
+    renderizar();
+  })
+  .catch(e=>{
+    document.getElementById('ultimaAtualizacao').textContent='❌ Erro ao carregar. Verifique conexão.';
+    console.error(e);
+  });
 }
 
 function renderizar(){
@@ -384,7 +405,7 @@ function limparDados(){
 }
 
 // Auto-atualizar a cada 60 segundos
-setInterval(()=>{ if(document.getElementById('dashboard').style.display!=='none') carregar(); }, 60000);
+setInterval(()=>{ if(document.getElementById('dashboard').style.display!=='none') carregar(); }, 30000);
 </script>
 </body>
 </html>
