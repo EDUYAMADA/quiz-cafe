@@ -269,7 +269,7 @@ function renderizar(){
   if(DADOS.length===0){
     document.getElementById('kpiTotal').textContent='0';
     document.getElementById('kpiHoje').textContent='0';
-    document.getElementById('kpiCappuccino').textContent='0';
+    document.getElementById('kpiMoka').textContent='0';
     document.getElementById('kpiEspresso').textContent='0';
     document.getElementById('tabelaBody').innerHTML='<tr><td colspan="11" class="vazio">Nenhum participante ainda</td></tr>';
     document.getElementById('cidades').innerHTML='<span style="color:rgba(255,255,255,0.3);font-size:13px">Sem dados ainda</span>';
@@ -277,7 +277,7 @@ function renderizar(){
   }
 
   // KPIs
-  const hoje = new Date().toLocaleDateString('pt-BR');
+  const hoje = new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric'});
   const deHoje = DADOS.filter(d=>d.data===hoje).length;
   const cappuccinos = DADOS.filter(d=>d.premio&&(d.premio.includes('Moka')||d.premio.includes('moka'))).length;
   const expressos = DADOS.filter(d=>d.premio&&d.premio.includes('Espresso')).length;
@@ -333,8 +333,8 @@ function renderizar(){
   // Tabela
   const tbody = document.getElementById('tabelaBody');
   tbody.innerHTML = [...DADOS].reverse().map((d,i)=>{
-    const badgeCls = d.premio&&d.premio.includes('Cappuccino')?'badge-cap':d.premio&&d.premio.includes('Espresso')?'badge-esp':'badge-sem';
-    const premioLabel = d.premio&&d.premio.includes('Cappuccino')?'☕✨ Cappuccino':d.premio&&d.premio.includes('Espresso')?'☕ Espresso':'—';
+    const badgeCls = d.premio&&(d.premio.includes('Moka')||d.premio.includes('moka'))?'badge-cap':d.premio&&d.premio.includes('Espresso')?'badge-esp':'badge-sem';
+    const premioLabel = d.premio&&(d.premio.includes('Moka')||d.premio.includes('moka'))?'☕✨ Moka Especial':d.premio&&d.premio.includes('Espresso')?'☕ Espresso':'—';
     return `<tr>
       <td style="color:#FFD700">${DADOS.length-i}</td>
       <td style="font-weight:600">${d.nome||'—'}</td>
@@ -376,7 +376,7 @@ function desenharBarras(id, labels, dados, cor, label){
 }
 
 function selecionarRapido(tipo){
-  const campos = ['expNome','expEmail','expCelular','expIdade','expGenero','expCidade','expComanda','expAcertos','expPremio','expData'];
+  const campos = ['expNome','expEmail','expCelular','expIdade','expGenero','expCidade','expEstado','expComanda','expAcertos','expPremio','expData'];
   campos.forEach(id=>document.getElementById(id).checked=false);
   if(tipo==='email'){ document.getElementById('expEmail').checked=true; }
   else if(tipo==='celular'){ document.getElementById('expCelular').checked=true; }
