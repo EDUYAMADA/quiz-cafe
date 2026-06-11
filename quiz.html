@@ -247,6 +247,20 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0d3d18;font-family:
       <input class="cad-input" id="cadCidade" type="text" placeholder="Sua cidade">
       <span class="cad-erro" id="erroCidade">Digite sua cidade</span>
     </div>
+    <div class="cad-field">
+      <label class="cad-label">ESTADO *</label>
+      <select class="cad-select" id="cadEstado">
+        <option value="">Selecione o estado...</option>
+        <option>AC</option><option>AL</option><option>AM</option><option>AP</option>
+        <option>BA</option><option>CE</option><option>DF</option><option>ES</option>
+        <option>GO</option><option>MA</option><option>MG</option><option>MS</option>
+        <option>MT</option><option>PA</option><option>PB</option><option>PE</option>
+        <option>PI</option><option>PR</option><option>RJ</option><option>RN</option>
+        <option>RO</option><option>RR</option><option>RS</option><option>SC</option>
+        <option>SE</option><option>SP</option><option>TO</option>
+      </select>
+      <span class="cad-erro" id="erroEstado">Selecione seu estado</span>
+    </div>
     <button class="btn-jogar" onclick="validarCadastro()">➡️ CONTINUAR</button>
   </div>
   <div class="cad-lgpd">🔒 Seus dados são usados apenas pelo Café com Orquídea.</div>
@@ -263,7 +277,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0d3d18;font-family:
     <div class="confirm-row"><span class="confirm-label">CELULAR</span><span class="confirm-val" id="confCelular">—</span></div>
     <div class="confirm-row"><span class="confirm-label">IDADE</span><span class="confirm-val" id="confIdade">—</span></div>
     <div class="confirm-row"><span class="confirm-label">GÊNERO</span><span class="confirm-val" id="confGenero">—</span></div>
-    <div class="confirm-row"><span class="confirm-label">CIDADE</span><span class="confirm-val" id="confCidade">—</span></div>
+    <div class="confirm-row"><span class="confirm-label">CIDADE / ESTADO</span><span class="confirm-val" id="confCidade">—</span></div>
   </div>
   <div style="width:100%;max-width:340px;display:flex;flex-direction:column;gap:8px;margin-top:4px">
     <button class="btn-jogar-verde" onclick="iniciarQuiz()">⚽ DADOS CORRETOS — JOGAR!</button>
@@ -719,6 +733,14 @@ function validarCadastro(){
     cidadeEl.classList.add('erro');erroCidade.classList.add('show');ok=false;
   } else { cidadeEl.classList.remove('erro');erroCidade.classList.remove('show'); }
 
+  // Validar estado
+  const estado=document.getElementById('cadEstado').value;
+  const estadoEl=document.getElementById('cadEstado');
+  const erroEstado=document.getElementById('erroEstado');
+  if(!estado){
+    estadoEl.style.borderColor='#f55';erroEstado.classList.add('show');ok=false;
+  } else { estadoEl.style.borderColor='';erroEstado.classList.remove('show'); }
+
   if(!ok) return;
 
   // Mostrar tela de confirmação
@@ -727,7 +749,7 @@ function validarCadastro(){
   document.getElementById('confCelular').textContent=document.getElementById('cadCelular').value;
   document.getElementById('confIdade').textContent=idade+' anos';
   document.getElementById('confGenero').textContent=genero;
-  document.getElementById('confCidade').textContent=cidade;
+  document.getElementById('confCidade').textContent=cidade+' - '+estado;
   ir('telaConfirm');
 }
 
@@ -738,7 +760,8 @@ function iniciarQuiz(){
   const idade=document.getElementById('cadIdade').value.trim();
   const genero=document.getElementById('cadGenero').value;
   const cidade=document.getElementById('cadCidade').value.trim();
-  CADASTRO={nome,email,celular:cel,idade,genero,cidade,comanda:COMANDA,data:dataHora().d,hora:dataHora().h};
+  const estado=document.getElementById('cadEstado').value;
+  CADASTRO={nome,email,celular:cel,idade,genero,cidade,estado,comanda:COMANDA,data:dataHora().d,hora:dataHora().h};
   PERGS=sortearPerguntas();
   IDX=0;ACERTOS=0;
   ir('telaQuiz');renderQ();
@@ -898,13 +921,23 @@ const GH_REPO='EDUYAMADA/quiz-cafe';
 const GH_FILE='dados_clientes.json';
 
 function salvarDados(){
+  const dh=dataHora();
   const reg={
-    ...CADASTRO,
+    nome:CADASTRO.nome||'',
+    email:CADASTRO.email||'',
+    celular:CADASTRO.celular||'',
+    idade:CADASTRO.idade||'',
+    genero:CADASTRO.genero||'',
+    cidade:CADASTRO.cidade||'',
+    estado:CADASTRO.estado||'',
+    comanda:'#'+String(COMANDA).padStart(3,'0'),
     acertos:ACERTOS,
     premio:ACERTOS>=5?'Moka Especial da Copa':ACERTOS>=3?'Cafe Espresso':'Sem premio',
+    data:dh.d,
+    hora:dh.h,
     timestamp:new Date().toISOString()
   };
-  // Salvar local como backup
+  // Backup local
   try{
     let local=JSON.parse(localStorage.getItem('quiz_clientes')||'[]');
     local.push(reg);
@@ -916,35 +949,37 @@ function salvarDados(){
 
 function salvarGitHub(reg){
   const url='https://api.github.com/repos/'+GH_REPO+'/contents/'+GH_FILE;
-  // Primeiro pegar SHA e conteudo atual
-  fetch(url,{headers:{'Authorization':'token '+GH_TOKEN,'Accept':'application/vnd.github.v3+json'}})
-  .then(r=>r.json())
-  .then(data=>{
+  fetch(url,{
+    headers:{'Authorization':'token '+GH_TOKEN,'Accept':'application/vnd.github.v3+json'},
+    cache:'no-store'
+  })
+  .then(function(r){
+    if(!r.ok) throw new Error('arquivo_nao_existe');
+    return r.json();
+  })
+  .then(function(data){
     let lista=[];
     try{
-      const decoded=atob(data.content.split('\n').join(''));
+      const raw=data.content.split('\n').join('');
+      const decoded=decodeURIComponent(escape(atob(raw)));
       lista=JSON.parse(decoded);
-    }catch(e){}
+    }catch(e){lista=[];}
     lista.push(reg);
     const novoConteudo=btoa(unescape(encodeURIComponent(JSON.stringify(lista,null,2))));
     return fetch(url,{
       method:'PUT',
       headers:{'Authorization':'token '+GH_TOKEN,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
-      body:JSON.stringify({message:'Quiz: novo registro '+reg.nome,content:novoConteudo,sha:data.sha})
+      body:JSON.stringify({message:'Quiz: '+reg.nome+' comanda '+reg.comanda,content:novoConteudo,sha:data.sha})
     });
   })
-  .catch(e=>{
-    // Arquivo não existe ainda — criar
-    fetch(url,{headers:{'Authorization':'token '+GH_TOKEN,'Accept':'application/vnd.github.v3+json'}})
-    .then(()=>{})
-    .catch(()=>{
-      const lista=[reg];
-      const novoConteudo=btoa(unescape(encodeURIComponent(JSON.stringify(lista,null,2))));
-      fetch(url,{
-        method:'PUT',
-        headers:{'Authorization':'token '+GH_TOKEN,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
-        body:JSON.stringify({message:'Quiz: criar dados_clientes.json',content:novoConteudo})
-      });
+  .catch(function(){
+    // Arquivo não existe — criar do zero
+    const lista=[reg];
+    const novoConteudo=btoa(unescape(encodeURIComponent(JSON.stringify(lista,null,2))));
+    fetch(url,{
+      method:'PUT',
+      headers:{'Authorization':'token '+GH_TOKEN,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
+      body:JSON.stringify({message:'Quiz: criar dados_clientes.json',content:novoConteudo})
     });
   });
 }
