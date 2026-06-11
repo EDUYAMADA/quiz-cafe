@@ -1,1 +1,47 @@
-[]
+[
+  {
+    "nome": "Eduardo Yamada",
+    "email": "orquidarioyamada@gmail.com",
+    "celular": "(12) 99999-1111",
+    "idade": "45",
+    "genero": "Masculino",
+    "cidade": "Santo Antônio do Pinhal",
+    "estado": "SP",
+    "comanda": "#001",
+    "acertos": 5,
+    "premio": "Moka Especial da Copa",
+    "data": "11/06/2026",
+    "hora": "14:30",
+    "timestamp": "2026-06-11T14:30:00.000Z"
+  },
+  {
+    "nome": "Maria Silva",
+    "email": "maria@email.com",
+    "celular": "(11) 98888-2222",
+    "idade": "32",
+    "genero": "Feminino",
+    "cidade": "São Paulo",
+    "estado": "SP",
+    "comanda": "#002",
+    "acertos": 3,
+    "premio": "Cafe Espresso",
+    "data": "11/06/2026",
+    "hora": "15:10",
+    "timestamp": "2026-06-11T15:10:00.000Z"
+  },
+  {
+    "nome": "João Oliveira",
+    "email": "joao@email.com",
+    "celular": "(21) 97777-3333",
+    "idade": "28",
+    "genero": "Masculino",
+    "cidade": "Campos do Jordão",
+    "estado": "SP",
+    "comanda": "#003",
+    "acertos": 2,
+    "premio": "Sem premio",
+    "data": "11/06/2026",
+    "hora": "16:45",
+    "timestamp": "2026-06-11T16:45:00.000Z"
+  }
+]
