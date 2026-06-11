@@ -585,7 +585,7 @@ function jingleEspresso(){
 }
 
 // 🏆 MOKA ESPECIAL DA COPA — Dobrado triunfal marcha campeão
-function jingleMoka Especial da Copa(){
+function jingleMoka(){
   var ns=[[523,0,.15],[523,.17,.15],[659,.34,.15],[784,.51,.15],
           [1047,.68,.30],[784,1.02,.15],[880,1.19,.15],
           [988,1.36,.15],[1047,1.53,.15],[1319,1.72,.70]];
@@ -840,7 +840,7 @@ function finalizar(){
 
   } else {
     const moka=ACERTOS===5;
-    setTimeout(()=>{moka?jingleMoka Especial da Copa():jingleEspresso();},300);
+    setTimeout(()=>{moka?jingleMoka():jingleEspresso();},300);
     tel.innerHTML=`
     <div class="res-premio-wrap">
       <div class="res-cafe-logo">☕ CAFÉ COM ORQUÍDEA</div>
