@@ -93,6 +93,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0d3d18;font-family:
 
 /* CADASTRO */
 #telaCadastro{gap:6px;justify-content:flex-start;overflow-y:auto;padding:10px 14px;}
+#telaConfirm{gap:8px;justify-content:flex-start;overflow-y:auto;padding:12px 14px;}
 .cad-logo{font-size:10px;color:#FFD700;letter-spacing:3px;font-weight:700;text-align:center;width:100%;}
 .cad-titulo{font-size:17px;font-weight:900;color:#fff;text-align:center;width:100%;}
 .cad-sub{font-size:12px;color:#afd;text-align:center;width:100%;}
@@ -101,10 +102,23 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0d3d18;font-family:
 .cad-label{font-size:10px;color:#FFD700;font-weight:700;letter-spacing:1px;}
 .cad-input{padding:10px 13px;border-radius:12px;border:2px solid rgba(255,215,0,0.3);background:rgba(255,255,255,0.08);color:#fff;font-size:14px;outline:none;width:100%;}
 .cad-input:focus{border-color:#FFD700;}
+.cad-input.erro{border-color:#f55;}
 .cad-input::placeholder{color:rgba(255,255,255,0.35);}
+.cad-select{padding:10px 13px;border-radius:12px;border:2px solid rgba(255,215,0,0.3);background:#1a4d00;color:#fff;font-size:14px;outline:none;width:100%;appearance:none;}
+.cad-select:focus{border-color:#FFD700;}
+.cad-erro{font-size:10px;color:#f77;display:none;margin-top:1px;}
+.cad-erro.show{display:block;}
 .btn-jogar{width:100%;padding:13px;border-radius:14px;border:none;background:#FFD700;color:#1a4d00;font-size:15px;font-weight:900;cursor:pointer;box-shadow:0 4px 0 #b09000;transition:transform 0.1s,box-shadow 0.1s;}
 .btn-jogar:active{transform:translateY(3px);box-shadow:0 1px 0 #b09000;}
+.btn-jogar-verde{width:100%;padding:13px;border-radius:14px;border:none;background:#009c3b;color:#fff;font-size:15px;font-weight:900;cursor:pointer;box-shadow:0 4px 0 #006b28;transition:transform 0.1s,box-shadow 0.1s;}
+.btn-jogar-verde:active{transform:translateY(3px);box-shadow:0 1px 0 #006b28;}
+.btn-editar{width:100%;padding:11px;border-radius:14px;border:2px solid rgba(255,215,0,0.4);background:transparent;color:#FFD700;font-size:14px;font-weight:700;cursor:pointer;}
 .cad-lgpd{font-size:10px;color:rgba(255,255,255,0.35);line-height:1.5;text-align:center;width:100%;}
+.confirm-box{width:100%;max-width:340px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,215,0,0.3);border-radius:16px;padding:14px 16px;}
+.confirm-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.06);font-size:13px;}
+.confirm-row:last-child{border-bottom:none;}
+.confirm-label{color:#FFD700;font-size:10px;font-weight:700;letter-spacing:1px;}
+.confirm-val{color:#fff;font-weight:600;text-align:right;max-width:200px;word-break:break-all;}
 
 /* RESULTADO */
 #telaResultado{overflow-y:auto;justify-content:flex-start;padding:16px 14px 30px;}
@@ -194,16 +208,66 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0d3d18;font-family:
 
 <div class="tela oculta" id="telaCadastro">
   <div class="cad-logo">☕ CAFÉ COM ORQUÍDEA</div>
-  <span style="font-size:44px;display:block;text-align:center;animation:float 3s ease-in-out infinite;margin:4px 0">☕🌸</span>
+  <span style="font-size:40px;display:block;text-align:center;animation:float 3s ease-in-out infinite;margin:2px 0">☕🌸</span>
   <div class="cad-titulo">🏆 Quiz da Copa 2026</div>
   <div class="cad-sub">Preencha seus dados para jogar!</div>
   <div class="cad-form">
-    <div class="cad-field"><label class="cad-label">NOME COMPLETO *</label><input class="cad-input" id="cadNome" type="text" placeholder="Seu nome completo"></div>
-    <div class="cad-field"><label class="cad-label">IDADE *</label><input class="cad-input" id="cadIdade" type="number" placeholder="Sua idade" min="1" max="120" inputmode="numeric"></div>
-    <div class="cad-field"><label class="cad-label">CIDADE *</label><input class="cad-input" id="cadCidade" type="text" placeholder="Sua cidade"></div>
-    <div class="cad-field"><label class="cad-label">EMAIL *</label><input class="cad-input" id="cadEmail" type="email" placeholder="seu@email.com" inputmode="email"></div>
-    <div class="cad-field"><label class="cad-label">CELULAR *</label><input class="cad-input" id="cadCelular" type="tel" placeholder="(11) 99999-9999" inputmode="tel"></div>
-    <button class="btn-jogar" onclick="confirmarCadastro()">⚽ JOGAR AGORA!</button>
+    <div class="cad-field">
+      <label class="cad-label">NOME COMPLETO *</label>
+      <input class="cad-input" id="cadNome" type="text" placeholder="Seu nome completo" autocomplete="name">
+      <span class="cad-erro" id="erroNome">Digite seu nome completo (mín. 3 letras)</span>
+    </div>
+    <div class="cad-field">
+      <label class="cad-label">EMAIL *</label>
+      <input class="cad-input" id="cadEmail" type="email" placeholder="seu@email.com" inputmode="email">
+      <span class="cad-erro" id="erroEmail">Digite um email válido (ex: nome@email.com)</span>
+    </div>
+    <div class="cad-field">
+      <label class="cad-label">CELULAR *</label>
+      <input class="cad-input" id="cadCelular" type="tel" placeholder="(11) 99999-9999" inputmode="tel" oninput="mascaraCelular(this)">
+      <span class="cad-erro" id="erroCelular">Digite um celular válido com DDD (ex: 11 99999-9999)</span>
+    </div>
+    <div class="cad-field">
+      <label class="cad-label">IDADE *</label>
+      <input class="cad-input" id="cadIdade" type="number" placeholder="Sua idade" min="1" max="120" inputmode="numeric">
+      <span class="cad-erro" id="erroIdade">Digite uma idade válida (entre 1 e 120)</span>
+    </div>
+    <div class="cad-field">
+      <label class="cad-label">GÊNERO *</label>
+      <select class="cad-select" id="cadGenero">
+        <option value="">Selecione...</option>
+        <option value="Masculino">Masculino</option>
+        <option value="Feminino">Feminino</option>
+        <option value="Prefiro não informar">Prefiro não informar</option>
+      </select>
+      <span class="cad-erro" id="erroGenero">Selecione seu gênero</span>
+    </div>
+    <div class="cad-field">
+      <label class="cad-label">CIDADE *</label>
+      <input class="cad-input" id="cadCidade" type="text" placeholder="Sua cidade">
+      <span class="cad-erro" id="erroCidade">Digite sua cidade</span>
+    </div>
+    <button class="btn-jogar" onclick="validarCadastro()">➡️ CONTINUAR</button>
+  </div>
+  <div class="cad-lgpd">🔒 Seus dados são usados apenas pelo Café com Orquídea.</div>
+</div>
+
+<!-- CONFIRMAÇÃO -->
+<div class="tela oculta" id="telaConfirm">
+  <div class="cad-logo">☕ CAFÉ COM ORQUÍDEA</div>
+  <div class="cad-titulo" style="margin-bottom:4px">✅ Confirme seus dados</div>
+  <div class="cad-sub">Verifique se tudo está correto antes de jogar</div>
+  <div class="confirm-box">
+    <div class="confirm-row"><span class="confirm-label">NOME</span><span class="confirm-val" id="confNome">—</span></div>
+    <div class="confirm-row"><span class="confirm-label">EMAIL</span><span class="confirm-val" id="confEmail">—</span></div>
+    <div class="confirm-row"><span class="confirm-label">CELULAR</span><span class="confirm-val" id="confCelular">—</span></div>
+    <div class="confirm-row"><span class="confirm-label">IDADE</span><span class="confirm-val" id="confIdade">—</span></div>
+    <div class="confirm-row"><span class="confirm-label">GÊNERO</span><span class="confirm-val" id="confGenero">—</span></div>
+    <div class="confirm-row"><span class="confirm-label">CIDADE</span><span class="confirm-val" id="confCidade">—</span></div>
+  </div>
+  <div style="width:100%;max-width:340px;display:flex;flex-direction:column;gap:8px;margin-top:4px">
+    <button class="btn-jogar-verde" onclick="iniciarQuiz()">⚽ DADOS CORRETOS — JOGAR!</button>
+    <button class="btn-editar" onclick="ir('telaCadastro')">✏️ Editar meus dados</button>
   </div>
   <div class="cad-lgpd">🔒 Seus dados são usados apenas pelo Café com Orquídea.</div>
 </div>
@@ -578,16 +642,90 @@ function comecar(){
   setTimeout(()=>document.getElementById('cadNome').focus(), 400);
 }
 
-function confirmarCadastro(){
+function mascaraCelular(el){
+  let v=el.value.replace(/\D/g,'');
+  if(v.length>11)v=v.slice(0,11);
+  if(v.length>6) v=v.replace(/^(\d{2})(\d{5})(\d*)$/,'($1) $2-$3');
+  else if(v.length>2) v=v.replace(/^(\d{2})(\d*)$/,'($1) $2');
+  el.value=v;
+}
+
+function validarEmail(email){
+  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
+}
+
+function validarCadastro(){
   const nome=document.getElementById('cadNome').value.trim();
-  const idade=document.getElementById('cadIdade').value.trim();
+  const email=document.getElementById('cadEmail').value.trim();
+  const cel=document.getElementById('cadCelular').value.replace(/\D/g,'');
+  const idade=parseInt(document.getElementById('cadIdade').value);
+  const genero=document.getElementById('cadGenero').value;
   const cidade=document.getElementById('cadCidade').value.trim();
+
+  let ok=true;
+
+  // Validar nome
+  const nomeEl=document.getElementById('cadNome');
+  const erroNome=document.getElementById('erroNome');
+  if(nome.length<3||!/[a-zA-ZÀ-ú]/.test(nome)){
+    nomeEl.classList.add('erro');erroNome.classList.add('show');ok=false;
+  } else { nomeEl.classList.remove('erro');erroNome.classList.remove('show'); }
+
+  // Validar email
+  const emailEl=document.getElementById('cadEmail');
+  const erroEmail=document.getElementById('erroEmail');
+  if(!validarEmail(email)){
+    emailEl.classList.add('erro');erroEmail.classList.add('show');ok=false;
+  } else { emailEl.classList.remove('erro');erroEmail.classList.remove('show'); }
+
+  // Validar celular
+  const celEl=document.getElementById('cadCelular');
+  const erroCel=document.getElementById('erroCelular');
+  if(cel.length<10||cel.length>11){
+    celEl.classList.add('erro');erroCel.classList.add('show');ok=false;
+  } else { celEl.classList.remove('erro');erroCel.classList.remove('show'); }
+
+  // Validar idade
+  const idadeEl=document.getElementById('cadIdade');
+  const erroIdade=document.getElementById('erroIdade');
+  if(isNaN(idade)||idade<1||idade>120){
+    idadeEl.classList.add('erro');erroIdade.classList.add('show');ok=false;
+  } else { idadeEl.classList.remove('erro');erroIdade.classList.remove('show'); }
+
+  // Validar gênero
+  const generoEl=document.getElementById('cadGenero');
+  const erroGenero=document.getElementById('erroGenero');
+  if(!genero){
+    generoEl.style.borderColor='#f55';erroGenero.classList.add('show');ok=false;
+  } else { generoEl.style.borderColor='';erroGenero.classList.remove('show'); }
+
+  // Validar cidade
+  const cidadeEl=document.getElementById('cadCidade');
+  const erroCidade=document.getElementById('erroCidade');
+  if(cidade.length<2){
+    cidadeEl.classList.add('erro');erroCidade.classList.add('show');ok=false;
+  } else { cidadeEl.classList.remove('erro');erroCidade.classList.remove('show'); }
+
+  if(!ok) return;
+
+  // Mostrar tela de confirmação
+  document.getElementById('confNome').textContent=nome;
+  document.getElementById('confEmail').textContent=email;
+  document.getElementById('confCelular').textContent=document.getElementById('cadCelular').value;
+  document.getElementById('confIdade').textContent=idade+' anos';
+  document.getElementById('confGenero').textContent=genero;
+  document.getElementById('confCidade').textContent=cidade;
+  ir('telaConfirm');
+}
+
+function iniciarQuiz(){
+  const nome=document.getElementById('cadNome').value.trim();
   const email=document.getElementById('cadEmail').value.trim();
   const cel=document.getElementById('cadCelular').value.trim();
-  if(!nome||!idade||!cidade||!email||!cel){
-    alert('Por favor preencha todos os campos!');return;
-  }
-  CADASTRO={nome,idade,cidade,email,celular:cel,comanda:COMANDA,data:dataHora().d,hora:dataHora().h};
+  const idade=document.getElementById('cadIdade').value.trim();
+  const genero=document.getElementById('cadGenero').value;
+  const cidade=document.getElementById('cadCidade').value.trim();
+  CADASTRO={nome,email,celular:cel,idade,genero,cidade,comanda:COMANDA,data:dataHora().d,hora:dataHora().h};
   PERGS=sortearPerguntas();
   IDX=0;ACERTOS=0;
   ir('telaQuiz');renderQ();
