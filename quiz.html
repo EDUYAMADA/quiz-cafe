@@ -91,6 +91,21 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0d3d18;font-family:
 .btn-jogar:active{transform:translateY(3px);box-shadow:0 1px 0 #b09000;}
 .cad-lgpd{font-size:10px;color:rgba(255,255,255,0.4);line-height:1.5;max-width:340px;}
 
+/* CADASTRO */
+#telaCadastro{gap:6px;justify-content:flex-start;overflow-y:auto;padding:10px 14px;}
+.cad-logo{font-size:10px;color:#FFD700;letter-spacing:3px;font-weight:700;text-align:center;width:100%;}
+.cad-titulo{font-size:17px;font-weight:900;color:#fff;text-align:center;width:100%;}
+.cad-sub{font-size:12px;color:#afd;text-align:center;width:100%;}
+.cad-form{width:100%;max-width:340px;display:flex;flex-direction:column;gap:7px;}
+.cad-field{display:flex;flex-direction:column;gap:3px;}
+.cad-label{font-size:10px;color:#FFD700;font-weight:700;letter-spacing:1px;}
+.cad-input{padding:10px 13px;border-radius:12px;border:2px solid rgba(255,215,0,0.3);background:rgba(255,255,255,0.08);color:#fff;font-size:14px;outline:none;width:100%;}
+.cad-input:focus{border-color:#FFD700;}
+.cad-input::placeholder{color:rgba(255,255,255,0.35);}
+.btn-jogar{width:100%;padding:13px;border-radius:14px;border:none;background:#FFD700;color:#1a4d00;font-size:15px;font-weight:900;cursor:pointer;box-shadow:0 4px 0 #b09000;transition:transform 0.1s,box-shadow 0.1s;}
+.btn-jogar:active{transform:translateY(3px);box-shadow:0 1px 0 #b09000;}
+.cad-lgpd{font-size:10px;color:rgba(255,255,255,0.35);line-height:1.5;text-align:center;width:100%;}
+
 /* RESULTADO */
 #telaResultado{overflow-y:auto;justify-content:flex-start;padding:16px 14px 30px;}
 
@@ -175,6 +190,22 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0d3d18;font-family:
   </div>
   <div class="badge-comanda" id="badgeComanda">🎫 Comanda válida</div>
   <button class="btn-comecar" onclick="comecar()">⚽ COMEÇAR O QUIZ!</button>
+</div>
+
+<div class="tela oculta" id="telaCadastro">
+  <div class="cad-logo">☕ CAFÉ COM ORQUÍDEA</div>
+  <span style="font-size:44px;display:block;text-align:center;animation:float 3s ease-in-out infinite;margin:4px 0">☕🌸</span>
+  <div class="cad-titulo">🏆 Quiz da Copa 2026</div>
+  <div class="cad-sub">Preencha seus dados para jogar!</div>
+  <div class="cad-form">
+    <div class="cad-field"><label class="cad-label">NOME COMPLETO *</label><input class="cad-input" id="cadNome" type="text" placeholder="Seu nome completo"></div>
+    <div class="cad-field"><label class="cad-label">IDADE *</label><input class="cad-input" id="cadIdade" type="number" placeholder="Sua idade" min="1" max="120" inputmode="numeric"></div>
+    <div class="cad-field"><label class="cad-label">CIDADE *</label><input class="cad-input" id="cadCidade" type="text" placeholder="Sua cidade"></div>
+    <div class="cad-field"><label class="cad-label">EMAIL *</label><input class="cad-input" id="cadEmail" type="email" placeholder="seu@email.com" inputmode="email"></div>
+    <div class="cad-field"><label class="cad-label">CELULAR *</label><input class="cad-input" id="cadCelular" type="tel" placeholder="(11) 99999-9999" inputmode="tel"></div>
+    <button class="btn-jogar" onclick="confirmarCadastro()">⚽ JOGAR AGORA!</button>
+  </div>
+  <div class="cad-lgpd">🔒 Seus dados são usados apenas pelo Café com Orquídea.</div>
 </div>
 
 <div class="tela oculta" id="telaQuiz">
@@ -408,6 +439,18 @@ const BANCO=[
 {txt:"Qual foi o único gol de pênalti marcado na final da Copa de 2022?",alts:["Mbappé no 1º tempo","Messi no 2º tempo","Mbappé na prorrogação","Messi nos pênaltis","Messi no 2º tempo da prorrogação"],certa:1,dif:"dificil",exp:"Messi converteu o pênalti que fez 2×0 para a Argentina no segundo tempo da final de 2022."},
 {txt:"Quantos jogadores foram expulsos na história das finais de Copa?",alts:["1","2","3","4","5"],certa:2,dif:"dificil",exp:"Apenas 3 jogadores foram expulsos em finais de Copa: Monti (1930), Coelho (1978) e Zidane (2006)."},
 {txt:"Qual foi o primeiro time a ser campeão e vice-campeão da Copa do Mundo?",alts:["Brasil","Uruguai","Itália","Alemanha","Argentina"],certa:1,dif:"dificil",exp:"O Uruguai foi campeão em 1930 e vice-campeão em 1950, no Maracanazo."},
+,
+// ======= FÁCEIS EXTRA — COPA 2026 FÁCEIS =======
+{txt:"O Brasil vai jogar a Copa 2026 em qual país da América do Norte?",alts:["Canadá","México","Estados Unidos","Cuba","Porto Rico"],certa:2,dif:"facil",exp:"O Brasil joga no grupo com jogos nos Estados Unidos, um dos três países sede da Copa 2026."},
+{txt:"Qual jogador brasileiro é chamado de 'Vini Jr'?",alts:["Vinícius Souza","Vinicius Jr — atacante do Real Madrid","Vinícius Tobias","Vinicius Lima","Vinicius Assunção"],certa:1,dif:"facil",exp:"Vinicius Jr., atacante do Real Madrid, é um dos melhores jogadores do mundo e jogará pela Seleção na Copa 2026."},
+{txt:"Qual time espanhol tem mais jogadores da Seleção Brasileira?",alts:["Barcelona","Atlético de Madrid","Sevilla","Real Madrid","Valencia"],certa:3,dif:"facil",exp:"O Real Madrid concentra o maior número de brasileiros convocados: Vinicius Jr, Rodrygo e Militão."},
+{txt:"Qual a cor do uniforme reserva do Brasil na Copa 2026?",alts:["Vermelho","Verde","Azul","Branco","Preto"],certa:2,dif:"facil",exp:"O uniforme reserva do Brasil é azul, inspirado no céu e no oceano brasileiros."},
+{txt:"Quantos jogadores cada time pode levar numa Copa do Mundo?",alts:["18","20","23","26","30"],certa:3,dif:"facil",exp:"Cada seleção pode inscrever 26 jogadores na Copa do Mundo desde 2022."},
+{txt:"Qual o nome do goleiro titular do Brasil na Copa 2026?",alts:["Ederson","Weverton","Alisson","Bento","Caique"],certa:2,dif:"facil",exp:"Alisson Becker, goleiro do Liverpool, é o titular absoluto do Brasil na Copa 2026."},
+{txt:"Qual jogador brasileiro atua no Barcelona e é considerado uma das maiores promessas?",alts:["Endrick","Rodrygo","Estêvão","Savinho","Gabriel Martinelli"],certa:2,dif:"facil",exp:"Estêvão foi contratado pelo Barcelona e é uma das maiores promessas do futebol brasileiro."},
+{txt:"O Brasil joga contra Marrocos na estreia da Copa 2026. Em qual cidade dos EUA?",alts:["Nova York","Miami","Los Angeles","Dallas","Chicago"],certa:3,dif:"facil",exp:"Brasil x Marrocos acontece no AT&T Stadium em Dallas, Texas, no dia 13 de junho de 2026."},
+{txt:"Qual seleção é a atual campeã do mundo entrando na Copa 2026?",alts:["Brasil","França","Alemanha","Argentina","Espanha"],certa:3,dif:"facil",exp:"A Argentina é a atual campeã do mundo, tendo vencido a Copa de 2022 no Catar."},
+{txt:"Qual continente tem mais seleções classificadas para a Copa 2026?",alts:["Europa","América do Sul","África","Ásia","América do Norte"],certa:0,dif:"facil",exp:"A Europa tem o maior número de vagas — 16 seleções europeias participam da Copa 2026."}
 ];
 
 // ANTI-REPETIÇÃO: guarda IDs das últimas perguntas no localStorage
@@ -658,21 +701,21 @@ function finalizar(){
     </div>`;
 
   } else {
-    const cappuccino=ACERTOS===5;
-    setTimeout(()=>{cappuccino?jingleCappuccino():jingleEspresso();},300);
+    const moka=ACERTOS===5;
+    setTimeout(()=>{moka?jingleCappuccino():jingleEspresso();},300);
     tel.innerHTML=`
     <div class="res-premio-wrap">
       <div class="res-cafe-logo">☕ CAFÉ COM ORQUÍDEA</div>
       <div class="res-box">
-        <div class="res-topo ${cappuccino?'cappuccino':'espresso'}">
+        <div class="res-topo ${moka?'cappuccino':'espresso'}">
           <div class="res-topo-deco"></div>
-          <div class="res-trofeus">${cappuccino?'🏆🏆':'🏆'}</div>
+          <div class="res-trofeus">${moka?'🏆🏆':'🏆'}</div>
           <div class="res-titulo">PARABÉNS!</div>
           <div class="res-subtitulo">${cappuccino?'VOCÊ ACERTOU TODAS AS 5 PERGUNTAS!':'Você acertou '+ACERTOS+' de 5 perguntas.'}</div>
         </div>
         <div class="res-corpo">
           <div class="res-cafe-nome-box">☕ CAFÉ COM ORQUÍDEA</div>
-          <span class="res-icone-premio">${cappuccino?'☕✨':'☕'}</span>
+          <span class="res-icone-premio">${moka?'☕✨':'☕'}</span>
           <div class="res-voce-ganhou">Você ganhou:</div>
           <div class="res-nome-premio">${cappuccino?'☕✨ CAPPUCCINO ESPECIAL DA COPA':'☕ CAFÉ ESPRESSO TRADICIONAL'}</div>
           <div class="res-unidade">1 (uma) unidade</div>
@@ -703,7 +746,7 @@ function salvarDados(){
     const reg={
       ...CADASTRO,
       acertos:ACERTOS,
-      premio:ACERTOS>=5?'Cappuccino Especial':ACERTOS>=3?'Cafe Espresso':'Sem premio',
+      premio:ACERTOS>=5?'Moka da Copa':ACERTOS>=3?'Cafe Espresso':'Sem premio',
       timestamp:new Date().toISOString()
     };
     let dados=[];
