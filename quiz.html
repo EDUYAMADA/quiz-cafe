@@ -917,8 +917,7 @@ function finalizar(){
 
 const _a='ghp_xaiu6Mv',_b='OZfAsRe7r4',_c='vVI113gxiTpnm06PANi';
 const GH_TOKEN=_a+_b+_c;
-const GH_REPO='EDUYAMADA/quiz-cafe';
-const GH_FILE='dados_clientes.json';
+const GIST_ID='497e445026e5079b4625c9944929e917';
 
 function salvarDados(){
   const dh=dataHora();
@@ -948,40 +947,31 @@ function salvarDados(){
 }
 
 function salvarGitHub(reg){
-  const url='https://api.github.com/repos/'+GH_REPO+'/contents/'+GH_FILE;
+  // Usar GitHub Gist API — tem CORS habilitado!
+  const url='https://api.github.com/gists/'+GIST_ID;
+  // Primeiro ler dados atuais
   fetch(url,{
     headers:{'Authorization':'token '+GH_TOKEN,'Accept':'application/vnd.github.v3+json'},
     cache:'no-store'
   })
-  .then(function(r){
-    if(!r.ok) throw new Error('arquivo_nao_existe');
-    return r.json();
-  })
-  .then(function(data){
+  .then(function(r){ return r.json(); })
+  .then(function(gist){
     let lista=[];
     try{
-      const raw=data.content.split('\n').join('');
-      const decoded=decodeURIComponent(escape(atob(raw)));
-      lista=JSON.parse(decoded);
-    }catch(e){lista=[];}
+      const conteudo=gist.files['dados_clientes.json'].content;
+      lista=JSON.parse(conteudo);
+    }catch(e){ lista=[]; }
     lista.push(reg);
-    const novoConteudo=btoa(unescape(encodeURIComponent(JSON.stringify(lista,null,2))));
+    // Atualizar o gist
     return fetch(url,{
-      method:'PUT',
+      method:'PATCH',
       headers:{'Authorization':'token '+GH_TOKEN,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
-      body:JSON.stringify({message:'Quiz: '+reg.nome+' comanda '+reg.comanda,content:novoConteudo,sha:data.sha})
+      body:JSON.stringify({files:{'dados_clientes.json':{content:JSON.stringify(lista,null,2)}}})
     });
   })
-  .catch(function(){
-    // Arquivo não existe — criar do zero
-    const lista=[reg];
-    const novoConteudo=btoa(unescape(encodeURIComponent(JSON.stringify(lista,null,2))));
-    fetch(url,{
-      method:'PUT',
-      headers:{'Authorization':'token '+GH_TOKEN,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
-      body:JSON.stringify({message:'Quiz: criar dados_clientes.json',content:novoConteudo})
-    });
-  });
+  .then(function(r){ return r.json(); })
+  .then(function(){ console.log('✅ Dados salvos no Gist!'); })
+  .catch(function(e){ console.error('Erro ao salvar Gist:',e); });
 }
 
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
