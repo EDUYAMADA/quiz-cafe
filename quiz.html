@@ -424,17 +424,51 @@ function sortearPerguntas(){
 // AUDIO
 const AC=new(window.AudioContext||window.webkitAudioContext)();
 function resumirAudio(){if(AC.state==='suspended')AC.resume();}
-function beep(n){n.forEach(([f,t,d,tp])=>{const o=AC.createOscillator(),g=AC.createGain();o.connect(g);g.connect(AC.destination);o.frequency.value=f;o.type=tp||'sine';g.gain.setValueAtTime(0,AC.currentTime+t);g.gain.linearRampToValueAtTime(0.2,AC.currentTime+t+0.04);g.gain.linearRampToValueAtTime(0,AC.currentTime+t+d);o.start(AC.currentTime+t);o.stop(AC.currentTime+t+d+0.05);});}
+
+function nota(freq,start,dur,type,vol){
+  const o=AC.createOscillator(),g=AC.createGain();
+  o.connect(g);g.connect(AC.destination);
+  o.type=type||'sine';o.frequency.value=freq;
+  g.gain.setValueAtTime(0,AC.currentTime+start);
+  g.gain.linearRampToValueAtTime(vol||0.22,AC.currentTime+start+0.04);
+  g.gain.linearRampToValueAtTime(0,AC.currentTime+start+dur);
+  o.start(AC.currentTime+start);
+  o.stop(AC.currentTime+start+dur+0.06);
+}
+
 // ✅ ACERTO — Fanfarra gol Ta-ta-ta-TAAA
-function beepAcerto(){beep([[523,0,0.09,'sine',0.22],[523,0.10,0.09,'sine',0.22],[659,0.21,0.14,'sine',0.22],[784,0.36,0.32,'sine',0.25]]);}
+function beepAcerto(){
+  nota(523,0,0.09,'sine',0.25);
+  nota(523,0.11,0.09,'sine',0.25);
+  nota(659,0.23,0.13,'sine',0.25);
+  nota(784,0.38,0.35,'sine',0.28);
+}
+
 // ❌ ERRO — Buzzer grave pesado
-function beepErro(){beep([[220,0,0.1,'sawtooth',0.22],[196,0.11,0.1,'sawtooth',0.20],[165,0.22,0.18,'sawtooth',0.18]]);}
-// ⏰ URGENTE — bip rápido
-function beepUrgente(){beep([[440,0,0.07,'square',0.1]]);}
+function beepErro(){
+  nota(220,0,0.12,'sawtooth',0.22);
+  nota(196,0.13,0.12,'sawtooth',0.20);
+  nota(165,0.26,0.20,'sawtooth',0.18);
+}
+
+// ⏰ URGENTE cronômetro
+function beepUrgente(){nota(880,0,0.07,'square',0.10);}
+
 // ☕ ESPRESSO — Fanfarra vitória clássica
-function jingleEspresso(){[[523,0,.14],[523,.15,.14],[523,.3,.14],[523,.46,.08],[659,.54,.28],[587,.88,.1],[523,1.0,.1],[659,1.12,.38],[523,1.55,.5]].forEach(([f,s,d])=>beep([[f,s,d,'triangle',0.22]]));}
+function jingleEspresso(){
+  var ns=[[523,0,.14],[523,.15,.14],[523,.30,.14],[523,.46,.08],
+          [659,.54,.28],[587,.88,.10],[523,1.00,.10],
+          [659,1.12,.38],[523,1.55,.50]];
+  ns.forEach(function(n){nota(n[0],n[1],n[2],'triangle',0.22);});
+}
+
 // 🏆 CAPPUCCINO — Dobrado triunfal marcha campeão
-function jingleCappuccino(){[[523,0,.15],[523,.17,.15],[659,.34,.15],[784,.51,.15],[1047,.68,.3],[784,1.02,.15],[880,1.19,.15],[988,1.36,.15],[1047,1.53,.15],[1319,1.72,.7]].forEach(([f,s,d])=>beep([[f,s,d,'triangle',0.25]]));}
+function jingleCappuccino(){
+  var ns=[[523,0,.15],[523,.17,.15],[659,.34,.15],[784,.51,.15],
+          [1047,.68,.30],[784,1.02,.15],[880,1.19,.15],
+          [988,1.36,.15],[1047,1.53,.15],[1319,1.72,.70]];
+  ns.forEach(function(n){nota(n[0],n[1],n[2],'triangle',0.26);});
+}
 
 // VALIDAÇÃO TOKEN (90 min)
 function validarToken(token){
