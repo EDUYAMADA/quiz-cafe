@@ -216,52 +216,33 @@ function entrar(){
 
 const _a='ghp_xaiu6Mv',_b='OZfAsRe7r4',_c='vVI113gxiTpnm06PANi';
 const GH_TOKEN=_a+_b+_c;
-const GH_REPO='EDUYAMADA/quiz-cafe';
-const GH_FILE='dados_clientes.json';
+const GIST_ID='497e445026e5079b4625c9944929e917';
 
 function carregar(){
   document.getElementById('ultimaAtualizacao').textContent='⏳ Carregando dados...';
-  // Usar raw.githubusercontent.com — sem CORS, sem autenticação
-  const rawUrl='https://raw.githubusercontent.com/'+GH_REPO+'/main/'+GH_FILE+'?t='+Date.now();
-  fetch(rawUrl,{cache:'no-store'})
-  .then(function(r){
-    if(r.status===404){
-      DADOS=[];renderizar();
-      document.getElementById('ultimaAtualizacao').textContent='📭 Nenhum quiz realizado ainda. Faça o primeiro!';
-      return null;
-    }
-    if(!r.ok) throw new Error('HTTP '+r.status);
-    return r.text();
+  // Usar GitHub Gist API — tem CORS habilitado!
+  fetch('https://api.github.com/gists/'+GIST_ID,{
+    headers:{'Authorization':'token '+GH_TOKEN,'Accept':'application/vnd.github.v3+json'},
+    cache:'no-store'
   })
-  .then(function(txt){
-    if(!txt)return;
-    try{ DADOS=JSON.parse(txt); }catch(e){ DADOS=[]; }
+  .then(function(r){
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    return r.json();
+  })
+  .then(function(gist){
+    try{
+      const conteudo=gist.files['dados_clientes.json'].content;
+      DADOS=JSON.parse(conteudo);
+    }catch(e){ DADOS=[]; }
     document.getElementById('ultimaAtualizacao').textContent=
       '✅ '+new Date().toLocaleString('pt-BR')+' — '+DADOS.length+' participante(s)';
     renderizar();
   })
   .catch(function(e){
-    // Fallback: tentar API do GitHub
-    const apiUrl='https://api.github.com/repos/'+GH_REPO+'/contents/'+GH_FILE;
-    fetch(apiUrl,{headers:{'Authorization':'token '+GH_TOKEN,'Accept':'application/vnd.github.v3+json'}})
-    .then(function(r){ return r.json(); })
-    .then(function(data){
-      try{
-        const raw=data.content.split('\n').join('');
-        const decoded=decodeURIComponent(escape(atob(raw)));
-        DADOS=JSON.parse(decoded);
-      }catch(e2){ DADOS=[]; }
-      document.getElementById('ultimaAtualizacao').textContent=
-        '✅ '+new Date().toLocaleString('pt-BR')+' — '+DADOS.length+' participante(s)';
-      renderizar();
-    })
-    .catch(function(e2){
-      // Último recurso: localStorage
-      try{ DADOS=JSON.parse(localStorage.getItem('quiz_clientes')||'[]'); }catch(e3){ DADOS=[]; }
-      document.getElementById('ultimaAtualizacao').textContent=
-        '⚠️ Dados locais — '+DADOS.length+' registro(s)';
-      renderizar();
-    });
+    document.getElementById('ultimaAtualizacao').textContent='❌ Erro: '+e.message;
+    console.error('Erro ao carregar Gist:',e);
+    DADOS=[];
+    renderizar();
   });
 }
 
