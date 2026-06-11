@@ -113,6 +113,9 @@ tr:hover td{background:rgba(255,255,255,0.04);}
         <input type="checkbox" id="expPremio" style="width:16px;height:16px;accent-color:#FFD700"> Prêmio
       </label>
       <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:#dfd;cursor:pointer">
+        <input type="checkbox" id="expEstado" style="width:16px;height:16px;accent-color:#FFD700"> Estado
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:#dfd;cursor:pointer">
         <input type="checkbox" id="expData" style="width:16px;height:16px;accent-color:#FFD700"> Data/Hora
       </label>
     </div>
@@ -179,7 +182,7 @@ tr:hover td{background:rgba(255,255,255,0.04);}
             <th>CELULAR</th>
             <th>IDADE</th>
             <th>GÊNERO</th>
-            <th>CIDADE</th>
+            <th>CIDADE</th><th>ESTADO</th>
             <th>COMANDA</th>
             <th>ACERTOS</th>
             <th>PRÊMIO</th>
@@ -217,27 +220,39 @@ const GH_REPO='EDUYAMADA/quiz-cafe';
 const GH_FILE='dados_clientes.json';
 
 function carregar(){
-  document.getElementById('ultimaAtualizacao').textContent = '⏳ Carregando dados...';
-  fetch('https://api.github.com/repos/'+GH_REPO+'/contents/'+GH_FILE,{
+  document.getElementById('ultimaAtualizacao').textContent='⏳ Carregando dados do GitHub...';
+  const url='https://api.github.com/repos/'+GH_REPO+'/contents/'+GH_FILE+'?t='+Date.now();
+  fetch(url,{
     headers:{'Authorization':'token '+GH_TOKEN,'Accept':'application/vnd.github.v3+json'},
     cache:'no-store'
   })
-  .then(r=>{
-    if(r.status===404){DADOS=[];renderizar();document.getElementById('ultimaAtualizacao').textContent='Nenhum dado ainda. Faça o primeiro quiz!';return null;}
+  .then(function(r){
+    if(r.status===404){
+      DADOS=[];
+      renderizar();
+      document.getElementById('ultimaAtualizacao').textContent='📭 Nenhum quiz realizado ainda.';
+      return null;
+    }
+    if(!r.ok) throw new Error('HTTP '+r.status);
     return r.json();
   })
-  .then(data=>{
+  .then(function(data){
     if(!data)return;
     try{
-      const decoded=decodeURIComponent(escape(atob(data.content.split('\n').join(''))));
+      const raw=data.content.split('\n').join('');
+      const decoded=decodeURIComponent(escape(atob(raw)));
       DADOS=JSON.parse(decoded);
-    }catch(e){DADOS=[];}
-    document.getElementById('ultimaAtualizacao').textContent='✅ Atualizado: '+new Date().toLocaleString('pt-BR')+' ('+DADOS.length+' registros)';
+    }catch(e){
+      console.error('Erro ao decodificar:',e);
+      DADOS=[];
+    }
+    document.getElementById('ultimaAtualizacao').textContent=
+      '✅ '+new Date().toLocaleString('pt-BR')+' — '+DADOS.length+' participante(s)';
     renderizar();
   })
-  .catch(e=>{
-    document.getElementById('ultimaAtualizacao').textContent='❌ Erro ao carregar. Verifique conexão.';
-    console.error(e);
+  .catch(function(e){
+    document.getElementById('ultimaAtualizacao').textContent='❌ Erro de conexão: '+e.message;
+    console.error('Erro carregar:',e);
   });
 }
 
@@ -318,7 +333,7 @@ function renderizar(){
       <td>${d.celular||'—'}</td>
       <td>${d.idade||'—'}</td>
       <td>${d.genero||'—'}</td>
-      <td>${d.cidade||'—'}</td>
+      <td>${d.cidade||'—'}</td><td>${d.estado||'—'}</td>
       <td style="color:#FFD700">#${String(d.comanda||0).padStart(3,'0')}</td>
       <td style="text-align:center;font-weight:900;color:${d.acertos>=3?'#0f0':'#f88'}">${d.acertos??'—'}</td>
       <td><span class="badge ${badgeCls}">${premioLabel}</span></td>
@@ -371,6 +386,7 @@ function exportarCSV(){
     {id:'expIdade', key:'idade', label:'Idade'},
     {id:'expGenero', key:'genero', label:'Genero'},
     {id:'expCidade', key:'cidade', label:'Cidade'},
+    {id:'expEstado', key:'estado', label:'Estado'},
     {id:'expComanda', key:'comanda', label:'Comanda'},
     {id:'expAcertos', key:'acertos', label:'Acertos'},
     {id:'expPremio', key:'premio', label:'Premio'},
