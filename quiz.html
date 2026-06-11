@@ -76,6 +76,21 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0d3d18;font-family:
 .btn-prox{width:100%;padding:12px;border-radius:13px;border:none;background:#FFD700;color:#1a4d00;font-size:15px;font-weight:900;cursor:pointer;box-shadow:0 4px 0 #b09000;display:none;transition:transform 0.1s,box-shadow 0.1s;}
 .btn-prox:active{transform:translateY(3px);box-shadow:0 1px 0 #b09000;}
 
+/* CADASTRO */
+#telaCadastro{gap:10px;text-align:center;justify-content:flex-start;padding:16px 14px;overflow-y:auto;}
+.cad-logo{font-size:10px;color:#FFD700;letter-spacing:3px;font-weight:700;}
+.cad-titulo{font-size:18px;font-weight:900;color:#fff;}
+.cad-sub{font-size:12px;color:#afd;margin-bottom:4px;}
+.cad-form{width:100%;max-width:340px;display:flex;flex-direction:column;gap:10px;}
+.cad-field{display:flex;flex-direction:column;gap:4px;text-align:left;}
+.cad-label{font-size:11px;color:#FFD700;font-weight:700;letter-spacing:1px;}
+.cad-input{padding:11px 14px;border-radius:12px;border:2px solid rgba(255,215,0,0.3);background:rgba(255,255,255,0.08);color:#fff;font-size:15px;outline:none;width:100%;}
+.cad-input:focus{border-color:#FFD700;}
+.cad-input::placeholder{color:rgba(255,255,255,0.35);}
+.btn-jogar{width:100%;padding:14px;border-radius:14px;border:none;background:#FFD700;color:#1a4d00;font-size:16px;font-weight:900;cursor:pointer;box-shadow:0 4px 0 #b09000;transition:transform 0.1s,box-shadow 0.1s;margin-top:4px;}
+.btn-jogar:active{transform:translateY(3px);box-shadow:0 1px 0 #b09000;}
+.cad-lgpd{font-size:10px;color:rgba(255,255,255,0.4);line-height:1.5;max-width:340px;}
+
 /* RESULTADO */
 #telaResultado{overflow-y:auto;justify-content:flex-start;padding:16px 14px 30px;}
 
@@ -488,7 +503,7 @@ function tokenJaUsado(t){return!!localStorage.getItem('token_used_'+t);}
 function marcarUsado(t){localStorage.setItem('token_used_'+t,Date.now().toString());}
 
 // ESTADO
-let TOKEN=null,IDX=0,ACERTOS=0,PERGS=[],cronoTimer=null,cronoSeg=TEMPO;
+let TOKEN=null,COMANDA=0,CADASTRO={},IDX=0,ACERTOS=0,PERGS=[],cronoTimer=null,cronoSeg=TEMPO;
 
 function ir(id){document.querySelectorAll('.tela').forEach(t=>t.classList.toggle('oculta',t.id!==id));}
 
@@ -509,12 +524,27 @@ window.onload=function(){
   if(!info){ir('telaInvalido');return;}
   if(info.expirado){ir('telaExpirado');return;}
   TOKEN=t;
+  COMANDA=info.comanda;
   document.getElementById('badgeComanda').textContent='🎫 Comanda #'+String(info.comanda).padStart(3,'0');
   ir('telaIntro');
 };
 
 function comecar(){
   resumirAudio();
+  ir('telaCadastro');
+  setTimeout(()=>document.getElementById('cadNome').focus(), 400);
+}
+
+function confirmarCadastro(){
+  const nome=document.getElementById('cadNome').value.trim();
+  const idade=document.getElementById('cadIdade').value.trim();
+  const cidade=document.getElementById('cadCidade').value.trim();
+  const email=document.getElementById('cadEmail').value.trim();
+  const cel=document.getElementById('cadCelular').value.trim();
+  if(!nome||!idade||!cidade||!email||!cel){
+    alert('Por favor preencha todos os campos!');return;
+  }
+  CADASTRO={nome,idade,cidade,email,celular:cel,comanda:COMANDA,data:dataHora().d,hora:dataHora().h};
   PERGS=sortearPerguntas();
   IDX=0;ACERTOS=0;
   ir('telaQuiz');renderQ();
@@ -592,6 +622,7 @@ function proxima(){resumirAudio();IDX++;if(IDX>=5){finalizar();return;}renderQ()
 
 function finalizar(){
   pararCrono();marcarUsado(TOKEN);
+  salvarDados();
   const{d,h}=dataHora();
   const tel=document.getElementById('telaResultado');
 
@@ -665,6 +696,21 @@ function finalizar(){
     </div>`;
   }
   ir('telaResultado');
+}
+
+function salvarDados(){
+  try{
+    const reg={
+      ...CADASTRO,
+      acertos:ACERTOS,
+      premio:ACERTOS>=5?'Cappuccino Especial':ACERTOS>=3?'Cafe Espresso':'Sem premio',
+      timestamp:new Date().toISOString()
+    };
+    let dados=[];
+    try{dados=JSON.parse(localStorage.getItem('quiz_clientes')||'[]');}catch(e){}
+    dados.push(reg);
+    localStorage.setItem('quiz_clientes',JSON.stringify(dados));
+  }catch(e){console.log('Erro ao salvar:',e);}
 }
 
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
