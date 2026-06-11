@@ -77,15 +77,60 @@ tr:hover td{background:rgba(255,255,255,0.04);}
 
   <div class="btns">
     <button class="btn btn-atualizar" onclick="carregar()">🔄 Atualizar</button>
-    <button class="btn btn-csv" onclick="exportarCSV()">📥 Exportar CSV</button>
-    <button class="btn btn-limpar" onclick="limparDados()">🗑️ Limpar dados</button>
+    <button class="btn btn-limpar" onclick="limparDados()">🗑️ Limpar</button>
+  </div>
+
+  <!-- EXPORTAÇÃO SELETIVA -->
+  <div class="secao" style="margin-bottom:16px">
+    <div class="secao-titulo">📥 EXPORTAR CSV</div>
+    <p style="font-size:11px;color:#9fd;margin-bottom:12px">Escolha quais dados exportar:</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+      <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:#dfd;cursor:pointer">
+        <input type="checkbox" id="expNome" checked style="width:16px;height:16px;accent-color:#FFD700"> Nome
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:#dfd;cursor:pointer">
+        <input type="checkbox" id="expEmail" checked style="width:16px;height:16px;accent-color:#FFD700"> Email
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:#dfd;cursor:pointer">
+        <input type="checkbox" id="expCelular" checked style="width:16px;height:16px;accent-color:#FFD700"> Celular
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:#dfd;cursor:pointer">
+        <input type="checkbox" id="expIdade" checked style="width:16px;height:16px;accent-color:#FFD700"> Idade
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:#dfd;cursor:pointer">
+        <input type="checkbox" id="expGenero" checked style="width:16px;height:16px;accent-color:#FFD700"> Gênero
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:#dfd;cursor:pointer">
+        <input type="checkbox" id="expCidade" checked style="width:16px;height:16px;accent-color:#FFD700"> Cidade
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:#dfd;cursor:pointer">
+        <input type="checkbox" id="expComanda" style="width:16px;height:16px;accent-color:#FFD700"> Comanda
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:#dfd;cursor:pointer">
+        <input type="checkbox" id="expAcertos" style="width:16px;height:16px;accent-color:#FFD700"> Acertos
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:#dfd;cursor:pointer">
+        <input type="checkbox" id="expPremio" style="width:16px;height:16px;accent-color:#FFD700"> Prêmio
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:#dfd;cursor:pointer">
+        <input type="checkbox" id="expData" style="width:16px;height:16px;accent-color:#FFD700"> Data/Hora
+      </label>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+      <button class="btn" style="background:rgba(255,215,0,0.1);color:#FFD700;border:1px solid rgba(255,215,0,0.3);font-size:11px;padding:6px 12px" onclick="selecionarRapido('email')">📧 Só Email</button>
+      <button class="btn" style="background:rgba(255,215,0,0.1);color:#FFD700;border:1px solid rgba(255,215,0,0.3);font-size:11px;padding:6px 12px" onclick="selecionarRapido('celular')">📱 Só Celular</button>
+      <button class="btn" style="background:rgba(255,215,0,0.1);color:#FFD700;border:1px solid rgba(255,215,0,0.3);font-size:11px;padding:6px 12px" onclick="selecionarRapido('nome_email')">👤 Nome+Email</button>
+      <button class="btn" style="background:rgba(255,215,0,0.1);color:#FFD700;border:1px solid rgba(255,215,0,0.3);font-size:11px;padding:6px 12px" onclick="selecionarRapido('nome_celular')">👤 Nome+Celular</button>
+      <button class="btn" style="background:rgba(255,215,0,0.1);color:#FFD700;border:1px solid rgba(255,215,0,0.3);font-size:11px;padding:6px 12px" onclick="selecionarRapido('todos')">✅ Todos</button>
+    </div>
+    <button class="btn btn-csv" onclick="exportarCSV()" style="width:100%;padding:12px">📥 EXPORTAR CSV SELECIONADO</button>
   </div>
 
   <!-- KPIs -->
   <div class="kpis">
     <div class="kpi"><div class="kpi-n" id="kpiTotal">0</div><div class="kpi-l">PARTICIPANTES</div></div>
     <div class="kpi"><div class="kpi-n" id="kpiHoje">0</div><div class="kpi-l">HOJE</div></div>
-    <div class="kpi"><div class="kpi-n" id="kpiCappuccino">0</div><div class="kpi-l">CAPPUCCINOS</div></div>
+    <div class="kpi"><div class="kpi-n" id="kpiMoka">0</div><div class="kpi-l">MOKAS</div></div>
     <div class="kpi"><div class="kpi-n" id="kpiEspresso">0</div><div class="kpi-l">EXPRESSOS</div></div>
   </div>
 
@@ -112,6 +157,11 @@ tr:hover td{background:rgba(255,255,255,0.04);}
   </div>
 
   <div class="secao" style="margin-bottom:16px">
+    <div class="secao-titulo">⚥ GÊNERO</div>
+    <canvas id="grafGenero"></canvas>
+  </div>
+
+  <div class="secao" style="margin-bottom:16px">
     <div class="secao-titulo">📍 TOP CIDADES</div>
     <div id="cidades" style="display:flex;flex-wrap:wrap;gap:6px;padding:4px 0"></div>
   </div>
@@ -125,10 +175,11 @@ tr:hover td{background:rgba(255,255,255,0.04);}
           <tr>
             <th>#</th>
             <th>NOME</th>
-            <th>IDADE</th>
-            <th>CIDADE</th>
             <th>EMAIL</th>
             <th>CELULAR</th>
+            <th>IDADE</th>
+            <th>GÊNERO</th>
+            <th>CIDADE</th>
             <th>COMANDA</th>
             <th>ACERTOS</th>
             <th>PRÊMIO</th>
@@ -183,16 +234,16 @@ function renderizar(){
   // KPIs
   const hoje = new Date().toLocaleDateString('pt-BR');
   const deHoje = DADOS.filter(d=>d.data===hoje).length;
-  const cappuccinos = DADOS.filter(d=>d.premio&&d.premio.includes('Cappuccino')).length;
+  const cappuccinos = DADOS.filter(d=>d.premio&&(d.premio.includes('Moka')||d.premio.includes('moka'))).length;
   const expressos = DADOS.filter(d=>d.premio&&d.premio.includes('Espresso')).length;
   document.getElementById('kpiTotal').textContent = DADOS.length;
   document.getElementById('kpiHoje').textContent = deHoje;
-  document.getElementById('kpiCappuccino').textContent = cappuccinos;
+  document.getElementById('kpiMoka').textContent = cappuccinos;
   document.getElementById('kpiEspresso').textContent = expressos;
 
   // Gráfico prêmios
   const sem = DADOS.filter(d=>d.premio&&d.premio.includes('Sem')).length;
-  desenharPizza('grafPremios',['Cappuccino','Espresso','Sem prêmio'],[cappuccinos,expressos,sem],['#009c3b','#FFD700','#555']);
+  desenharPizza('grafPremios',['Moka Especial','Espresso','Sem prêmio'],[cappuccinos,expressos,sem],['#009c3b','#FFD700','#555']);
 
   // Gráfico acertos
   const contAcertos = [0,0,0,0,0,0];
@@ -218,6 +269,15 @@ function renderizar(){
   });
   desenharBarras('grafIdade',Object.keys(faixas),Object.values(faixas),'#e870c8','Pessoas');
 
+  // Gênero
+  const generos = {'Masculino':0,'Feminino':0,'Prefiro não informar':0,'Não informado':0};
+  DADOS.forEach(d=>{
+    const g = d.genero||'Não informado';
+    if(generos[g]!==undefined) generos[g]++;
+    else generos['Não informado']++;
+  });
+  desenharPizza('grafGenero',Object.keys(generos),Object.values(generos),['#4488ff','#ff88aa','#aaaaaa','#555555']);
+
   // Cidades
   const cidadeCount = {};
   DADOS.forEach(d=>{ if(d.cidade){ const ci=d.cidade.trim(); cidadeCount[ci]=(cidadeCount[ci]||0)+1; }});
@@ -233,10 +293,11 @@ function renderizar(){
     return `<tr>
       <td style="color:#FFD700">${DADOS.length-i}</td>
       <td style="font-weight:600">${d.nome||'—'}</td>
-      <td>${d.idade||'—'}</td>
-      <td>${d.cidade||'—'}</td>
       <td style="color:#afd">${d.email||'—'}</td>
       <td>${d.celular||'—'}</td>
+      <td>${d.idade||'—'}</td>
+      <td>${d.genero||'—'}</td>
+      <td>${d.cidade||'—'}</td>
       <td style="color:#FFD700">#${String(d.comanda||0).padStart(3,'0')}</td>
       <td style="text-align:center;font-weight:900;color:${d.acertos>=3?'#0f0':'#f88'}">${d.acertos??'—'}</td>
       <td><span class="badge ${badgeCls}">${premioLabel}</span></td>
@@ -269,18 +330,48 @@ function desenharBarras(id, labels, dados, cor, label){
   });
 }
 
+function selecionarRapido(tipo){
+  const campos = ['expNome','expEmail','expCelular','expIdade','expGenero','expCidade','expComanda','expAcertos','expPremio','expData'];
+  campos.forEach(id=>document.getElementById(id).checked=false);
+  if(tipo==='email'){ document.getElementById('expEmail').checked=true; }
+  else if(tipo==='celular'){ document.getElementById('expCelular').checked=true; }
+  else if(tipo==='nome_email'){ document.getElementById('expNome').checked=true; document.getElementById('expEmail').checked=true; }
+  else if(tipo==='nome_celular'){ document.getElementById('expNome').checked=true; document.getElementById('expCelular').checked=true; }
+  else if(tipo==='todos'){ campos.forEach(id=>document.getElementById(id).checked=true); }
+}
+
 function exportarCSV(){
   if(DADOS.length===0){ alert('Nenhum dado para exportar!'); return; }
-  const headers = ['#','Nome','Idade','Cidade','Email','Celular','Comanda','Acertos','Premio','Data','Hora'];
-  const rows = DADOS.map((d,i)=>[
-    i+1, d.nome||'', d.idade||'', d.cidade||'', d.email||'',
-    d.celular||'', d.comanda||'', d.acertos??'', d.premio||'', d.data||'', d.hora||''
-  ]);
-  const csv = [headers, ...rows].map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
-  const blob = new Blob(['\uFEFF'+csv], {type:'text/csv;charset=utf-8;'});
+
+  const campos = [
+    {id:'expNome', key:'nome', label:'Nome'},
+    {id:'expEmail', key:'email', label:'Email'},
+    {id:'expCelular', key:'celular', label:'Celular'},
+    {id:'expIdade', key:'idade', label:'Idade'},
+    {id:'expGenero', key:'genero', label:'Genero'},
+    {id:'expCidade', key:'cidade', label:'Cidade'},
+    {id:'expComanda', key:'comanda', label:'Comanda'},
+    {id:'expAcertos', key:'acertos', label:'Acertos'},
+    {id:'expPremio', key:'premio', label:'Premio'},
+    {id:'expData', key:'data', label:'Data'},
+  ];
+
+  const selecionados = campos.filter(c=>document.getElementById(c.id).checked);
+  if(selecionados.length===0){ alert('Selecione pelo menos um campo!'); return; }
+
+  const headers = selecionados.map(c=>c.label);
+  const rows = DADOS.map(d=>selecionados.map(c=>{
+    let v = d[c.key]??'';
+    if(c.key==='comanda') v = '#'+String(v).padStart(3,'0');
+    return v;
+  }));
+
+  const csv = [headers,...rows].map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const blob = new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href=url; a.download='quiz-cafe-'+new Date().toISOString().slice(0,10)+'.csv';
+  const tipo = selecionados.length===1?selecionados[0].label.toLowerCase():'dados';
+  a.href=url; a.download='quiz-cafe-'+tipo+'-'+new Date().toISOString().slice(0,10)+'.csv';
   a.click(); URL.revokeObjectURL(url);
 }
 
