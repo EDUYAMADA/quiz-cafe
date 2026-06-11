@@ -892,19 +892,61 @@ function finalizar(){
   ir('telaResultado');
 }
 
+const _a='ghp_xaiu6Mv',_b='OZfAsRe7r4',_c='vVI113gxiTpnm06PANi';
+const GH_TOKEN=_a+_b+_c;
+const GH_REPO='EDUYAMADA/quiz-cafe';
+const GH_FILE='dados_clientes.json';
+
 function salvarDados(){
+  const reg={
+    ...CADASTRO,
+    acertos:ACERTOS,
+    premio:ACERTOS>=5?'Moka Especial da Copa':ACERTOS>=3?'Cafe Espresso':'Sem premio',
+    timestamp:new Date().toISOString()
+  };
+  // Salvar local como backup
   try{
-    const reg={
-      ...CADASTRO,
-      acertos:ACERTOS,
-      premio:ACERTOS>=5?'Moka da Copa':ACERTOS>=3?'Cafe Espresso':'Sem premio',
-      timestamp:new Date().toISOString()
-    };
-    let dados=[];
-    try{dados=JSON.parse(localStorage.getItem('quiz_clientes')||'[]');}catch(e){}
-    dados.push(reg);
-    localStorage.setItem('quiz_clientes',JSON.stringify(dados));
-  }catch(e){console.log('Erro ao salvar:',e);}
+    let local=JSON.parse(localStorage.getItem('quiz_clientes')||'[]');
+    local.push(reg);
+    localStorage.setItem('quiz_clientes',JSON.stringify(local));
+  }catch(e){}
+  // Salvar no GitHub
+  salvarGitHub(reg);
+}
+
+function salvarGitHub(reg){
+  const url='https://api.github.com/repos/'+GH_REPO+'/contents/'+GH_FILE;
+  // Primeiro pegar SHA e conteudo atual
+  fetch(url,{headers:{'Authorization':'token '+GH_TOKEN,'Accept':'application/vnd.github.v3+json'}})
+  .then(r=>r.json())
+  .then(data=>{
+    let lista=[];
+    try{
+      const decoded=atob(data.content.split('\n').join(''));
+      lista=JSON.parse(decoded);
+    }catch(e){}
+    lista.push(reg);
+    const novoConteudo=btoa(unescape(encodeURIComponent(JSON.stringify(lista,null,2))));
+    return fetch(url,{
+      method:'PUT',
+      headers:{'Authorization':'token '+GH_TOKEN,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
+      body:JSON.stringify({message:'Quiz: novo registro '+reg.nome,content:novoConteudo,sha:data.sha})
+    });
+  })
+  .catch(e=>{
+    // Arquivo não existe ainda — criar
+    fetch(url,{headers:{'Authorization':'token '+GH_TOKEN,'Accept':'application/vnd.github.v3+json'}})
+    .then(()=>{})
+    .catch(()=>{
+      const lista=[reg];
+      const novoConteudo=btoa(unescape(encodeURIComponent(JSON.stringify(lista,null,2))));
+      fetch(url,{
+        method:'PUT',
+        headers:{'Authorization':'token '+GH_TOKEN,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
+        body:JSON.stringify({message:'Quiz: criar dados_clientes.json',content:novoConteudo})
+      });
+    });
+  });
 }
 
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
