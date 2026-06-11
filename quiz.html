@@ -130,7 +130,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0d3d18;font-family:
 .res-box{border-radius:22px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,0.5);border:2px solid #FFD700;}
 .res-topo{padding:22px 20px 16px;text-align:center;position:relative;}
 .res-topo.espresso{background:linear-gradient(135deg,#4a2800,#7b4a1e);}
-.res-topo.cappuccino{background:linear-gradient(135deg,#006b28,#009c3b);}
+.res-topo.moka{background:linear-gradient(135deg,#006b28,#009c3b);}
 .res-topo-deco{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(255,215,0,0.2),transparent 70%);}
 .res-trofeus{font-size:24px;letter-spacing:4px;margin-bottom:5px;position:relative;z-index:1;}
 .res-titulo{font-size:24px;font-weight:900;color:#FFD700;margin-bottom:3px;position:relative;z-index:1;text-shadow:0 2px 8px rgba(0,0,0,0.5);}
@@ -186,7 +186,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0d3d18;font-family:
     <div class="regra"><span>⚽</span><span><strong>5 perguntas</strong> — 15 segundos cada!</span></div>
     <div class="regra"><span>⏱️</span><span>Tempo esgotado = resposta errada</span></div>
     <div class="regra"><span>☕</span><span>3 ou 4 acertos = <strong style="color:#FFD700">1 Café Espresso!</strong></span></div>
-    <div class="regra"><span>🏆</span><span>5 acertos = <strong style="color:#FFD700">1 Cappuccino Especial da Copa!</strong></span></div>
+    <div class="regra"><span>🏆</span><span>5 acertos = <strong style="color:#FFD700">1 Moka Especial da Copa!</strong></span></div>
   </div>
   <div class="badge-comanda" id="badgeComanda">🎫 Comanda válida</div>
   <button class="btn-comecar" onclick="comecar()">⚽ COMEÇAR O QUIZ!</button>
@@ -520,8 +520,8 @@ function jingleEspresso(){
   ns.forEach(function(n){nota(n[0],n[1],n[2],'triangle',0.22);});
 }
 
-// 🏆 CAPPUCCINO — Dobrado triunfal marcha campeão
-function jingleCappuccino(){
+// 🏆 MOKA ESPECIAL DA COPA — Dobrado triunfal marcha campeão
+function jingleMoka Especial da Copa(){
   var ns=[[523,0,.15],[523,.17,.15],[659,.34,.15],[784,.51,.15],
           [1047,.68,.30],[784,1.02,.15],[880,1.19,.15],
           [988,1.36,.15],[1047,1.53,.15],[1319,1.72,.70]];
@@ -702,22 +702,22 @@ function finalizar(){
 
   } else {
     const moka=ACERTOS===5;
-    setTimeout(()=>{moka?jingleCappuccino():jingleEspresso();},300);
+    setTimeout(()=>{moka?jingleMoka Especial da Copa():jingleEspresso();},300);
     tel.innerHTML=`
     <div class="res-premio-wrap">
       <div class="res-cafe-logo">☕ CAFÉ COM ORQUÍDEA</div>
       <div class="res-box">
-        <div class="res-topo ${moka?'cappuccino':'espresso'}">
+        <div class="res-topo ${moka?'moka':'espresso'}">
           <div class="res-topo-deco"></div>
           <div class="res-trofeus">${moka?'🏆🏆':'🏆'}</div>
           <div class="res-titulo">PARABÉNS!</div>
-          <div class="res-subtitulo">${cappuccino?'VOCÊ ACERTOU TODAS AS 5 PERGUNTAS!':'Você acertou '+ACERTOS+' de 5 perguntas.'}</div>
+          <div class="res-subtitulo">${moka?'VOCÊ ACERTOU TODAS AS 5 PERGUNTAS!':'Você acertou '+ACERTOS+' de 5 perguntas.'}</div>
         </div>
         <div class="res-corpo">
           <div class="res-cafe-nome-box">☕ CAFÉ COM ORQUÍDEA</div>
           <span class="res-icone-premio">${moka?'☕✨':'☕'}</span>
           <div class="res-voce-ganhou">Você ganhou:</div>
-          <div class="res-nome-premio">${cappuccino?'☕✨ CAPPUCCINO ESPECIAL DA COPA':'☕ CAFÉ ESPRESSO TRADICIONAL'}</div>
+          <div class="res-nome-premio">${moka?'☕✨ MOKA ESPECIAL DA COPA':'☕ CAFÉ ESPRESSO TRADICIONAL'}</div>
           <div class="res-unidade">1 (uma) unidade</div>
           <div class="res-instrucao">📲 Apresente esta tela a um de nossos<br>atendentes para retirar seu prêmio.</div>
           <div class="res-datetime">
