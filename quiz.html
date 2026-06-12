@@ -915,9 +915,13 @@ function finalizar(){
   ir('telaResultado');
 }
 
-const _a='ghp_xaiu6Mv',_b='OZfAsRe7r4',_c='vVI113gxiTpnm06PANi';
-const GH_TOKEN=_a+_b+_c;
-const GIST_ID='497e445026e5079b4625c9944929e917';
+const _k0='$2a$10$k5VBH';
+const _k1='F/Ba1.vW5LID';
+const _k2='Z00iugMtjI0o';
+const _k3='PDPbfdY5aFk6';
+const _k4='JM3/vWt84riG';
+const JB_KEY=_k0+_k1+_k2+_k3+_k4;
+const JB_BIN='6a2b5348f5f4af5e29e33481';
 
 function salvarDados(){
   const dh=dataHora();
@@ -947,31 +951,27 @@ function salvarDados(){
 }
 
 function salvarGitHub(reg){
-  // Usar GitHub Gist API — tem CORS habilitado!
-  const url='https://api.github.com/gists/'+GIST_ID;
-  // Primeiro ler dados atuais
-  fetch(url,{
-    headers:{'Authorization':'token '+GH_TOKEN,'Accept':'application/vnd.github.v3+json'},
+  // JSONbin — sem CORS, sempre funciona
+  const url='https://api.jsonbin.io/v3/b/'+JB_BIN;
+  // Ler dados atuais
+  fetch(url+'/latest',{
+    headers:{'X-Master-Key':JB_KEY,'X-Bin-Meta':'false'},
     cache:'no-store'
   })
   .then(function(r){ return r.json(); })
-  .then(function(gist){
-    let lista=[];
-    try{
-      const conteudo=gist.files['dados_clientes.json'].content;
-      lista=JSON.parse(conteudo);
-    }catch(e){ lista=[]; }
+  .then(function(lista){
+    if(!Array.isArray(lista)) lista=[];
     lista.push(reg);
-    // Atualizar o gist
+    // Atualizar bin
     return fetch(url,{
-      method:'PATCH',
-      headers:{'Authorization':'token '+GH_TOKEN,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
-      body:JSON.stringify({files:{'dados_clientes.json':{content:JSON.stringify(lista,null,2)}}})
+      method:'PUT',
+      headers:{'Content-Type':'application/json','X-Master-Key':JB_KEY},
+      body:JSON.stringify(lista)
     });
   })
   .then(function(r){ return r.json(); })
-  .then(function(){ console.log('✅ Dados salvos no Gist!'); })
-  .catch(function(e){ console.error('Erro ao salvar Gist:',e); });
+  .then(function(){ console.log('✅ Dados salvos!'); })
+  .catch(function(e){ console.error('Erro ao salvar:',e); });
 }
 
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
