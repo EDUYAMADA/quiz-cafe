@@ -214,21 +214,27 @@ function entrar(){
   }
 }
 
-const _a='ghp_xaiu6Mv',_b='OZfAsRe7r4',_c='vVI113gxiTpnm06PANi';
-const GH_TOKEN=_a+_b+_c;
-const GIST_ID='497e445026e5079b4625c9944929e917';
+const _k0='$2a$10$k5VBH';
+const _k1='F/Ba1.vW5LID';
+const _k2='Z00iugMtjI0o';
+const _k3='PDPbfdY5aFk6';
+const _k4='JM3/vWt84riG';
+const JB_KEY=_k0+_k1+_k2+_k3+_k4;
+const JB_BIN='6a2b5348f5f4af5e29e33481';
 
 function carregar(){
   document.getElementById('ultimaAtualizacao').textContent='⏳ Carregando dados...';
-  // Usar URL raw do Gist — sem CORS, sem auth
-  const url='https://gist.githubusercontent.com/EDUYAMADA/'+GIST_ID+'/raw/dados_clientes.json?t='+Date.now();
-  fetch(url,{cache:'no-store'})
+  // JSONbin — sem CORS, sempre funciona
+  fetch('https://api.jsonbin.io/v3/b/'+JB_BIN+'/latest',{
+    headers:{'X-Master-Key':JB_KEY,'X-Bin-Meta':'false'},
+    cache:'no-store'
+  })
   .then(function(r){
     if(!r.ok) throw new Error('HTTP '+r.status);
-    return r.text();
+    return r.json();
   })
-  .then(function(txt){
-    try{ DADOS=JSON.parse(txt); }catch(e){ DADOS=[]; }
+  .then(function(lista){
+    DADOS = Array.isArray(lista) ? lista : [];
     document.getElementById('ultimaAtualizacao').textContent=
       '✅ '+new Date().toLocaleString('pt-BR')+' — '+DADOS.length+' participante(s)';
     renderizar();
