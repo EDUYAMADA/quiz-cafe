@@ -11,29 +11,15 @@ on:
                       steps:
                             - uses: actions/checkout@v4
 
-                                        - name: Fix background-position in index.html
-                                                run: |
-                                                          python3 - <<'EOF'
-                                                                    with open('doutor-orquidea/index.html', 'r', encoding='utf-8') as f:
-                                                                                  content = f.read()
+                                  - name: Add fix.css link to index.html
+                                          run: |
+                                                    sed -i 's|<head>|<head><link rel="stylesheet" href="fix.css">|' doutor-orquidea/index.html
+                                                              echo "Done"
 
-                                                                                                      # Insert link to fix.css right after <head>
-                                                                                                                fixed = content.replace(
-                                                                                                                              '<head>',
-                                                                                                                                            '<head><link rel="stylesheet" href="fix.css">',
-                                                                                                                                                          1  # Only replace first occurrence
-                                                                                                                                                                    )
-                                                                                                                                                                              
-                                                                                                                                                                                        with open('doutor-orquidea/index.html', 'w', encoding='utf-8') as f:
-                                                                                                                                                                                                      f.write(fixed)
-                                                                                                                                                                                                                
-                                                                                                                                                                                                                          print('Done! Changes made:', '<head>' in content and '<link rel="stylesheet" href="fix.css">' in fixed)
-                                                                                                                                                                                                                                    EOF
-                                                                                                                                                                                                                                          
-                                                                                                                                                                                                                                                - name: Commit changes
-                                                                                                                                                                                                                                                        run: |
-                                                                                                                                                                                                                                                                  git config user.name 'github-actions[bot]'
-                                                                                                                                                                                                                                                                            git config user.email 'github-actions[bot]@users.noreply.github.com'
-                                                                                                                                                                                                                                                                                      git add doutor-orquidea/index.html
-                                                                                                                                                                                                                                                                                                git diff --staged --quiet || git commit -m 'Fix: add fix.css link to hero section'
-                                                                                                                                                                                                                                                                                                          git push
+                                                                    - name: Commit and push
+                                                                            run: |
+                                                                                      git config user.name 'github-actions[bot]'
+                                                                                                git config user.email 'github-actions[bot]@users.noreply.github.com'
+                                                                                                          git add doutor-orquidea/index.html
+                                                                                                                    git diff --staged --quiet || git commit -m 'Fix: add fix.css link to hero'
+                                                                                                                              git push
