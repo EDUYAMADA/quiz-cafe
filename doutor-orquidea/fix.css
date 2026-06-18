@@ -1,0 +1,4 @@
+/* Fix: hero background position */
+.hero-bg {
+    background-position: center 50% !important;
+}
