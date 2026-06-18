@@ -1,0 +1,39 @@
+name: Fix Hero Background Position
+
+on:
+  workflow_dispatch:
+
+  jobs:
+    fix-hero:
+        runs-on: ubuntu-latest
+            permissions:
+                  contents: write
+                      steps:
+                            - uses: actions/checkout@v4
+
+                                        - name: Fix background-position in index.html
+                                                run: |
+                                                          python3 - <<'EOF'
+                                                                    with open('doutor-orquidea/index.html', 'r', encoding='utf-8') as f:
+                                                                                  content = f.read()
+
+                                                                                                      # Insert link to fix.css right after <head>
+                                                                                                                fixed = content.replace(
+                                                                                                                              '<head>',
+                                                                                                                                            '<head><link rel="stylesheet" href="fix.css">',
+                                                                                                                                                          1  # Only replace first occurrence
+                                                                                                                                                                    )
+                                                                                                                                                                              
+                                                                                                                                                                                        with open('doutor-orquidea/index.html', 'w', encoding='utf-8') as f:
+                                                                                                                                                                                                      f.write(fixed)
+                                                                                                                                                                                                                
+                                                                                                                                                                                                                          print('Done! Changes made:', '<head>' in content and '<link rel="stylesheet" href="fix.css">' in fixed)
+                                                                                                                                                                                                                                    EOF
+                                                                                                                                                                                                                                          
+                                                                                                                                                                                                                                                - name: Commit changes
+                                                                                                                                                                                                                                                        run: |
+                                                                                                                                                                                                                                                                  git config user.name 'github-actions[bot]'
+                                                                                                                                                                                                                                                                            git config user.email 'github-actions[bot]@users.noreply.github.com'
+                                                                                                                                                                                                                                                                                      git add doutor-orquidea/index.html
+                                                                                                                                                                                                                                                                                                git diff --staged --quiet || git commit -m 'Fix: add fix.css link to hero section'
+                                                                                                                                                                                                                                                                                                          git push
