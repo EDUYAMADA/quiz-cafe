@@ -316,7 +316,7 @@ footer{background:var(--verde-estufa);color:#d8e8d2;text-align:center;padding:40
 }
 .p-icon{font-size:26px;margin-bottom:6px}
 .p-name{font-family:'Fraunces',serif;font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:6px}
-.p-desc{font-size:.85rem;color:rgba(255,255,255,.75);line-height:1.65;margin-bottom:10px}
+.p-desc{font-size:1rem;color:rgba(255,255,255,.95);line-height:1.7;margin-bottom:12px;font-weight:500}
 .p-quote{font-family:'Fraunces',serif;font-size:1rem;font-style:italic;color:#f0a9cd;line-height:1.6;margin-bottom:10px}
 .p-tags{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
 
@@ -494,35 +494,35 @@ src="https://www.facebook.com/tr?id=1371183171543353&ev=PageView&noscript=1"
         <g transform="translate(170,170) rotate(0)" class="petal-g" data-idx="0">
           <ellipse cx="0" cy="-114" rx="42" ry="66" fill="#b0407a" opacity="0.9"/>
           <polygon points="0,-188 -12,-170 12,-170" fill="#b0407a" opacity="0.9"/>
-          <text x="0" y="-132" text-anchor="middle" font-family="Fraunces,Georgia,serif" font-size="10.5" font-weight="700" fill="#fff">Variedade</text>
+          <text x="0" y="-132" text-anchor="middle" font-family="Fraunces,Georgia,serif" font-size="13" font-weight="700" fill="#fff">Variedade</text>
         </g>
 
         <!-- Pétala 2 — Local -->
         <g transform="translate(170,170) rotate(72)" class="petal-g" data-idx="1">
           <ellipse cx="0" cy="-114" rx="42" ry="66" fill="#3e6b4a" opacity="0.9"/>
           <polygon points="0,-188 -12,-170 12,-170" fill="#3e6b4a" opacity="0.9"/>
-          <text x="0" y="-132" text-anchor="middle" font-family="Fraunces,Georgia,serif" font-size="10.5" font-weight="700" fill="#fff">Local</text>
+          <text x="0" y="-132" text-anchor="middle" font-family="Fraunces,Georgia,serif" font-size="13" font-weight="700" fill="#fff">Local</text>
         </g>
 
         <!-- Pétala 3 — Substrato -->
         <g transform="translate(170,170) rotate(144)" class="petal-g" data-idx="2">
           <ellipse cx="0" cy="-114" rx="42" ry="66" fill="#8c5a3c" opacity="0.9"/>
           <polygon points="0,-188 -12,-170 12,-170" fill="#8c5a3c" opacity="0.9"/>
-          <text x="0" y="-132" text-anchor="middle" font-family="Fraunces,Georgia,serif" font-size="10.5" font-weight="700" fill="#fff">Substrato</text>
+          <text x="0" y="-132" text-anchor="middle" font-family="Fraunces,Georgia,serif" font-size="13" font-weight="700" fill="#fff">Substrato</text>
         </g>
 
         <!-- Pétala 4 — Irrigação -->
         <g transform="translate(170,170) rotate(216)" class="petal-g" data-idx="3">
           <ellipse cx="0" cy="-114" rx="42" ry="66" fill="#4a7c59" opacity="0.9"/>
           <polygon points="0,-188 -12,-170 12,-170" fill="#4a7c59" opacity="0.9"/>
-          <text x="0" y="-132" text-anchor="middle" font-family="Fraunces,Georgia,serif" font-size="10.5" font-weight="700" fill="#fff">Irrigação</text>
+          <text x="0" y="-132" text-anchor="middle" font-family="Fraunces,Georgia,serif" font-size="13" font-weight="700" fill="#fff">Irrigação</text>
         </g>
 
         <!-- Pétala 5 — Adubação -->
         <g transform="translate(170,170) rotate(288)" class="petal-g" data-idx="4">
           <ellipse cx="0" cy="-114" rx="42" ry="66" fill="#6b4c9a" opacity="0.9"/>
           <polygon points="0,-188 -12,-170 12,-170" fill="#6b4c9a" opacity="0.9"/>
-          <text x="0" y="-132" text-anchor="middle" font-family="Fraunces,Georgia,serif" font-size="10.5" font-weight="700" fill="#fff">Adubação</text>
+          <text x="0" y="-132" text-anchor="middle" font-family="Fraunces,Georgia,serif" font-size="13" font-weight="700" fill="#fff">Adubação</text>
         </g>
 
         <!-- Anéis decorativos -->
@@ -943,7 +943,7 @@ function showSlide(idx){
     }
 
     tagsEl.innerHTML = s.tags.map(t =>
-      `<span style="display:inline-block;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.4);color:#fff;font-size:.75rem;font-weight:700;padding:4px 12px;border-radius:20px;margin:2px;letter-spacing:.03em">${t}</span>`
+      `<span style="display:inline-block;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.4);color:#fff;font-size:.85rem;font-weight:700;padding:5px 14px;border-radius:20px;margin:2px;letter-spacing:.03em">${t}</span>`
     ).join('');
 
     panel.classList.add('visible');
