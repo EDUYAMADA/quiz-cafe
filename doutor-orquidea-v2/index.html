@@ -76,8 +76,9 @@ p{margin-bottom:1rem}
 .btn{
   display:inline-block;font-family:var(--fonte-corpo);font-weight:800;
   font-size:1.05rem;line-height:1.2;text-align:center;
-  background:var(--cattleya);color:#fff;
-  padding:18px 30px;border-radius:999px;border:0;cursor:pointer;
+  background:linear-gradient(135deg,#b0407a,#8c2d60);color:#fff;
+  padding:18px 30px;border-radius:999px;
+  box-shadow:0 4px 18px rgba(176,64,122,.4);border:0;cursor:pointer;
   box-shadow:0 8px 22px rgba(176,64,122,.28);
   transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
 }
@@ -337,6 +338,54 @@ footer{background:var(--verde-estufa);color:#d8e8d2;text-align:center;padding:40
 .btn-cta:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(176,64,122,.52)}
 
 @media(prefers-reduced-motion:reduce){.ring-svg,.scroll-hint,.center-hub.pulse{animation:none}}
+
+/* ── BOTÃO GLOW ── */
+.btn-glow{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  background:linear-gradient(135deg,#b0407a,#8c2d60);
+  color:#fff;
+  font-family:var(--fonte-corpo);
+  font-weight:800;
+  font-size:1.1rem;
+  line-height:1.2;
+  text-align:center;
+  padding:20px 36px;
+  border-radius:999px;
+  text-decoration:none;
+  border:none;
+  cursor:pointer;
+  transition:transform .2s ease, box-shadow .2s ease;
+  box-shadow:0 6px 24px rgba(176,64,122,.45);
+  z-index:1;
+}
+.btn-glow::before{
+  content:'';
+  position:absolute;
+  inset:-4px;
+  border-radius:999px;
+  background:linear-gradient(135deg,#f0a9cd,#b0407a,#6b4c9a);
+  z-index:-1;
+  opacity:.7;
+  filter:blur(10px);
+  animation:glow-pulse 2.2s ease-in-out infinite;
+}
+.btn-glow:hover{
+  transform:translateY(-3px);
+  box-shadow:0 12px 32px rgba(176,64,122,.6);
+}
+@keyframes glow-pulse{
+  0%,100%{opacity:.6;filter:blur(10px)}
+  50%{opacity:.95;filter:blur(16px)}
+}
+.btn-glow .arrow{
+  font-size:1.2rem;
+  transition:transform .2s;
+}
+.btn-glow:hover .arrow{transform:translateX(4px)}
 </style>
 <!-- Meta Pixel -->
 <script>
@@ -374,7 +423,7 @@ src="https://www.facebook.com/tr?id=1371183171543353&ev=PageView&noscript=1"
     </div>
     <h1>Suas orquídeas podem florescer todos os anos — mesmo que você já tenha tentado de tudo</h1>
     <p class="lead">O método prático que reúne mais de 30 anos de cultivo na Serra da Mantiqueira para você ter raízes fortes, folhas firmes e flores que voltam temporada após temporada.</p>
-    <a href="#oferta" class="btn">Quero minhas orquídeas saudáveis</a>
+    <a href="https://go.hotmart.com/L94901161L?dp=1" class="btn">Quero minhas orquídeas saudáveis</a>
     <div class="preco-linha">Por apenas <span class="valor">R$67</span> — acesso por 1 ano</div>
   </div>
 </header>
@@ -394,7 +443,7 @@ src="https://www.facebook.com/tr?id=1371183171543353&ev=PageView&noscript=1"
       <div class="card card-dor"><span class="marca">✕</span><p>Achar que "não nasceu com a mão boa pra planta".</p></div>
     </div>
     <p class="center lead maxw" style="margin:32px auto 0"><strong>Nada disso é culpa sua.</strong> É só falta do método certo — e é exatamente isso que você vai aprender.</p>
-    <div class="center" style="margin-top:26px"><a href="#oferta" class="btn">Quero resolver isso agora</a></div>
+    <div class="center" style="margin-top:26px"><a href="https://go.hotmart.com/L94901161L?dp=1" class="btn">Quero resolver isso agora</a></div>
   </div>
 </section>
 
@@ -445,7 +494,7 @@ src="https://www.facebook.com/tr?id=1371183171543353&ev=PageView&noscript=1"
         </div>
       </div>
     </div>
-    <div class="center" style="margin-top:30px"><a href="#oferta" class="btn">Também quero esses resultados</a></div>
+    <div class="center" style="margin-top:30px"><a href="https://go.hotmart.com/L94901161L?dp=1" class="btn">Também quero esses resultados</a></div>
   </div>
 </section>
 
@@ -636,7 +685,7 @@ src="https://www.facebook.com/tr?id=1371183171543353&ev=PageView&noscript=1"
       </div></div>
     </div>
     <p class="center" style="margin:34px 0 0;font-family:var(--fonte-display);font-size:1.5rem;color:#fff"><strong>41 aulas</strong> nos 11 módulos + <span style="color:var(--cattleya)">25 aulas bônus</span> = <strong style="color:#fff">66 aulas no total</strong></p>
-    <div class="center" style="margin-top:24px"><a href="#oferta" class="btn">Quero garantir minha vaga</a></div>
+    <div class="center" style="margin-top:24px"><a href="https://go.hotmart.com/L94901161L?dp=1" class="btn">Quero garantir minha vaga</a></div>
   </div>
 </section>
 
@@ -747,7 +796,7 @@ src="https://www.facebook.com/tr?id=1371183171543353&ev=PageView&noscript=1"
     <div class="eyebrow" style="justify-content:center">Mais que uma planta</div>
     <h2>Imagine o orgulho de ver suas orquídeas floridas — e o prazer de cuidar delas como uma terapia</h2>
     <p class="lead" style="margin-top:1rem">Cultivar vira um momento seu, de calma e conexão. E o melhor: com resultado que todo mundo vê.</p>
-    <div style="margin-top:28px"><a href="#oferta" class="btn">Quero começar por R$67</a></div>
+    <div style="margin-top:28px"><a href="https://go.hotmart.com/L94901161L?dp=1" class="btn">Quero começar por R$67</a></div>
   </div>
 </section>
 
@@ -762,7 +811,7 @@ src="https://www.facebook.com/tr?id=1371183171543353&ev=PageView&noscript=1"
 <!-- ====== CTA FIXO MOBILE ====== -->
 <div class="cta-fixo">
   <div class="p">R$67<small>1 ano de acesso</small></div>
-  <a href="#oferta" class="btn">Quero minha vaga</a>
+  <a href="https://go.hotmart.com/L94901161L?dp=1" class="btn">Quero minha vaga</a>
 </div>
 
 <script>
