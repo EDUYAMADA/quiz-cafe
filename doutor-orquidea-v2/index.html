@@ -264,7 +264,7 @@ footer{background:var(--verde-estufa);color:#d8e8d2;text-align:center;padding:40
 @keyframes bounce{0%,100%{transform:translateY(0)}55%{transform:translateY(9px)}}
 
 /* PARALLAX */
-.parallax-stage{position:relative;height:660vh;background:transparent}
+.parallax-stage{position:relative;height:770vh;background:transparent}
 .sticky-scene{position:sticky;top:0;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#0d1f14}
 
 /* MANDALA */
@@ -612,6 +612,7 @@ src="https://www.facebook.com/tr?id=1371183171543353&ev=PageView&noscript=1"
         <div class="dot"></div>
         <div class="dot"></div>
         <div class="dot"></div>
+        <div class="dot"></div>
         <div class="dot final"></div>
       </div>
 
@@ -851,116 +852,113 @@ document.addEventListener('DOMContentLoaded', function(){
 
 
 <script>
-
-// 5 pétalas + 1 slide final (índice 5)
 const slides = [
+  // Slide 0 — mandala sozinha, sem card
+  {icon:'', name:'', desc:'', quote:'', tags:[], color:'#b0407a', final:false, empty:true},
   {
     icon:'🌺', name:'Variedade',
     desc:'Cada orquídea carrega dentro de si o mapa do seu habitat. Quando você entende de onde ela vem — se é epífita das alturas ou terrestre das matas — tudo o mais se encaixa naturalmente.',
-    quote:'', tags:['Epífita','Terrestre','Habitat natural'], color:'#b0407a', final:false
+    quote:'', tags:['Epífita','Terrestre','Habitat natural'], color:'#b0407a', final:false, empty:false
   },
   {
     icon:'📍', name:'Local',
     desc:'Sua varanda, sua janela, seu clima — eles são únicos. Encontrar o lugar certo dentro da sua casa é o gesto mais amoroso que você pode fazer pela sua orquídea.',
-    quote:'', tags:['Luz','Clima','Cobertura'], color:'#3e6b4a', final:false
+    quote:'', tags:['Luz','Clima','Cobertura'], color:'#3e6b4a', final:false, empty:false
   },
   {
     icon:'🪨', name:'Substrato',
     desc:'O substrato é o lar da raiz. Você tem o poder de moldá-lo de acordo com o seu tempo, sua rotina e sua planta. Leve, médio ou pesado — a escolha é sua.',
-    quote:'', tags:['Leve','Médio','Pesado'], color:'#8c5a3c', final:false
+    quote:'', tags:['Leve','Médio','Pesado'], color:'#8c5a3c', final:false, empty:false
   },
   {
     icon:'💧', name:'Irrigação',
     desc:'A água é vida — mas na medida certa. Imersão, aspersão, gotejamento... cada forma tem sua razão de ser. Aprender a irrigar é aprender a ouvir a planta.',
-    quote:'', tags:['Imersão','Aspersão','Frequência'], color:'#4a7c59', final:false
+    quote:'', tags:['Imersão','Aspersão','Frequência'], color:'#4a7c59', final:false, empty:false
   },
   {
     icon:'🌱', name:'Adubação',
     desc:'Nutrir é um ato de cuidado. Orgânico ou químico, lento ou solúvel — quando você entende como cada nutriente age, passa a alimentar com intenção, não com chute.',
-    quote:'', tags:['Orgânico','Liberação lenta','NPK equilibrado'], color:'#6b4c9a', final:false
+    quote:'', tags:['Orgânico','Liberação lenta','NPK equilibrado'], color:'#6b4c9a', final:false, empty:false
   },
   {
     icon:'🧑‍🌾', name:'Você no Centro',
     desc:'',
-    quote:'"Quando um muda, todos os outros respondem. Você, o cultivador, é quem conecta tudo. Esse é o método completo."',
-    tags:['Tudo interligado','O método completo'], color:'#b0407a', final:true
+    quote:'Quando um muda, todos os outros respondem. Você, o cultivador, é quem conecta tudo.',
+    tags:['Tudo interligado','Método completo'], color:'#b0407a', final:true, empty:false
   }
 ];
 
-const stage    = document.getElementById('parallaxStage');
-const panel    = document.getElementById('petalPanel');
-const canvas   = document.getElementById('mandalaCanvas');
-const centerHub= document.getElementById('centerHub');
-const dots     = document.querySelectorAll('.dot');
-const progress = document.getElementById('progressBar');
-const petalGs  = document.querySelectorAll('.petal-g ellipse, .petal-g polygon');
-const innerRing= document.getElementById('innerRing');
+const stage      = document.getElementById('parallaxStage');
+const panel      = document.getElementById('petalPanel');
+const canvas     = document.getElementById('mandalaCanvas');
+const centerHub  = document.getElementById('centerHub');
+const dots       = document.querySelectorAll('.petal-dots .dot');
+const progress   = document.getElementById('progressBar') || document.querySelector('.progress-bar');
+const petalGs    = document.querySelectorAll('.petal-g ellipse, .petal-g polygon');
+const petalTexts = document.querySelectorAll('.petal-g text');
+const innerRing  = document.getElementById('innerRing');
+const flashOverlay = document.getElementById('flashOverlay');
+
+if(!stage||!panel||!canvas){ console.warn('Mandala: elementos não encontrados.'); }
 
 let currentSlide = -1;
-let ticking = false;
+let flashActive  = false;
+let ticking      = false;
 
-function lerp(a,b,t){ return a+(b-a)*t }
+function lerp(a,b,t){ return a+(b-a)*t; }
 
 function update(){
   ticking = false;
+  if(!stage||!panel||!canvas) return;
+
   const rect  = stage.getBoundingClientRect();
   const total = stage.offsetHeight - window.innerHeight;
   const p01   = Math.min(Math.max(-rect.top / total, 0), 1);
 
-  progress.style.width = (p01*100)+'%';
+  if(progress) progress.style.width = (p01*100)+'%';
 
-  // Divide em 6 slides (5 pétalas + 1 final)
-  const idx = Math.min(Math.floor(p01 * 6), 5);
-  const isFinal = idx === 5;
+  // 7 slides (0=intro vazio, 1-5=pétalas, 6=clímax)
+  const idx     = Math.min(Math.floor(p01 * 7), 6);
+  const isFinal = idx === 6;
 
-  // 3D: nas pétalas inclina suavemente; no slide final volta ao neutro e cresce
+  // 3D simulado
   let tilt, scale;
-  if(isFinal){
-    tilt  = 0;
-    scale = 1.28;
-  } else {
-    tilt  = lerp(10, -6, p01 * (6/5));
-    scale = lerp(0.82, 1.08, p01 * (6/5));
-  }
-  canvas.style.transform = `perspective(560px) rotateX(${tilt}deg) scale(${scale})`;
+  if(isFinal){ tilt=0; scale=1.28; }
+  else { tilt=lerp(10,-6,p01*(7/6)); scale=lerp(0.82,1.08,p01*(7/6)); }
+  canvas.style.transform = 'perspective(560px) rotateX('+tilt+'deg) scale('+scale+')';
 
-  // Brilho e pulso no slide final
+  // Flash no clímax
   if(isFinal){
     canvas.classList.add('glowing');
-    centerHub.classList.add('pulse');
-    innerRing.setAttribute('stroke','#b0407a');
-    innerRing.setAttribute('opacity','0.9');
-    innerRing.setAttribute('stroke-dasharray','none');
-    innerRing.setAttribute('stroke-width','2');
+    if(centerHub) centerHub.classList.add('pulse');
+    if(innerRing){ innerRing.setAttribute('stroke','#b0407a'); innerRing.setAttribute('opacity','0.9'); innerRing.setAttribute('stroke-dasharray','none'); innerRing.setAttribute('stroke-width','2'); }
+    if(!flashActive){ flashActive=true; if(flashOverlay) flashOverlay.classList.add('active'); }
   } else {
     canvas.classList.remove('glowing');
-    centerHub.classList.remove('pulse');
-    innerRing.setAttribute('stroke','#b0407a');
-    innerRing.setAttribute('opacity','0.4');
-    innerRing.setAttribute('stroke-dasharray','4 4');
-    innerRing.setAttribute('stroke-width','1');
+    if(centerHub) centerHub.classList.remove('pulse');
+    if(innerRing){ innerRing.setAttribute('stroke','#b0407a'); innerRing.setAttribute('opacity','0.4'); innerRing.setAttribute('stroke-dasharray','4 4'); innerRing.setAttribute('stroke-width','1'); }
+    if(flashActive){ flashActive=false; if(flashOverlay) flashOverlay.classList.remove('active'); }
   }
 
   // Highlight pétalas
   for(let i=0;i<petalGs.length;i++){
-    const gi = Math.floor(i/2);
-    if(isFinal){
-      petalGs[i].setAttribute('opacity','1');
-    } else {
-      petalGs[i].setAttribute('opacity', gi===idx ? '1' : '0.42');
-    }
+    const gi=Math.floor(i/2);
+    if(isFinal){ petalGs[i].setAttribute('opacity','1'); }
+    else if(idx===0){ petalGs[i].setAttribute('opacity','0.72'); }
+    else { petalGs[i].setAttribute('opacity', gi===(idx-1)?'1':'0.35'); }
   }
+  if(petalTexts) petalTexts.forEach(t=>t.setAttribute('opacity','1'));
 
-  if(idx !== currentSlide){
-    currentSlide = idx;
-    showSlide(idx);
-  }
+  if(idx !== currentSlide){ currentSlide=idx; showSlide(idx); }
 }
 
 function showSlide(idx){
   const s = slides[idx];
   dots.forEach((d,i)=>d.classList.toggle('active',i===idx));
   panel.classList.remove('visible','final-panel');
+
+  // Slide 0: mandala sozinha, sem painel
+  if(s.empty){ return; }
 
   setTimeout(()=>{
     document.getElementById('panelIcon').textContent = s.icon;
@@ -971,30 +969,30 @@ function showSlide(idx){
     const tagsEl  = document.getElementById('panelTags');
 
     if(s.final){
-      descEl.style.display  = 'none';
-      quoteEl.style.display = 'block';
-      quoteEl.textContent   = s.quote;
+      descEl.style.display='none';
+      quoteEl.style.display='block';
+      quoteEl.textContent=s.quote;
       panel.classList.add('final-panel');
     } else {
-      descEl.style.display  = 'block';
-      quoteEl.style.display = 'none';
-      descEl.textContent    = s.desc;
+      descEl.style.display='block';
+      quoteEl.style.display='none';
+      descEl.textContent=s.desc;
     }
 
     tagsEl.innerHTML = s.tags.map(t=>
-      `<span class="tag" style="background:${s.color}44">${t}</span>`
+      '<span style="display:inline-block;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.4);color:#fff;font-size:.85rem;font-weight:700;padding:5px 14px;border-radius:20px;margin:2px">'+t+'</span>'
     ).join('');
 
     panel.classList.add('visible');
-  }, 200);
+  }, 400);
 }
 
 window.addEventListener('scroll',()=>{
-  if(!ticking){ticking=true;requestAnimationFrame(update)}
+  if(!ticking){ ticking=true; requestAnimationFrame(update); }
 },{passive:true});
 
-setTimeout(()=>{ update(); showSlide(0); panel.classList.add('visible'); },300);
-
+// Inicializar — só mostrar mandala, sem painel
+setTimeout(()=>{ update(); }, 300);
 </script>
 <script>
 function generateEventId(){return "ev_"+Date.now()+"_"+Math.random().toString(36).substr(2,9);}
