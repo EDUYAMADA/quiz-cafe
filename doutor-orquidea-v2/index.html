@@ -404,6 +404,13 @@ fbq('track', 'PageView');
 src="https://www.facebook.com/tr?id=1371183171543353&ev=PageView&noscript=1"
 /></noscript>
 <!-- End Meta Pixel -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://eduyamada.github.io/quiz-cafe/doutor-orquidea-v2/">
+  <meta property="og:title" content="Doutor de Orquídea — Aprenda a Cultivar com o Método Mandala">
+  <meta property="og:description" content="Mais de 30 anos de cultivo em 66 aulas práticas. Faça suas orquídeas florescerem todo ano com o método exclusivo da Serra da Mantiqueira.">
+  <meta property="og:image" content="https://eduyamada.github.io/quiz-cafe/doutor-orquidea-v2/og-image.jpg">
+  <meta property="og:locale" content="pt_BR">
+  <meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
 <div class="progress-bar" id="progressBar" style="position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,#b0407a,#6b4c9a);z-index:9999;width:0%;transition:width .1s linear"></div>
@@ -411,7 +418,7 @@ src="https://www.facebook.com/tr?id=1371183171543353&ev=PageView&noscript=1"
 <!-- ====== BARRA DE URGÊNCIA ====== -->
 <div class="urgencia">
   <span class="selo">Promoção por tempo limitado</span>
-  <span>Bônus exclusivos inclusos nesta turma — <a href="#oferta">garanta sua vaga</a></span>
+  <span>Bônus exclusivos inclusos nesta turma — <a href="https://go.hotmart.com/L94901161L?dp=1">garanta sua vaga</a></span>
 </div>
 
 <!-- ====== HERO ====== -->
@@ -1030,6 +1037,91 @@ window.addEventListener('scroll',()=>{
 
 // Inicializar — só mostrar mandala, sem painel
 setTimeout(()=>{ update(); }, 300);
+</script>
+<script>
+// ── META CONVERSIONS API ──
+function generateEventId() {
+  return 'ev_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+}
+
+function sendCAPIEvent(eventName, eventData) {
+  const eventId = generateEventId();
+  const payload = {
+    data: [{
+      event_name: eventName,
+      event_time: Math.floor(Date.now() / 1000),
+      event_id: eventId,
+      event_source_url: window.location.href,
+      action_source: 'website',
+      user_data: {
+        client_user_agent: navigator.userAgent,
+        client_ip_address: '',
+        fbc: getCookie('_fbc') || '',
+        fbp: getCookie('_fbp') || '',
+      },
+      custom_data: eventData || {}
+    }],
+    access_token: 'EAAsYdqtlDmsBR1OlQxBU9dAnBZBe8N9o9zr6eijAMxt0iaIzRbpSfHeJwwLXm3l7mqqrGPhzHsFE65O9u2D8i25ef38ZBVcadVH0FYvIE0UVgyPZAsFBShf5cg52De5kZAzEe6FPaOP2q8ya98xabyz6dt4R1ezY8S4WfypLmhNpHxSXYOlx4WnV0lprJwZDZD'
+  };
+
+  fetch('https://graph.facebook.com/v18.0/1371183171543353/events', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).catch(function(e) { console.log('CAPI:', e); });
+
+  return eventId;
+}
+
+function getCookie(name) {
+  const value = '; ' + document.cookie;
+  const parts = value.split('; ' + name + '=');
+  if (parts.length === 2) return parts.pop().split(';').shift();
+  return '';
+}
+
+// Disparar ViewContent no carregamento
+window.addEventListener('load', function() {
+  const eid = generateEventId();
+  if(typeof fbq !== 'undefined') {
+    fbq('track', 'ViewContent', {
+      content_name: 'Doutor de Orquídea',
+      content_category: 'Curso Online',
+      value: 67,
+      currency: 'BRL'
+    }, {eventID: eid});
+  }
+  sendCAPIEvent('ViewContent', {
+    content_name: 'Doutor de Orquídea',
+    content_category: 'Curso Online',
+    value: 67,
+    currency: 'BRL'
+  });
+});
+
+// Adicionar InitiateCheckout em todos os botões Hotmart
+document.addEventListener('DOMContentLoaded', function() {
+  var hotmartLinks = document.querySelectorAll('a[href*="hotmart"]');
+  hotmartLinks.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var eid = generateEventId();
+      if(typeof fbq !== 'undefined') {
+        fbq('track', 'InitiateCheckout', {
+          content_name: 'Doutor de Orquídea',
+          value: 67,
+          currency: 'BRL',
+          num_items: 1
+        }, {eventID: eid});
+      }
+      sendCAPIEvent('InitiateCheckout', {
+        content_name: 'Doutor de Orquídea',
+        value: 67,
+        currency: 'BRL',
+        num_items: 1
+      });
+    });
+  });
+});
 </script>
 </body>
 </html>
