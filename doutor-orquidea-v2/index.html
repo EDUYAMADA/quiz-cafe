@@ -270,7 +270,7 @@ footer{background:var(--verde-estufa);color:#d8e8d2;text-align:center;padding:40
 .sticky-scene{position:sticky;top:0;height:100vh;display:flex;align-items:center;justify-content:center;overflow:visible;background:#0d1f14}
 
 /* MANDALA */
-.mandala-wrap{position:relative;width:min(380px,90vw);height:min(380px,90vw);transition:filter .8s ease;overflow:visible}
+.mandala-wrap{position:relative;width:min(420px,94vw);height:min(420px,94vw);transition:filter .8s ease;overflow:visible}
 .mandala-wrap.glowing{filter:drop-shadow(0 0 28px rgba(176,64,122,.7)) drop-shadow(0 0 60px rgba(176,64,122,.35))}
 .ring-svg{position:absolute;inset:0;width:100%;height:100%;animation:spin 34s linear infinite;transform-origin:50% 50%;overflow:visible}
 @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
@@ -299,14 +299,14 @@ footer{background:var(--verde-estufa);color:#d8e8d2;text-align:center;padding:40
 
 /* PAINEL PÉTALA */
 .petal-panel{
-  position:absolute;bottom:clamp(70px,16vh,120px);left:50%;
+  position:absolute;bottom:24px;left:50%;
   transform:translateX(-50%) translateY(18px);
-  width:min(310px,84vw);
-  background:rgba(13,31,20,.85);
-  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-  border:1px solid rgba(255,255,255,.13);
-  border-radius:20px;padding:20px 22px;text-align:center;
-  transition:opacity .38s ease,transform .38s ease;
+  width:min(340px,90vw);
+  background:rgba(10,25,16,.95);
+  border:1px solid rgba(255,255,255,.2);
+  border-left:3px solid var(--panel-color,#b0407a);
+  border-radius:20px;padding:18px 20px;text-align:center;
+  transition:opacity .5s ease,transform .5s ease;
   opacity:0;z-index:40;pointer-events:none;
 }
 .petal-panel.visible{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -316,9 +316,9 @@ footer{background:var(--verde-estufa);color:#d8e8d2;text-align:center;padding:40
   border-color:rgba(176,64,122,.5);
   background:rgba(26,19,38,.9);
 }
-.p-icon{font-size:26px;margin-bottom:6px}
-.p-name{font-family:'Fraunces',serif;font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:6px}
-.p-desc{font-size:.85rem;color:rgba(255,255,255,.75);line-height:1.65;margin-bottom:10px}
+.p-icon{font-size:36px;margin-bottom:8px}
+.p-name{font-family:'Fraunces',serif;font-size:1.4rem;font-weight:700;color:#fff;margin-bottom:8px}
+.p-desc{font-size:1rem;color:rgba(255,255,255,.92);line-height:1.5;margin-bottom:10px;font-weight:500}
 .p-quote{font-family:'Fraunces',serif;font-size:1rem;font-style:italic;color:#f0a9cd;line-height:1.6;margin-bottom:10px}
 .p-tags{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
 
@@ -862,11 +862,11 @@ document.addEventListener('DOMContentLoaded', function(){
 <script>
 const slides = [
   {icon:'', name:'', desc:'', quote:'', tags:[], color:'#b0407a', final:false, empty:true},
-  {icon:'🌺', name:'Variedade', desc:'Cada orquídea carrega dentro de si o mapa do seu habitat. Quando você entende de onde ela vem — se é epífita das alturas ou terrestre das matas — tudo o mais se encaixa naturalmente.', quote:'', tags:['Epífita','Terrestre','Habitat natural'], color:'#b0407a', final:false, empty:false},
-  {icon:'📍', name:'Local', desc:'Sua varanda, sua janela, seu clima — eles são únicos. Encontrar o lugar certo dentro da sua casa é o gesto mais amoroso que você pode fazer pela sua orquídea.', quote:'', tags:['Luz','Clima','Cobertura'], color:'#3e6b4a', final:false, empty:false},
-  {icon:'🪨', name:'Substrato', desc:'O substrato é o lar da raiz. Você tem o poder de moldá-lo de acordo com o seu tempo, sua rotina e sua planta. Leve, médio ou pesado — a escolha é sua.', quote:'', tags:['Leve','Médio','Pesado'], color:'#8c5a3c', final:false, empty:false},
-  {icon:'💧', name:'Irrigação', desc:'A água é vida — mas na medida certa. Imersão, aspersão, gotejamento... cada forma tem sua razão de ser. Aprender a irrigar é aprender a ouvir a planta.', quote:'', tags:['Imersão','Aspersão','Frequência'], color:'#4a7c59', final:false, empty:false},
-  {icon:'🌱', name:'Adubação', desc:'Nutrir é um ato de cuidado. Orgânico ou químico, lento ou solúvel — quando você entende como cada nutriente age, passa a alimentar com intenção, não com chute.', quote:'', tags:['Orgânico','Liberação lenta','NPK equilibrado'], color:'#6b4c9a', final:false, empty:false},
+  {icon:'🌺', name:'Variedade', desc:'Epífita ou terrestre? Cada espécie tem necessidades únicas. Entenda sua planta e tudo muda.', quote:'', tags:['Epífita','Terrestre','Habitat natural'], color:'#b0407a', final:false, empty:false},
+  {icon:'📍', name:'Local', desc:'O ambiente certo vale mais que qualquer produto. Encontre o lugar ideal na sua casa.', quote:'', tags:['Luz','Clima','Cobertura'], color:'#3e6b4a', final:false, empty:false},
+  {icon:'🪨', name:'Substrato', desc:'Leve, médio ou pesado. Monte o substrato ideal para sua planta e sua rotina.', quote:'', tags:['Leve','Médio','Pesado'], color:'#8c5a3c', final:false, empty:false},
+  {icon:'💧', name:'Irrigação', desc:'Rega demais ou de menos mata. Descubra o método certo para a sua orquídea.', quote:'', tags:['Imersão','Aspersão','Frequência'], color:'#4a7c59', final:false, empty:false},
+  {icon:'🌱', name:'Adubação', desc:'Orgânico, químico ou lento. Saiba exatamente quando e como adubar.', quote:'', tags:['Orgânico','Liberação lenta','NPK equilibrado'], color:'#6b4c9a', final:false, empty:false},
   {icon:'🧑‍🌾', name:'Você no Centro', desc:'', quote:'Quando um muda, todos os outros respondem. Você, o cultivador, é quem conecta tudo.', tags:['Tudo interligado','Método completo'], color:'#b0407a', final:true, empty:false}
 ];
 const stage=document.getElementById('parallaxStage'),panel=document.getElementById('petalPanel'),canvas=document.getElementById('mandalaCanvas'),centerHub=document.getElementById('centerHub'),dots=document.querySelectorAll('.petal-dots .dot'),progress=document.getElementById('progressBar')||document.querySelector('.progress-bar'),petalGs=document.querySelectorAll('.petal-g ellipse, .petal-g polygon'),petalTexts=document.querySelectorAll('.petal-g text'),innerRing=document.getElementById('innerRing'),flashOverlay=document.getElementById('flashOverlay');
