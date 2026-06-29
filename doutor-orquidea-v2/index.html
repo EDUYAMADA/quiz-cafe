@@ -267,7 +267,7 @@ footer{background:var(--verde-estufa);color:#d8e8d2;text-align:center;padding:40
 
 /* PARALLAX */
 .parallax-stage{position:relative;height:770vh;background:transparent}
-.sticky-scene{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;overflow:visible;background:#0d1f14;padding:24px 16px 24px}
+.sticky-scene{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;overflow:clip;background:#0d1f14;padding:24px 16px 20px;gap:12px}
 
 /* MANDALA */
 .mandala-wrap{position:relative;width:min(240px,65vw);height:min(240px,65vw);transition:filter .8s ease;overflow:visible;flex-shrink:0}
@@ -329,7 +329,7 @@ footer{background:var(--verde-estufa);color:#d8e8d2;text-align:center;padding:40
 
 
 /* DOTS */
-.petal-dots{display:flex;flex-direction:row;gap:8px;justify-content:center;flex-shrink:0;margin-top:10px}
+.petal-dots{display:flex;flex-direction:row;gap:8px;justify-content:center;flex-shrink:0}
 .dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.22);transition:background .3s,transform .3s}
 .dot.active{background:#b0407a;transform:scale(1.5)}
 .dot.final{background:rgba(176,64,122,.4)}
